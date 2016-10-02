@@ -13,3 +13,9 @@ dependencies {
 task plumbus << {
   println "A plumbus task!"
 }
+
+test {
+  testLogging {
+     showStandardStreams = true
+  }
+}
