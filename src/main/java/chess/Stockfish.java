@@ -11,15 +11,27 @@ public class Stockfish {
   private Process engine;
   private BufferedReader processReader;
   private OutputStreamWriter processWriter;
+
+  /* This is the FEN notation for the starting positions on a chessboard.
+   * White pieces are upper-case letters. Black are lower case.
+   * w = white's turn.
+   * KQkq - = castling availability
+   * - = "en passant target square doesn't exist"  TODO: look up what the heck en passant means
+   * The second to last number is the "halfmove clock - the number of halfmoves since the last capture or pawn advance
+   * Full move number: Starts at one and increments when black moves
+   */
   private final String STARTING_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 
+  // Path to stockfish executable.
+  // TODO: figure out how to make this run on different systems
   private String path = "engine/stockfish-7-win/Windows/stockfish 7 x64.exe";
 
   // Start Stockfish engine
   public boolean startEngine() {
   try {
     engine = Runtime.getRuntime().exec(path);
+    // Open streams to read from and write to engine
     processReader = new BufferedReader(new InputStreamReader(engine.getInputStream()));
     processWriter = new OutputStreamWriter(engine.getOutputStream());
   }
@@ -33,6 +45,8 @@ public class Stockfish {
   // Send UCI command to Stockfish engine
   public boolean sendCommand(String command) {
     try {
+
+      // UCI commands must end with newline
       processWriter.write(command + "\n");
       processWriter.flush();
     }
