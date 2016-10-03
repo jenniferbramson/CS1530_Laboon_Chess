@@ -5,5 +5,10 @@ import chess.BoardGraphics;
 
 public class GraphicsTest {
 
+  @Test
+  public void testGraphics() {
+    String[] args = new String[1];
+    BoardGraphics.main(args);
+  }
 
 }

@@ -1,6 +1,7 @@
 package chess;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 
 public class BoardGraphics {
 
@@ -17,11 +18,11 @@ public class BoardGraphics {
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     Container content = frame.getContentPane();   // Get reference to content pane
 
-    JPanel timer = this.addTimer();
-    JPanel board = this.addCheckers();            // Add the square board
-    JPanel buttons = this.addButtons();
+    JPanel timer = this.addTimer();               // Get the timer panel
+    JPanel board = this.addCheckers();            // Get the square board
+    JPanel buttons = this.addButtons();           // Get the buttons panel
 
-    JPanel left = new JPanel();
+    JPanel left = new JPanel();                   // Stack the three panels above
     left.setLayout(new BorderLayout());
     left.add(timer, BorderLayout.NORTH);
     left.add(board, BorderLayout.CENTER);
@@ -61,6 +62,7 @@ public class BoardGraphics {
         b.setMargin(margins);     // Make the button have no margins
         b.setBorder(null);        // Necessary to not have button covering colors
         b.setOpaque(true);        // Necessary to see the colors (otherwise white)
+        b.addActionListener(getSquareAction());
 
         if ((i + j) % 2 == 0) {   // White square
           b.setBackground(Color.WHITE);
@@ -105,7 +107,6 @@ public class BoardGraphics {
     }
     panel.add(new JLabel(""));  // Corners are empty
 
-    // Add the panel to the content
     return panel;
   } // end addCheckers
 
@@ -115,16 +116,18 @@ public class BoardGraphics {
 
     // Add save button
     save = new JButton("Save");
+    save.addActionListener(getSaveAction());
     panel.add(save);
 
     // Add load button
     load = new JButton("Load");
+    load.addActionListener(getLoadAction());
     panel.add(load);
 
     return panel;
   }
 
-
+  // Placeholder for timer
   private JPanel addTimer() {
     JPanel panel = new JPanel();
     JLabel label = new JLabel("Timer");   // Place holder for real timer
@@ -134,24 +137,57 @@ public class BoardGraphics {
     return panel;
   }
 
-
+  // Placeholder for taken white pieces
   private JPanel addTakenWhite() {
     JPanel panel = new JPanel();
     JLabel label = new JLabel("Taken White Pieces");
-    label.setHorizontalAlignment(SwingConstants.CENTER);
-
+    panel.setLayout(new GridLayout(3, 1));
+    panel.add(new JLabel(""));
     panel.add(label);
+    panel.add(new JLabel(""));
+    return panel;
+  }
+
+  // Placeholder for taken black piece
+  private JPanel addTakenBlack() {
+    JPanel panel = new JPanel();
+    JLabel label = new JLabel("Taken Black Pieces");
+    panel.setLayout(new GridLayout(3, 1));
+    panel.add(new JLabel(""));
+    panel.add(label);
+    panel.add(new JLabel(""));
     return panel;
   }
 
 
-  private JPanel addTakenBlack() {
-    JPanel panel = new JPanel();
-    JLabel label = new JLabel("Taken Black Pieces");
-    label.setHorizontalAlignment(SwingConstants.CENTER);
+  private ActionListener getSquareAction() {
+    ActionListener action = new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        // Placeholder for when we add functionality
 
-    panel.add(label);
-    return panel;
+      }
+    };
+    return action;
+  }
+
+  private ActionListener getSaveAction() {
+    ActionListener action = new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        // Placeholder for when we add functionality
+
+      }
+    };
+    return action;
+  }
+
+  private ActionListener getLoadAction() {
+    ActionListener action = new ActionListener() {
+      public void actionPerformed(ActionEvent e) {
+        // Placeholder for when we add functionality
+
+      }
+    };
+    return action;
   }
 
 
