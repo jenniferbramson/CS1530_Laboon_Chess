@@ -33,18 +33,32 @@ public class BoardGraphics {
     JPanel takenBlack = this.makeTakenBlack();
     JPanel takenWhite = this.makeTakenWhite();
 
-    JPanel right = new JPanel();
-    right.setLayout(new GridLayout(2, 1));
-    right.add(takenBlack);
-    right.add(takenWhite);
-
     // Entire screen has both the leftand right sides of the board put together
     // in a horizontal fashion
-    content.setLayout(new BorderLayout());
-    content.add(left, BorderLayout.CENTER);
-    content.add(right, BorderLayout.EAST);
+    content.setLayout(new GridBagLayout());
+    GridBagConstraints c = new GridBagConstraints();
+    c.fill = GridBagConstraints.HORIZONTAL;
+    c.insets = new Insets(10, 10, 10, 10);
+    c.gridx = 0;
+    c.gridy = 0;
+    c.gridheight = 2;
+    c.ipadx = 300;
+    c.ipady = 300;
+    content.add(left, c);
+    c.gridx = 1;
+    c.gridy = 0;
+    c.gridheight = 1;
+    c.ipadx = 100;
+    c.ipady = 150;
+    content.add(takenBlack, c);
+    c.gridx = 1;
+    c.gridy = 1;
+    c.gridheight = 1;
+    c.ipadx = 100;
+    c.ipady = 150;
+    content.add(takenWhite, c);
 
-    frame.setSize(700, 600);
+    frame.pack();                               // Autosizes frame to fit content
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setVisible(true);                     // Do this last
   }
