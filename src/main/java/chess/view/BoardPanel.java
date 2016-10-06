@@ -39,6 +39,24 @@ public class BoardPanel extends JPanel {
         checkers[i][j] = b;
       }
     }
+		
+		//Added to try and draw letters
+		String firstrow = "brkbqnrn";
+		for(int i=0; i<firstrow.length();i++){
+			checkers[0][i].setText(String.valueOf(firstrow.charAt(i)));
+		}
+		for(int i=0; i<firstrow.length(); i++){
+			checkers[1][i].setText("p");
+		}
+		
+		for(int i=0; i<firstrow.length();i++){
+			checkers[6][i].setText("P");
+		}
+		String lastrow = "BRKBQNRN";
+		for(int i=0; i<firstrow.length();i++){
+			checkers[7][i].setText(String.valueOf(lastrow.charAt(i)));
+		}
+		//------------------------------------
 
     // Create Labels for a through h for the first rows
     this.add(new JLabel(""));  // Corners are empty

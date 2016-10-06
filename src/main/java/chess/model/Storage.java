@@ -1,4 +1,5 @@
-public class Storage() {
+import java.util.*;
+public class Storage {
 	
 	//board
 	private char[][] board = new char[8][8];
@@ -7,27 +8,29 @@ public class Storage() {
 	
 	//constructor
 	public Storage(){
-		history = new ArrayList<String>;
+		history = new ArrayList<String>();
 		//initialize the board
 		String firstrow = "brkbqnrn";
 		for(int i=0; i<firstrow.length();i++){
-			char[0][i] = firstrow.charAt(i);
+			board[0][i] = firstrow.charAt(i);
 		}
 		for(int i=0; i<firstrow.length(); i++){
-			char[1][i] = 'p'
+			board[1][i] = 'p';
 		}
 		
 		for(int i=0; i<firstrow.length();i++){
-			char[6][i] = 'P';
+			board[6][i] = 'P';
 		}
 		String lastrow = "BRKBQNRN";
 		for(int i=0; i<firstrow.length();i++){
-			char[7][i] = lastrow.charAt(i);
+			board[7][i] = lastrow.charAt(i);
 		}
 		
-		public movePiece(int x_1, int y_1, int x_2, int y_2){
+		/*
+		public void movePiece(int x_1, int y_1, int x_2, int y_2){
 			board[x_2][y_2] = board[x_1][y_1];
-		}
+			board[x_1][y_1] = null;
+		}*/
 		
 	}
 	//should pass in "moves" and update history
