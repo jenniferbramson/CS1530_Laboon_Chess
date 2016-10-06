@@ -19,6 +19,7 @@ public class HelloWorld {
 
   public static void main(String[] args) {
     speak();
+    ConsoleGraphics chessBoard = new ConsoleGraphics();
   }
 
 }
