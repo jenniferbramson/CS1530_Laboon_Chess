@@ -11,8 +11,6 @@ public class BoardPanel extends JPanel {
 	private Storage my_storage;
 	boolean second_click = false;
 	private String old_spot = "";
-	private int old_x = 0;
-	private int old_y = 0;
 
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
@@ -109,18 +107,11 @@ public class BoardPanel extends JPanel {
 				System.out.println("You clicked on " + current_spot);
 				if(second_click){
 					System.out.println("Moving " + old_spot + " to " + current_spot);
-					if( (old_x+old_y) % 2== 0)
-						checkers[old_x][old_y].setBackground(Color.WHITE);
-					else
-						checkers[old_x][old_y].setBackground(Color.GRAY);
 					second_click = false;
 				}
 				else{
-					checkers[y][x].setBackground(Color.GREEN);
 					System.out.println("First click");
 					old_spot = current_spot;
-					old_x = x;
-					old_y = y;
 					second_click = true;
 				}
       }
