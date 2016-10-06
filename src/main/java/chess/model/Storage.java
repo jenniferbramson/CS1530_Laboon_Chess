@@ -9,7 +9,6 @@ public class Storage {
 	//arraylist to keep track of history
 	ArrayList<String> history;
 	
-	
 	//constructor
 	public Storage(){
 		history = new ArrayList<String>();
