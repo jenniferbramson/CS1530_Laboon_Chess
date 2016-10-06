@@ -25,27 +25,29 @@ public class Stockfish {
 
   // Path to stockfish executable.
   // TODO: figure out how to make this run on different systems
-  private String path = "engine/stockfish-7-win/Windows/stockfish 7 x64.exe";
+
 
   // Start Stockfish engine
-  public boolean startEngine() {
-  try {
-    engine = Runtime.getRuntime().exec(path);
-    // Open streams to read from and write to engine
-    processReader = new BufferedReader(new InputStreamReader(engine.getInputStream()));
-    processWriter = new OutputStreamWriter(engine.getOutputStream());
-  }
-  catch (Exception e) {
-    e.printStackTrace();
-    return false;
-  }
+  public boolean startEngine(String path) {
+    if (path.length() == 0){
+      path = "engine/stockfish-7-win/Windows/stockfish 7 x64.exe";
+    }
+    try {
+      engine = Runtime.getRuntime().exec(path);
+      // Open streams to read from and write to engine
+      processReader = new BufferedReader(new InputStreamReader(engine.getInputStream()));
+      processWriter = new OutputStreamWriter(engine.getOutputStream());
+    }
+    catch (Exception e) {
+      e.printStackTrace();
+      return false;
+    }
   return true;
   }
 
   // Send UCI command to Stockfish engine
-  public boolean sendCommand(String command) {
+  public boolean send(String command) {
     try {
-
       // UCI commands must end with newline
       processWriter.write(command + "\n");
       processWriter.flush();
@@ -62,7 +64,7 @@ public class Stockfish {
   public String getOutput() {
     StringBuffer output = new StringBuffer();
     try {
-      sendCommand("isready");
+      send("isready");
       String text = "";
       while (!text.equals("readyok")){
         text = processReader.readLine();
@@ -86,8 +88,8 @@ public class Stockfish {
   * @return Best Move in PGN format
   */
   public String getBestMove(String fen, int waitTime) {
-    sendCommand("position fen " + fen);
-    sendCommand("go movetime " + waitTime);
+    send("position fen " + fen);
+    send("go movetime " + waitTime);
     return getOutput().split("bestmove ")[1].split(" ")[0];
   }
 
@@ -96,7 +98,7 @@ public class Stockfish {
   */
   public void stopEngine() {
     try {
-      sendCommand("quit");
+      send("quit");
       processReader.close();
       processWriter.close();
     }

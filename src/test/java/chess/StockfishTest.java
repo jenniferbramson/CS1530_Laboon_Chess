@@ -34,7 +34,7 @@ public class StockfishTest {
   @Test
   public void testEngineStart() {
     Stockfish sf = new Stockfish();
-    boolean started = sf.startEngine();
+    boolean started = sf.startEngine("");
     assertTrue(started);
     sf.stopEngine();
   }
