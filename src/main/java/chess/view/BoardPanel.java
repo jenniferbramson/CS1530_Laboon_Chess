@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.*;
 import java.awt.event.*;  // awt.* does not import Action or Event Listeners
+import java.io.*;
+import javax.imageio.*;
 
 public class BoardPanel extends JPanel {
 
@@ -32,23 +34,31 @@ public class BoardPanel extends JPanel {
         b.setOpaque(true);        // Necessary to see the colors (otherwise white)
         b.addActionListener(getSquareAction());
         b.setBorder(null);        // Necessary to not have button covering colors
-				b.setFont(new Font("Arial", Font.BOLD, 20));				//make the letters big
+				//b.setFont(new Font("Arial", Font.BOLD, 20));				//make the letters big
         if ((i + j) % 2 == 0) {   // White square
           b.setBackground(Color.WHITE);
         } else {                  // Black Square
           b.setBackground(Color.GRAY);
         }
-				
+
 				//b.setIcon(icon);
-				
+
         checkers[i][j] = b;
       }
     }
-		
+
 		//Added to try and draw letters
 		for(int i=0; i<8;i++){
 			for(int j=0; j<8;j++){
-				checkers[i][j].setText(String.valueOf(my_storage.getSpace(i,j)));
+				//checkers[i][j].setText(String.valueOf(my_storage.getSpace(i,j)));
+        if (i == 6) {
+          try {
+            Image img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
+            checkers[i][j].setIcon(new ImageIcon(img));
+          } catch (IOException ex) {
+            // Error
+          }
+        }
 			}
 		}
 		//------------------------------------
