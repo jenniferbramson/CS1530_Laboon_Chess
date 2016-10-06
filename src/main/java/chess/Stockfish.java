@@ -20,7 +20,7 @@ public class Stockfish {
    * The second to last number is the "halfmove clock - the number of halfmoves since the last capture or pawn advance
    * Full move number: Starts at one and increments when black moves
    */
-  private final String STARTING_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  public final String STARTING_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 
   // Path to stockfish executable.
@@ -57,6 +57,13 @@ public class Stockfish {
       return false;
     }
     return true;
+  }
+
+  // move string needs to be in algebraic notation for chess
+  public boolean movePiece(String move){
+
+    return true; // if valid move
+    
   }
 
 
@@ -106,4 +113,22 @@ public class Stockfish {
       e.printStackTrace();
     }
   }
+
+  // public static void main(String[] args) {
+  //   startEngine("");
+  //   send("uci");
+  //   send("ucinewgame");
+  //   send("position startpos");
+  //   send("go");
+  //   String bestMove = getBestMove(STARTING_POS, 1000);
+  //   System.out.println(bestMove);
+  //   send("position startpos moves " + bestMove);
+  //   System.out.println(getOutput());
+  //   send("d");
+  //   System.out.println(getOutput());
+  //   stopEngine();
+  //
+  //   System.exit(0);
+  // }
+
 }
