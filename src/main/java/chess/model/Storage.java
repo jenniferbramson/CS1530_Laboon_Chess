@@ -4,6 +4,8 @@ public class Storage {
 	
 	//board
 	private char[][] board = new char[8][8];
+	private char[] white_taken = new char[16];
+	private char[] black_taken = new char[16];
 	//arraylist to keep track of history
 	ArrayList<String> history;
 	
@@ -28,6 +30,10 @@ public class Storage {
 			board[7][i] = lastrow.charAt(i);
 		}
 	}
+		
+		public void deletePiece(int x, int y){
+			board[x][y] = '\u0000';
+		}
 		
 		public String getSpace(int x, int y){
 			if(board[x][y] == '\u0000') return "";

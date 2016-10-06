@@ -9,6 +9,10 @@ public class BoardPanel extends JPanel {
   // These are buttons we will need to use listeners on
   protected JButton[][] checkers;
 	private Storage my_storage;
+	boolean second_click = false;
+	private String old_spot = "";
+	private int old_x = 0;
+	private int old_y = 0;
 
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
@@ -89,7 +93,6 @@ public class BoardPanel extends JPanel {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         // Placeholder for when we add functionality
-				//System.out.println("source: " + e.getSource());
 				int x=0, y=0;
 				for(int i=0; i<8; i++){
 					for(int j=0; j<8; j++){
@@ -102,7 +105,24 @@ public class BoardPanel extends JPanel {
 				int a = (int)'a';
 				char x_board = (char)(x+a);
 				int y_board = 8-y;
-				System.out.println("You clicked on " + x_board + y_board);
+				String current_spot = x_board + Integer.toString(y_board);
+				System.out.println("You clicked on " + current_spot);
+				if(second_click){
+					System.out.println("Moving " + old_spot + " to " + current_spot);
+					if( (old_x+old_y) % 2== 0)
+						checkers[old_x][old_y].setBackground(Color.WHITE);
+					else
+						checkers[old_x][old_y].setBackground(Color.GRAY);
+					second_click = false;
+				}
+				else{
+					checkers[y][x].setBackground(Color.GREEN);
+					System.out.println("First click");
+					old_spot = current_spot;
+					old_x = x;
+					old_y = y;
+					second_click = true;
+				}
       }
     };
     return action;
