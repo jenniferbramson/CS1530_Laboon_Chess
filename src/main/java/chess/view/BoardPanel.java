@@ -8,12 +8,13 @@ public class BoardPanel extends JPanel {
 
   // These are buttons we will need to use listeners on
   protected JButton[][] checkers;
+	private Storage my_storage;
 
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
     this.setLayout(new GridLayout(10, 10));
-
+		my_storage = new Storage();
     checkers = new JButton[8][8];
     Insets margins = new Insets(0, 0, 0, 0);  // For setting button margins
 
@@ -27,7 +28,7 @@ public class BoardPanel extends JPanel {
         b.setOpaque(true);        // Necessary to see the colors (otherwise white)
         b.addActionListener(getSquareAction());
         b.setBorder(null);        // Necessary to not have button covering colors
-
+				b.setFont(new Font("Arial", Font.BOLD, 20));				//make the letters big
         if ((i + j) % 2 == 0) {   // White square
           b.setBackground(Color.WHITE);
         } else {                  // Black Square
@@ -41,20 +42,10 @@ public class BoardPanel extends JPanel {
     }
 		
 		//Added to try and draw letters
-		String firstrow = "brkbqnrn";
-		for(int i=0; i<firstrow.length();i++){
-			checkers[0][i].setText(String.valueOf(firstrow.charAt(i)));
-		}
-		for(int i=0; i<firstrow.length(); i++){
-			checkers[1][i].setText("p");
-		}
-		
-		for(int i=0; i<firstrow.length();i++){
-			checkers[6][i].setText("P");
-		}
-		String lastrow = "BRKBQNRN";
-		for(int i=0; i<firstrow.length();i++){
-			checkers[7][i].setText(String.valueOf(lastrow.charAt(i)));
+		for(int i=0; i<8;i++){
+			for(int j=0; j<8;j++){
+				checkers[i][j].setText(String.valueOf(my_storage.getSpace(i,j)));
+			}
 		}
 		//------------------------------------
 
@@ -98,7 +89,20 @@ public class BoardPanel extends JPanel {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         // Placeholder for when we add functionality
-
+				//System.out.println("source: " + e.getSource());
+				int x=0, y=0;
+				for(int i=0; i<8; i++){
+					for(int j=0; j<8; j++){
+						if(e.getSource() == checkers[i][j]){
+								x=j;
+								y=i;
+						}
+					}
+				}
+				int a = (int)'a';
+				char x_board = (char)(x+a);
+				int y_board = 8-y;
+				System.out.println("You clicked on " + x_board + y_board);
       }
     };
     return action;
