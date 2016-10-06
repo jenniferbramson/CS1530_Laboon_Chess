@@ -71,7 +71,9 @@ public class ConsoleGraphics {
     c.ipady = 200;
     content.add(takenWhite, c);
 
-    frame.pack();                               // Autosizes frame to fit content
+    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.pack();
+		frame.setSize(screenSize.width-200,screenSize.height);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setVisible(true);                     // Do this last
   }

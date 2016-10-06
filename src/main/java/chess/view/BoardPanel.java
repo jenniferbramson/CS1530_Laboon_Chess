@@ -21,6 +21,8 @@ public class BoardPanel extends JPanel {
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         JButton b = new JButton("");
+				b.setPreferredSize(new Dimension(64, 64));					//set prefered size to 64px by 64px
+				//ImageIcon icon = new    ImageIcon(this.getClass().getResource("/img/WhitePawn.png"));  //get image
         b.setMargin(margins);     // Make the button have no margins
         b.setOpaque(true);        // Necessary to see the colors (otherwise white)
         b.addActionListener(getSquareAction());
@@ -29,9 +31,11 @@ public class BoardPanel extends JPanel {
         if ((i + j) % 2 == 0) {   // White square
           b.setBackground(Color.WHITE);
         } else {                  // Black Square
-          b.setBackground(Color.BLACK);
+          b.setBackground(Color.GRAY);
         }
-
+				
+				//b.setIcon(icon);
+				
         checkers[i][j] = b;
       }
     }
