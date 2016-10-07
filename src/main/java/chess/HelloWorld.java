@@ -18,20 +18,23 @@ public class HelloWorld {
   }
 
   public static void demoStockfish(){
+    String os_name = System.getProperty("os.name");
+    System.out.println(os_name);
     Stockfish engine = new Stockfish();
-    engine.startEngine("");
+    engine.startEngine(os_name);
+    // Tell the engine to switch to UCI mode
     engine.send("uci");
     engine.send("ucinewgame");
     engine.send("position startpos");
-    engine.send("go");
-    String bestMove = engine.getBestMove(engine.STARTING_POS, 1000);
-    System.out.println(bestMove);
-    engine.send("position startpos moves " + bestMove);
-    // System.out.println(engine.getOutput());
     engine.send("d");
     String output = engine.getOutput();
-    System.out.println(output);
-    System.out.println("Fen string pulled from output: " + engine.getFen(output));
+    System.out.println("First print in demo" + output);
+    engine.send("go");
+    String bestMove = engine.getBestMove(engine.STARTING_POS, 1000);
+    System.out.println("best move calculated by stockfish: " + bestMove);
+    engine.send("position startpos moves " + bestMove);
+    String fen = engine.getFen();
+    System.out.println("Fen string after first move: " + fen);
     engine.stopEngine();
     System.exit(0);
 

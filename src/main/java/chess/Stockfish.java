@@ -5,6 +5,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 
+/* This class will use the Universal Chess Interface (UCI) to communicate
+ * with the Stockfish engine.
+ *
+ * Commands that may be useful:
+ * debug [on | off]
+ * isready - returns "readyok"
+ * position [fen  | startpos ]  moves
+ * d - draws the board and includes a fen string
+ */
 
 public class Stockfish {
 
@@ -20,11 +29,8 @@ public class Stockfish {
    * The second to last number is the "halfmove clock - the number of halfmoves since the last capture or pawn advance
    * Full move number: Starts at one and increments when black moves
    */
-  public final String STARTING_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+  public static final String STARTING_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
   public String fen = STARTING_POS;
-
-  // Path to stockfish executable.
-  // TODO: figure out how to make this run on different systems
 
 
   // Start Stockfish engine
@@ -33,7 +39,8 @@ public class Stockfish {
     if (os_name.toLowerCase().contains("windows"))
       path = "engine/stockfish-7-win/Windows/stockfish 7 x64.exe";
     else if (os_name.toLowerCase().contains("mac"))
-      path = ""; // path to binary. Can be compiled from Make file included in Stockfish-7-mac.zip
+      // path to binary. Will be compiled from Make file included in Stockfish-7-mac.zip
+      path = "";
 
     try {
       engine = Runtime.getRuntime().exec(path);
@@ -62,18 +69,31 @@ public class Stockfish {
     return true;
   }
 
-  public String getFen(String output){
-    int fenPos = output.indexOf("Fen:");
-    int fenEnd = output.indexOf("\n", fenPos);
-    String fen = output.substring(fenPos + 5, fenEnd);
+  public String getFen(){
+    // "d" is the command to draw board
+    // fen string is on its own line of the output, starting with "Fen: "
+    send("d");
+    String output = getOutput();
+    int fenStart = output.indexOf("Fen:");
+    int fenEnd = output.indexOf("\n", fenStart);
+    String fen = output.substring(fenStart + 5, fenEnd);
     return fen;
   }
 
+  public boolean isReady(){
+    send("isready");
+    String output = getOutput();
+    if (output.contains("readyok"))
+      return true;
+    return false;
+  }
+
   // move string needs to be in algebraic notation for chess
-  public boolean movePiece(String move){
-
-    send("position startpos moves " + move);
-
+  // NOT WORKING
+  public boolean movePiece(String move, String fen){
+    // System.out.println(" Will send command: position " + fen + " moves " + move);
+    send("position " + fen + " moves " + move);
+    // System.out.println(getOutput());
     return true; // if valid move?
 
   }
@@ -113,6 +133,7 @@ public class Stockfish {
   }
 
 
+  // Not working yet
   public String getLegalMoves(String fen) {
      send("position fen " + fen);
      send("d");
@@ -121,6 +142,7 @@ public class Stockfish {
      return getOutput().split("Legal moves: ")[1];
   }
 
+  // Not working
   public boolean isLegalMove(String fen, String move){
     String legalMoves = getLegalMoves(fen);
     return true;
@@ -129,14 +151,16 @@ public class Stockfish {
   /**
   * Stops Stockfish and cleans up before closing it
   */
-  public void stopEngine() {
+  public boolean stopEngine() {
     try {
       send("quit");
       processReader.close();
       processWriter.close();
+      return true;
     }
     catch (IOException e) {
       e.printStackTrace();
+      return false;
     }
   }
 }
