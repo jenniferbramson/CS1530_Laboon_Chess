@@ -21,17 +21,20 @@ public class Stockfish {
    * Full move number: Starts at one and increments when black moves
    */
   public final String STARTING_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-
+  public String fen = STARTING_POS;
 
   // Path to stockfish executable.
   // TODO: figure out how to make this run on different systems
 
 
   // Start Stockfish engine
-  public boolean startEngine(String path) {
-    if (path.length() == 0){
+  public boolean startEngine(String os_name) {
+    String path = "";
+    if (os_name.toLowerCase().contains("windows"))
       path = "engine/stockfish-7-win/Windows/stockfish 7 x64.exe";
-    }
+    else if (os_name.toLowerCase().contains("mac"))
+      path = ""; // path to binary. Can be compiled from Make file included in Stockfish-7-mac.zip
+
     try {
       engine = Runtime.getRuntime().exec(path);
       // Open streams to read from and write to engine
@@ -59,11 +62,20 @@ public class Stockfish {
     return true;
   }
 
+  public String getFen(String output){
+    int fenPos = output.indexOf("Fen:");
+    int fenEnd = output.indexOf("\n", fenPos);
+    String fen = output.substring(fenPos + 5, fenEnd);
+    return fen;
+  }
+
   // move string needs to be in algebraic notation for chess
   public boolean movePiece(String move){
 
-    return true; // if valid move
-    
+    send("position startpos moves " + move);
+
+    return true; // if valid move?
+
   }
 
 
@@ -100,6 +112,20 @@ public class Stockfish {
     return getOutput().split("bestmove ")[1].split(" ")[0];
   }
 
+
+  public String getLegalMoves(String fen) {
+     send("position fen " + fen);
+     send("d");
+     String output = getOutput();
+     System.out.println("Output" + output);
+     return getOutput().split("Legal moves: ")[1];
+  }
+
+  public boolean isLegalMove(String fen, String move){
+    String legalMoves = getLegalMoves(fen);
+    return true;
+  }
+
   /**
   * Stops Stockfish and cleans up before closing it
   */
@@ -113,22 +139,4 @@ public class Stockfish {
       e.printStackTrace();
     }
   }
-
-  // public static void main(String[] args) {
-  //   startEngine("");
-  //   send("uci");
-  //   send("ucinewgame");
-  //   send("position startpos");
-  //   send("go");
-  //   String bestMove = getBestMove(STARTING_POS, 1000);
-  //   System.out.println(bestMove);
-  //   send("position startpos moves " + bestMove);
-  //   System.out.println(getOutput());
-  //   send("d");
-  //   System.out.println(getOutput());
-  //   stopEngine();
-  //
-  //   System.exit(0);
-  // }
-
 }

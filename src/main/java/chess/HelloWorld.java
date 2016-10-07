@@ -29,7 +29,9 @@ public class HelloWorld {
     engine.send("position startpos moves " + bestMove);
     // System.out.println(engine.getOutput());
     engine.send("d");
-    System.out.println(engine.getOutput());
+    String output = engine.getOutput();
+    System.out.println(output);
+    System.out.println("Fen string pulled from output: " + engine.getFen(output));
     engine.stopEngine();
     System.exit(0);
 
