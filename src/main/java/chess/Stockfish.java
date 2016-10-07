@@ -71,7 +71,7 @@ public class Stockfish {
 
   public String getFen(){
     // "d" is the command to draw board
-    send("d");
+    this.send("d");
     String output = this.getOutput();
     // fen string is on its own line of the output, starting with "Fen: "
     int fenStart = output.indexOf("Fen:");
@@ -81,29 +81,32 @@ public class Stockfish {
   }
 
   public boolean isReady(){
-    send("isready");
+    this.send("isready");
     String output = getOutput();
     if (output.contains("readyok"))
       return true;
     return false;
   }
 
-  // move string needs to be in algebraic notation for chess
-  // NOT WORKING
-  public boolean movePiece(String move, String fen){
-    // System.out.println(" Will send command: position " + fen + " moves " + move);
-    send("position " + fen + " moves " + move);
-    // System.out.println(getOutput());
-    return true; // if valid move?
-
+  public void drawBoard() {
+    // tell stockfish to draw the current board
+    this.send("d");
+    String output = this.getOutput();
+    // Board  starts with +---+---+---+---+---+---+---+---+
+    // Fen string always follows board
+    int start = output.indexOf("+---+---+---+---+---+---+---+---+");
+    int end = output.indexOf("Fen: ") - 1;
+    String board = output.substring(start, end);
+    System.out.println(board);
   }
+
 
 
   // Get raw output from engine
   public String getOutput() {
     StringBuffer output = new StringBuffer();
     try {
-      send("isready");
+      this.send("isready");
       String text = "";
       while (!text.equals("readyok")){
         text = processReader.readLine();
@@ -125,8 +128,8 @@ public class Stockfish {
   * @return Best Move in PGN format
   */
   public String getBestMove(String fen, int waitTime) {
-    send("position fen " + fen);
-    send("go movetime " + waitTime);
+    this.send("position fen " + fen);
+    this.send("go movetime " + waitTime);
     String output = getOutput();
     System.out.println(output);
     int index = output.indexOf("bestmove");
@@ -135,11 +138,20 @@ public class Stockfish {
     return bestMove;
   }
 
+  // move string needs to be in algebraic notation for chess
+  // NOT WORKING
+  public boolean movePiece(String move, String fen){
+    // System.out.println(" Will send command: position " + fen + " moves " + move);
+    this.send("position " + fen + " moves " + move);
+    // System.out.println(getOutput());
+    return true; // if valid move?
+
+  }
 
   // Not working yet
   public String getLegalMoves(String fen) {
-     send("position fen " + fen);
-     send("d");
+     this.send("position fen " + fen);
+     this.send("d");
      String output = getOutput();
      System.out.println("Output" + output);
      return getOutput().split("Legal moves: ")[1];
@@ -156,7 +168,7 @@ public class Stockfish {
   */
   public boolean stopEngine() {
     try {
-      send("quit");
+      this.send("quit");
       processReader.close();
       processWriter.close();
       return true;
