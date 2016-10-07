@@ -51,14 +51,16 @@ public class BoardPanel extends JPanel {
 		for(int i=0; i<8;i++){
 			for(int j=0; j<8;j++){
 				//checkers[i][j].setText(String.valueOf(my_storage.getSpace(i,j)));
-        if (i == 6) {
-          try {
-            Image img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
-            checkers[i][j].setIcon(new ImageIcon(img));
-          } catch (IOException ex) {
-            // Error
-          }
-        }
+				if (i == 6) {
+					try {
+					Image img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
+					//Modify the values to get desired pixel width/height
+					img = img.getScaledInstance(32, 32, Image.SCALE_DEFAULT);
+					checkers[i][j].setIcon(new ImageIcon(img));
+					} catch (IOException ex) {
+					// Error
+					}
+				}
 			}
 		}
 		//------------------------------------
