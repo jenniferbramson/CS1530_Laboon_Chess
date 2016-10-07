@@ -12,11 +12,6 @@ public class HelloWorldTest {
 
   @Test
   public void testHello2() {
-    assertEquals(HelloWorld.five(), 5);
-  }
-
-  @Test
-  public void testHello3() {
     assertEquals(HelloWorld.chess(), 'p');
   }
 
