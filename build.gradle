@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'application'
 mainClassName = "chess.HelloWorld"
+mainClassName = "chess.LaboonChess"
 
 repositories {
   mavenCentral()
@@ -14,6 +15,12 @@ test {
 	testLogging{
 		events 'passed'
 	}
+}
+
+sourceSets {
+  main {
+     output.resourcesDir = "build/classes/main"
+   }
 }
 
 task plumbus << {
