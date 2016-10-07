@@ -71,9 +71,9 @@ public class Stockfish {
 
   public String getFen(){
     // "d" is the command to draw board
-    // fen string is on its own line of the output, starting with "Fen: "
     send("d");
-    String output = getOutput();
+    String output = this.getOutput();
+    // fen string is on its own line of the output, starting with "Fen: "
     int fenStart = output.indexOf("Fen:");
     int fenEnd = output.indexOf("\n", fenStart);
     String fen = output.substring(fenStart + 5, fenEnd);
@@ -120,16 +120,19 @@ public class Stockfish {
   * This function returns the best move for a given position after
   * calculating for 'waitTime' ms
   *
-  * @param fen
-  *            Position string
-  * @param waitTime
-  *            in milliseconds
+  * fen Position string
+  * waitTime in milliseconds
   * @return Best Move in PGN format
   */
   public String getBestMove(String fen, int waitTime) {
     send("position fen " + fen);
     send("go movetime " + waitTime);
-    return getOutput().split("bestmove ")[1].split(" ")[0];
+    String output = getOutput();
+    System.out.println(output);
+    int index = output.indexOf("bestmove");
+    // bestmove string starts after "bestmove " and has length 4
+    String bestMove = output.substring(index + 9, index + 13);
+    return bestMove;
   }
 
 
