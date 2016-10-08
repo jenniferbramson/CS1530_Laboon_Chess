@@ -26,12 +26,11 @@ public class HelloWorld {
     player1.send("uci");
     String output = player1.getOutput();
     // System.out.println("PLAYER 1 INIT: demoStockfish()" + output);
-    player1.send("position startpos");
-    System.out.println("STARTING BOARD");
 
     String bestMove1 = player1.getBestMove(player1.STARTING_POS, 10000);
     System.out.println("best move calculated by stockfish: " + bestMove1);
 
+    // Send first move
     player1.send("position startpos moves " + bestMove1);
     String fen = player1.getFen();
     System.out.println("Fen string after first move: " + fen);
@@ -46,6 +45,9 @@ public class HelloWorld {
     // System.out.println("PLAYER 2 INIT: demoStockfish()" + output);
     String bestMove2 = player2.getBestMove(fen, 10000);
     System.out.println("best move calculated by stockfish for player 2: " + bestMove2);
+
+    // It seems that the stockfish board does not preserve any state.
+    // It may be necessary to store all moves in some structure
     player2.send("position startpos moves " + bestMove1 + " " + bestMove2);
     player2.drawBoard();
     fen = player2.getFen();
