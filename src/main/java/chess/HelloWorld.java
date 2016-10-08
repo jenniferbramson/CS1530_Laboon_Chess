@@ -23,7 +23,7 @@ public class HelloWorld {
     String output = player1.getOutput();
     // System.out.println("PLAYER 1 INIT: demoStockfish()" + output);
 
-    String bestMove1 = player1.getBestMove(player1.STARTING_POS, 10000);
+    String bestMove1 = player1.getBestMove(player1.STARTING_POS, 100);
     System.out.println("best move calculated by stockfish: " + bestMove1);
 
     // Send first move
@@ -39,7 +39,7 @@ public class HelloWorld {
 
     output = player2.getOutput();
     // System.out.println("PLAYER 2 INIT: demoStockfish()" + output);
-    String bestMove2 = player2.getBestMove(fen, 10000);
+    String bestMove2 = player2.getBestMove(fen, 100);
     System.out.println("best move calculated by stockfish for player 2: " + bestMove2);
 
     // It seems that the stockfish board does not preserve any state.
@@ -50,7 +50,7 @@ public class HelloWorld {
     System.out.println("Fen string after second move: " + fen);
 
 
-    String bestMove3 = player1.getBestMove(fen, 10000);
+    String bestMove3 = player1.getBestMove(fen, 100);
     System.out.println("best move calculated by stockfish: " + bestMove3);
 
     // Send first move
@@ -64,10 +64,61 @@ public class HelloWorld {
 
   }
 
+  // Just for testing to see how engine acts over many turns
+  public static void playGame(int rounds) {
+    String os_name = System.getProperty("os.name");
+
+    Stockfish player1 = new Stockfish();
+    player1.startEngine(os_name);
+    // Tell the engine to switch to UCI mode
+    player1.send("uci");
+
+    Stockfish player2 = new Stockfish();
+    player2.startEngine(os_name);
+    player2.send("uci");
+
+    String fen = player1.STARTING_POS;
+    StringBuilder allMoves = new StringBuilder();
+
+    for (int i = 0; i < rounds; i++){
+
+      String bestMove = player1.getBestMove(fen, 100);
+      allMoves.append(bestMove);
+      allMoves.append(" ");
+      player1.send("position startpos moves " + allMoves.toString());
+      fen = player1.getFen();
+      System.out.println("Fen string after move " + (i+1) + ": " + fen);
+      player1.drawBoard();
+
+      bestMove = player2.getBestMove(fen, 100);
+      allMoves.append(bestMove);
+      allMoves.append(" ");
+
+      // It seems that the stockfish board does not preserve any state.
+      // It may be necessary to store all moves in some structure
+      player2.send("position startpos moves " + allMoves.toString());
+      fen = player2.getFen();
+      i++;
+      System.out.println("Fen string after move " + (i+1) + ": " + fen);
+      player2.drawBoard();
+
+      System.out.println();
+      System.out.println("ALL MOVES AFTER ITERATION " + (i/2));
+      System.out.println("All moves string " + allMoves);
+      System.out.println();
+
+    }
+    player1.stopEngine();
+    player2.stopEngine();
+
+  }
+
+//
   public static void main(String[] args) {
     speak();
-    demoStockfish();
+    playGame(100);
     ConsoleGraphics chessBoard = new ConsoleGraphics();
+    System.exit(0);
   }
 
 }
