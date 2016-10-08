@@ -141,12 +141,19 @@ public class Stockfish {
     return bestMove;
   }
 
+  /* In the Stockfish documentation, it looks like you should be able to move a piece
+     starting from any point in the game as long as the fen string to represent the
+     board state is correct.
+
+     I can't get that to work--it doesn't move the piece on its internal board when I try.
+     It you use "startpos" instead of the fen and pass in all moves that have been played,
+     it works.
+   */
   // move string needs to be in algebraic notation for chess
-  // NOT WORKING
-  public boolean movePiece(String move, String fen){
-    // System.out.println(" Will send command: position " + fen + " moves " + move);
-    this.send("position " + fen + " moves " + move);
-    // System.out.println(getOutput());
+  public boolean movePiece(String allMoves, String fen){
+    this.send("position startpos " + " moves " + allMoves);
+
+    // check to see if valid - not sure how yet
     return true; // if valid move?
 
   }
