@@ -6,10 +6,6 @@ public class HelloWorld {
       System.out.println("Hello World!");
   }
 
-  public static int five() {
-      return 5;
-  }
-
   public static char chess() {
     Board b = new Board();
     b.init();

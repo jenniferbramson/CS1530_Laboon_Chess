@@ -33,8 +33,8 @@ public class ConsoleGraphics {
 
     // Right side of the board has the the taken black and white pieces stacked
     // vertically
-    TakenPanel takenBlack = new TakenPanel("Taken Black Pieces");
-    TakenPanel takenWhite = new TakenPanel("Taken White Pieces");
+   // TakenPanel takenBlack = new TakenPanel("Taken Black Pieces");
+    //TakenPanel takenWhite = new TakenPanel("Taken White Pieces");
 
     // Entire screen has both the leftand right sides of the board put together
     // in a horizontal fashion
@@ -63,15 +63,17 @@ public class ConsoleGraphics {
     c.gridheight = 6;
     c.ipadx = 150;
     c.ipady = 200;
-    content.add(takenBlack, c);
+    //content.add(takenBlack, c);
     c.gridx = 2;
     c.gridy = 6;
     c.gridheight = 6;
     c.ipadx = 150;
     c.ipady = 200;
-    content.add(takenWhite, c);
+    //content.add(takenWhite, c);
 
-    frame.pack();                               // Autosizes frame to fit content
+    //Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		frame.pack();
+		//frame.setSize(screenSize.width,screenSize.height);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setVisible(true);                     // Do this last
   }
