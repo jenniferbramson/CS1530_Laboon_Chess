@@ -45,6 +45,7 @@ public class HelloWorld {
     // It seems that the stockfish board does not preserve any state.
     // It may be necessary to store all moves in some structure
     player2.send("position startpos moves " + bestMove1 + " " + bestMove2);
+    // player2.send("position " + fen + " moves " + bestMove2);
     player2.drawBoard();
     fen = player2.getFen();
     System.out.println("Fen string after second move: " + fen);
@@ -85,7 +86,8 @@ public class HelloWorld {
       String bestMove = player1.getBestMove(fen, 100);
       allMoves.append(bestMove);
       allMoves.append(" ");
-      player1.send("position startpos moves " + allMoves.toString());
+      // player1.send("position startpos moves " + allMoves.toString());
+      player1.movePiece(allMoves.toString(), fen);
       fen = player1.getFen();
       System.out.println("Fen string after move " + (i+1) + ": " + fen);
       player1.drawBoard();
@@ -96,16 +98,16 @@ public class HelloWorld {
 
       // It seems that the stockfish board does not preserve any state.
       // It may be necessary to store all moves in some structure
-      player2.send("position startpos moves " + allMoves.toString());
+      player2.movePiece(allMoves.toString(), fen);
       fen = player2.getFen();
       i++;
       System.out.println("Fen string after move " + (i+1) + ": " + fen);
       player2.drawBoard();
 
-      System.out.println();
-      System.out.println("ALL MOVES AFTER ITERATION " + (i/2));
-      System.out.println("All moves string " + allMoves);
-      System.out.println();
+      // System.out.println();
+      // System.out.println("ALL MOVES AFTER ITERATION " + (i/2));
+      // System.out.println("All moves string " + allMoves);
+      // System.out.println();
 
     }
     player1.stopEngine();
@@ -116,7 +118,8 @@ public class HelloWorld {
 //
   public static void main(String[] args) {
     speak();
-    playGame(100);
+    playGame(6);
+    // demoStockfish();
     ConsoleGraphics chessBoard = new ConsoleGraphics();
     System.exit(0);
   }
