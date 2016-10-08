@@ -128,11 +128,14 @@ public class Stockfish {
   * @return Best Move in PGN format
   */
   public String getBestMove(String fen, int waitTime) {
+
     this.send("position fen " + fen);
+    this.send("go");
     this.send("go movetime " + waitTime);
-    String output = getOutput();
-    System.out.println(output);
+    String output = this.getOutput();
+    // System.out.println("output from Stockfish.getBestMove():" + output);
     int index = output.indexOf("bestmove");
+    if (index == -1) return null; // best move not found
     // bestmove string starts after "bestmove " and has length 4
     String bestMove = output.substring(index + 9, index + 13);
     return bestMove;
