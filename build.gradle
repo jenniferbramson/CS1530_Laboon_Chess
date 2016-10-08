@@ -10,18 +10,20 @@ dependencies {
   testCompile 'junit:junit:4.12'
 }
 
+
 test {
 	testLogging{
 		events 'passed'
+    showStandardStreams = true
 	}
+}
+
+sourceSets {
+  main {
+     output.resourcesDir = "build/classes/main"
+   }
 }
 
 task plumbus << {
   println "A plumbus task!"
-}
-
-test {
-  testLogging {
-     showStandardStreams = true
-  }
 }
