@@ -125,7 +125,7 @@ public class Stockfish {
   *
   * fen Position string
   * waitTime in milliseconds
-  * @return Best Move in PGN format
+  * @return best move
   */
   public String getBestMove(String fen, int waitTime) {
 
@@ -152,6 +152,11 @@ public class Stockfish {
   // move string needs to be in algebraic notation for chess
   public boolean movePiece(String allMoves, String fen){
     this.send("position startpos " + " moves " + allMoves);
+
+    // can't get it to work this way
+    // this.send("position " + fen );
+    // this.send("go");
+    // this.send("position " + fen + " " + allMoves);
 
     // check to see if valid - not sure how yet
     return true; // if valid move?
