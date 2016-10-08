@@ -53,9 +53,18 @@ public class HelloWorld {
     fen = player2.getFen();
     System.out.println("Fen string after second move: " + fen);
 
+
+    String bestMove3 = player1.getBestMove(fen, 10000);
+    System.out.println("best move calculated by stockfish: " + bestMove3);
+
+    // Send first move
+    player1.send("position startpos moves " + bestMove1 + " " + bestMove2 + " "  + bestMove3);
+    fen = player1.getFen();
+    System.out.println("Fen string after third move: " + fen);
+    player1.drawBoard();
+
     player1.stopEngine();
     player2.stopEngine();
-    System.exit(0);
 
   }
 
