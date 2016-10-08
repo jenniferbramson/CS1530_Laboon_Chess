@@ -55,24 +55,19 @@ public class StockfishTest {
     sf.stopEngine();
   }
 
-  // @Test
-  // public void testMovePiece(){
-  //   String os_name = System.getProperty("os.name");
-  //   Stockfish sf = new Stockfish();
-  //   sf.startEngine(os_name);
-  //   // Tell the engine to switch to UCI mode
-  //   sf.send("uci");
-  //   sf.send("ucinewgame");
-  //   boolean ready = sf.isReady();
-  //   sf.send("position startpos");
-  //   System.out.println("ready: " + ready);
-  //   sf.send("go");
-  //   // Move pawn from d2 to d4 where the rest of the pieces are in the starting position
-  //   sf.movePiece("d2d4", sf.STARTING_POS);
-  //   String fen = sf.getFen();
-  //   System.out.println("feb after move: " + fen);
-  //   // Output should contain fen string with one pawn in the middle
-  //   // assertTrue(output.contains("3p4"));
-  //   sf.stopEngine();
-  // }
+  @Test
+  public void testMovePiece(){
+    String os_name = System.getProperty("os.name");
+    Stockfish sf = new Stockfish();
+    sf.startEngine(os_name);
+    // Tell the engine to switch to UCI mode
+    sf.send("uci");
+    sf.send("ucinewgame");
+    // Move white pawn from d2 to d4 while the rest of the pieces are in the starting positions
+    sf.movePiece("d2d4", sf.STARTING_POS);
+    String fen = sf.getFen();
+    // Fen should contain string with the 4th white pawn in the middle
+    assertTrue(fen.contains("3P4"));
+    sf.stopEngine();
+  }
 }
