@@ -27,7 +27,7 @@ public class HelloWorld {
     System.out.println("best move calculated by stockfish: " + bestMove1);
 
     // Send first move
-    player1.send("position startpos moves " + bestMove1);
+    player1.movePiece(bestMove1, fen);
     String fen = player1.getFen();
     System.out.println("Fen string after first move: " + fen);
     player1.drawBoard();
@@ -42,10 +42,9 @@ public class HelloWorld {
     String bestMove2 = player2.getBestMove(fen, 100);
     System.out.println("best move calculated by stockfish for player 2: " + bestMove2);
 
-    // It seems that the stockfish board does not preserve any state.
-    // It may be necessary to store all moves in some structure
-    player2.send("position startpos moves " + bestMove1 + " " + bestMove2);
+    // player2.send("position startpos moves " + bestMove1 + " " + bestMove2);
     // player2.send("position " + fen + " moves " + bestMove2);
+    player2.movePiece(bestMove2, fen);
     player2.drawBoard();
     fen = player2.getFen();
     System.out.println("Fen string after second move: " + fen);
@@ -82,6 +81,13 @@ public class HelloWorld {
     StringBuilder allMoves = new StringBuilder();
 
     for (int i = 0; i < rounds; i++){
+
+      System.out.println("ROUND " + (i/2+1));
+
+      player1.send("position fen " + fen);
+      player1.send("d");
+      String output = player1.getOutput();
+      System.out.println("Output" + output);
 
       String bestMove = player1.getBestMove(fen, 100);
       allMoves.append(bestMove);
