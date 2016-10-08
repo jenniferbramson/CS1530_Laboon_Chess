@@ -20,30 +20,47 @@ public class HelloWorld {
   public static void demoStockfish(){
     String os_name = System.getProperty("os.name");
     System.out.println(os_name);
-    Stockfish engine = new Stockfish();
-    engine.startEngine(os_name);
+    Stockfish player1 = new Stockfish();
+    player1.startEngine(os_name);
     // Tell the engine to switch to UCI mode
-    engine.send("uci");
-    engine.send("ucinewgame");
-    engine.send("position startpos");
-    engine.send("d");
-    String output = engine.getOutput();
-    System.out.println("First print in demo" + output);
-    engine.send("go");
-    String bestMove = engine.getBestMove(engine.STARTING_POS, 1000);
-    System.out.println("best move calculated by stockfish: " + bestMove);
-    engine.send("position startpos moves " + bestMove);
-    String fen = engine.getFen();
+    player1.send("uci");
+    String output = player1.getOutput();
+    // System.out.println("PLAYER 1 INIT: demoStockfish()" + output);
+    player1.send("position startpos");
+    System.out.println("STARTING BOARD");
+
+    String bestMove1 = player1.getBestMove(player1.STARTING_POS, 10000);
+    System.out.println("best move calculated by stockfish: " + bestMove1);
+
+    player1.send("position startpos moves " + bestMove1);
+    String fen = player1.getFen();
     System.out.println("Fen string after first move: " + fen);
-    engine.stopEngine();
+    player1.drawBoard();
+
+    // Start a second stockfish engine to represent player 2
+    Stockfish player2 = new Stockfish();
+    player2.startEngine(os_name);
+    player2.send("uci");
+
+    output = player2.getOutput();
+    // System.out.println("PLAYER 2 INIT: demoStockfish()" + output);
+    String bestMove2 = player2.getBestMove(fen, 10000);
+    System.out.println("best move calculated by stockfish for player 2: " + bestMove2);
+    player2.send("position startpos moves " + bestMove1 + " " + bestMove2);
+    player2.drawBoard();
+    fen = player2.getFen();
+    System.out.println("Fen string after second move: " + fen);
+
+    player1.stopEngine();
+    player2.stopEngine();
     System.exit(0);
 
   }
 
   public static void main(String[] args) {
     speak();
-    BoardGraphics chessBoard = new BoardGraphics();
     demoStockfish();
+    BoardGraphics chessBoard = new BoardGraphics();
   }
 
 }
