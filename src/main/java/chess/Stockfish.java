@@ -39,8 +39,9 @@ public class Stockfish {
     if (os_name.toLowerCase().contains("windows"))
       path = "engine/stockfish-7-win/Windows/stockfish 7 x64.exe";
     else if (os_name.toLowerCase().contains("mac"))
-      // path to binary. Will be compiled from Make file included in Stockfish-7-mac.zip
-      path = "";
+      // path to binary. Not sure what the extension should be for mac.
+      // It doesn't show an extension on my computer.
+      path = "engine/stockfish-7-mac/Mac/stockfish-7-64";
 
     try {
       engine = Runtime.getRuntime().exec(path);
