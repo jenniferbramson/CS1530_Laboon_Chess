@@ -5,10 +5,10 @@ import chess.Stockfish;
 
 public class StockfishTest {
 
-
   @Test
   public void testEngineStart() {
     Stockfish sf = new Stockfish();
+    // Get OS type to pass in to startEngine() so that the correct file can be executed
     String os_name = System.getProperty("os.name");
     boolean started = sf.startEngine(os_name);
     assertTrue(started);
@@ -32,24 +32,27 @@ public class StockfishTest {
     // Tell the engine to switch to UCI mode
     sf.send("uci");
     String output = sf.getOutput();
+    // The engine responds with "uciok" when it is ready to communicate in uci mode
     assertTrue(output.contains("uciok"));
     sf.stopEngine();
   }
 
   @Test
-  public void testFenExtraction() {
+  public void testGetFen() {
     String os_name = System.getProperty("os.name");
     Stockfish sf = new Stockfish();
     sf.startEngine(os_name);
     // Tell the engine to switch to UCI mode
     sf.send("uci");
     sf.send("ucinewgame");
-    sf.send("position startpos");
+    // Tell the engine to draw the board
     sf.send("d");
     String output = sf.getOutput();
     String fen = sf.getFen();
-    System.out.println("Starting fen from testFenExtraction: " + fen);
+    /* The board was just initialized with the starting postions, so the
+       fen string should match the STARTING_POS fen string */
     assertTrue(fen.equals(Stockfish.STARTING_POS));
+    sf.stopEngine();
   }
 
   // @Test
