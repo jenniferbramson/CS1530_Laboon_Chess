@@ -6,6 +6,7 @@ public class Storage {
 	private char[][] board = new char[8][8];
 	private char[] white_taken = new char[16];
 	private char[] black_taken = new char[16];
+	private boolean white_turn = true;
 	//arraylist to keep track of history
 	ArrayList<String> history;
 	
@@ -28,7 +29,47 @@ public class Storage {
 		for(int i=0; i<firstrow.length();i++){
 			board[7][i] = lastrow.charAt(i);
 		}
+		white_turn = true;		//white goes first
 	}
+	
+	//loads the board from a fen string
+	public Storage(String fen){
+		String[] tokens = fen.split("/|\\ ");	//using regex OR operator to pass multiple delims "/" or " "
+		//load the entire board
+		for(int i=0; i<8; i++){	//load one row at a time
+			String row = tokens[i];
+			int index = 0;
+			int skip = 0;
+			for(int j=0; j<row.length();j++){
+				if (index > 7) break;
+				if(Character.isDigit(row.charAt(j))){		//if its a number, we need to fill in some spaces
+					//index += (int)Character.getNumericValue(j) ;				//<- this won't work for some reason 
+					index += Integer.parseInt(Character.toString(row.charAt(j))) -1;
+				} 
+				else{
+					//set the spot to be that character
+					board[i][index] = row.charAt(j);
+				}
+				index++;
+			}//end of loop for row
+		}//end of loop to load board
+		
+		//set the turn
+		if(tokens[8].equals("w")){
+			white_turn = true;
+		}
+		else if(tokens[8].equals("b")){
+			white_turn = false;
+		}
+		else{
+			System.out.println("error: test point 1");
+		}
+	}
+	
+	//returns whether it is white's turn or not
+		public boolean isWhiteTurn(){
+			return white_turn;
+		}
 		
 		public void deletePiece(int x, int y){
 			board[x][y] = '\u0000';
