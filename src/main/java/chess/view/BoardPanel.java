@@ -175,9 +175,9 @@ public class BoardPanel extends JPanel {
 				if(second_click){
 					System.out.println("Moving " + old_spot + " to " + current_spot);
 					if( (old_x+old_y) % 2== 0)
-						checkers[old_x][old_y].setBackground(Color.WHITE);
+						checkers[old_y][old_x].setBackground(Color.WHITE);
 					else
-						checkers[old_x][old_y].setBackground(Color.GRAY);
+						checkers[old_y][old_x].setBackground(Color.GRAY);
 					second_click = false;
 				}
 				else{
