@@ -13,9 +13,14 @@ public class HelloWorld {
     return b.getSquare(0, 1);
   }
 
+
+
+
+//
   public static void main(String[] args) {
     speak();
     ConsoleGraphics chessBoard = new ConsoleGraphics();
+    System.exit(0);
   }
 
 }
