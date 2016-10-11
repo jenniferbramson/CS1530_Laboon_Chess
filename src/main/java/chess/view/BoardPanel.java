@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.*;
 import java.awt.event.*;  // awt.* does not import Action or Event Listeners
+import java.io.*;
+import javax.imageio.*;
 
 public class BoardPanel extends JPanel {
 
@@ -11,6 +13,19 @@ public class BoardPanel extends JPanel {
 	private Storage my_storage;
 	boolean second_click = false;
 	private String old_spot = "";
+	private int old_x = 0;
+	private int old_y = 0;
+
+	private int imageWidth = 32;
+	private int imageHeight = 32;
+
+	private String[] blackSide = {"BlackRook", "BlackKnight", "BlackBishop",
+								  "BlackQueen", "BlackKing", "BlackBishop",
+								  "BlackKnight", "BlackRook"};
+
+	private String[] whiteSide = {"WhiteRook", "WhiteKnight", "WhiteBishop",
+								  "WhiteQueen", "WhiteKing", "WhiteBishop",
+								  "WhiteKnight", "WhiteRook"};
 
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
@@ -30,23 +45,76 @@ public class BoardPanel extends JPanel {
         b.setOpaque(true);        // Necessary to see the colors (otherwise white)
         b.addActionListener(getSquareAction());
         b.setBorder(null);        // Necessary to not have button covering colors
-				b.setFont(new Font("Arial", Font.BOLD, 20));				//make the letters big
+        b.setBorderPainted(false);  // Necessary for mac icon transparency
+				//b.setFont(new Font("Arial", Font.BOLD, 20));				//make the letters big
         if ((i + j) % 2 == 0) {   // White square
           b.setBackground(Color.WHITE);
         } else {                  // Black Square
           b.setBackground(Color.GRAY);
         }
-				
+
 				//b.setIcon(icon);
-				
+
         checkers[i][j] = b;
       }
     }
-		
+
 		//Added to try and draw letters
-		for(int i=0; i<8;i++){
-			for(int j=0; j<8;j++){
-				checkers[i][j].setText(String.valueOf(my_storage.getSpace(i,j)));
+		//for(int i=0; i<8;i++){
+			//for(int j=0; j<8;j++){
+				//checkers[i][j].setText(String.valueOf(my_storage.getSpace(i,j)));
+
+		//Add white pawns to board
+		for(int i=0; i<8; i++)
+		{
+			try {
+				Image img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
+				//Modify the values to get desired pixel width/height
+				img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+				checkers[6][i].setIcon(new ImageIcon(img));
+			} catch (IOException ex) {
+			// Error
+			}
+		}
+
+		//Add white pieces to board
+		for(int i=0; i<8; i++)
+		{
+			try {
+				Image img = ImageIO.read(getClass().getResource("/" + whiteSide[i] + ".png"));
+				//Modify the values to get desired pixel width/height
+				img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+				checkers[7][i].setIcon(new ImageIcon(img));
+			} catch (IOException ex) {
+			// Error
+			}
+		}
+
+		//Add black pawns to the board
+		for(int i=0; i<8; i++)
+		{
+			try {
+				Image img = ImageIO.read(getClass().getResource("/BlackPawn.png"));
+				//Modify the values to get desired pixel width/height
+				img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+				checkers[1][i].setIcon(new ImageIcon(img));
+			} catch (IOException ex) {
+			// Error
+			}
+
+		}
+
+		//Add black pieces to board
+		for(int i=0; i<8; i++)
+		{
+			try {
+				Image img = ImageIO.read(getClass().getResource("/" + blackSide[i] + ".png"));
+				//Modify the values to get desired pixel width/height
+				img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+				checkers[0][i].setIcon(new ImageIcon(img));
+			} catch (IOException ex) {
+			// Error
+
 			}
 		}
 		//------------------------------------
@@ -107,11 +175,18 @@ public class BoardPanel extends JPanel {
 				System.out.println("You clicked on " + current_spot);
 				if(second_click){
 					System.out.println("Moving " + old_spot + " to " + current_spot);
+					if( (old_x+old_y) % 2== 0)
+						checkers[old_y][old_x].setBackground(Color.WHITE);
+					else
+						checkers[old_y][old_x].setBackground(Color.GRAY);
 					second_click = false;
 				}
 				else{
+					checkers[y][x].setBackground(Color.GREEN);
 					System.out.println("First click");
 					old_spot = current_spot;
+					old_x = x;
+					old_y = y;
 					second_click = true;
 				}
       }
