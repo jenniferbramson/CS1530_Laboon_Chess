@@ -120,6 +120,9 @@ public class Storage {
 			if(board[x][y] == '\u0000') return "";
 			else return String.valueOf(board[x][y]);
 		}
+		public char getSpace(int x, int y, boolean filler){
+			return board[x][y];
+		}
 
 		public void movePiece(int x_1, int y_1, int x_2, int y_2){
 			board[x_2][y_2] = board[x_1][y_1];
