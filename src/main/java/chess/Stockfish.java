@@ -1,9 +1,16 @@
 package chess;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import java.util.concurrent.TimeUnit;
+
 
 /* This class will use the Universal Chess Interface (UCI) to communicate
  * with the Stockfish engine.
@@ -19,7 +26,10 @@ public class Stockfish {
 
   private Process engine;
   private BufferedReader processReader;
-  private OutputStreamWriter processWriter;
+  private BufferedWriter processWriter;
+  private InputStream inputStream;
+  private InputStreamReader inputStreamReader;
+  private ProcessBuilder builder;
 
   /* This is the FEN notation for the starting positions on a chessboard.
    * White pieces are upper-case letters. Black are lower case.
@@ -36,19 +46,47 @@ public class Stockfish {
   // Start Stockfish engine
   public boolean startEngine(String os_name) {
     String path = "";
+    String pathBase = System.getProperty("user.dir");
+    System.out.println("CURRENT PATH " + pathBase);
     if (os_name.toLowerCase().contains("windows"))
       path = "engine/stockfish-7-win/Windows/stockfish 7 x64.exe";
-    else if (os_name.toLowerCase().contains("mac"))
+    else if (os_name.toLowerCase().contains("mac")){
       // path to binary. Not sure what the extension should be for mac.
       // It doesn't show an extension on my computer.
-      path = "engine/stockfish-7-mac/Mac/stockfish-7-64";
+
+     
+      path = pathBase + "/engine/stockfish-7-mac/Mac/stockfish-7-64";
+    }
+    System.out.println("path is " + path);
 
     try {
-      engine = Runtime.getRuntime().exec(path);
+
+      Process p = Runtime.getRuntime().exec("chmod 777 " + path);
+      p.waitFor();
+
+      builder = new ProcessBuilder(path);
+      builder.redirectErrorStream(true);
+  
+      engine = builder.start();
+      System.out.println( "Process is running" + engine.isAlive());
+      while (!(engine.isAlive())){
+        TimeUnit.SECONDS.sleep(1);
+        engine = builder.start(); 
+      }
+      System.out.println( "Process is running" + engine.isAlive());
+
       // Open streams to read from and write to engine
-      processReader = new BufferedReader(new InputStreamReader(engine.getInputStream()));
-      processWriter = new OutputStreamWriter(engine.getOutputStream());
+      inputStream = engine.getInputStream();
+      System.out.println("INPUT STREAM" + inputStream.read());
+      inputStreamReader = new InputStreamReader(inputStream);
+      processReader = new BufferedReader(inputStreamReader);
+      System.out.println(processReader.read());
+      processWriter = new BufferedWriter(new OutputStreamWriter(engine.getOutputStream()));
+      processWriter.write("isready" + "\n");
+      processWriter.flush();
+      System.out.println("OUTPUT: " + processReader.readLine());
     }
+
     catch (Exception e) {
       e.printStackTrace();
       return false;
@@ -62,6 +100,7 @@ public class Stockfish {
       // UCI commands must end with newline
       processWriter.write(command + "\n");
       processWriter.flush();
+
     }
     catch (IOException e) {
       e.printStackTrace();
@@ -185,6 +224,7 @@ public class Stockfish {
   public boolean stopEngine() {
     try {
       this.send("quit");
+      inputStream.close();
       processReader.close();
       processWriter.close();
       return true;
