@@ -45,6 +45,7 @@ public class BoardPanel extends JPanel {
         b.setOpaque(true);        // Necessary to see the colors (otherwise white)
         b.addActionListener(getSquareAction());
         b.setBorder(null);        // Necessary to not have button covering colors
+        b.setBorderPainted(false);  // Necessary for mac icon transparency
 				//b.setFont(new Font("Arial", Font.BOLD, 20));				//make the letters big
         if ((i + j) % 2 == 0) {   // White square
           b.setBackground(Color.WHITE);
