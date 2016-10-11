@@ -19,14 +19,6 @@ public class BoardPanel extends JPanel {
 	private int imageWidth = 32;
 	private int imageHeight = 32;
 
-	private String[] blackSide = {"BlackRook", "BlackKnight", "BlackBishop",
-								  "BlackQueen", "BlackKing", "BlackBishop",
-								  "BlackKnight", "BlackRook"};
-
-	private String[] whiteSide = {"WhiteRook", "WhiteKnight", "WhiteBishop",
-								  "WhiteQueen", "WhiteKing", "WhiteBishop",
-								  "WhiteKnight", "WhiteRook"};
-
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
@@ -177,63 +169,7 @@ public class BoardPanel extends JPanel {
 				
 			}
 		}
-		
-		
-		/*		
-		//Add white pawns to board
-		for(int i=0; i<8; i++)
-		{
-			try {
-				Image img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
-				//Modify the values to get desired pixel width/height
-				img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
-				checkers[6][i].setIcon(new ImageIcon(img));
-			} catch (IOException ex) {
-			// Error
-			}
-		}
 
-		//Add white pieces to board
-		for(int i=0; i<8; i++)
-		{
-			try {
-				Image img = ImageIO.read(getClass().getResource("/" + whiteSide[i] + ".png"));
-				//Modify the values to get desired pixel width/height
-				img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
-				checkers[7][i].setIcon(new ImageIcon(img));
-			} catch (IOException ex) {
-			// Error
-			}
-		}
-
-		//Add black pawns to the board
-		for(int i=0; i<8; i++)
-		{
-			try {
-				Image img = ImageIO.read(getClass().getResource("/BlackPawn.png"));
-				//Modify the values to get desired pixel width/height
-				img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
-				checkers[1][i].setIcon(new ImageIcon(img));
-			} catch (IOException ex) {
-			// Error
-			}
-
-		}
-
-		//Add black pieces to board
-		for(int i=0; i<8; i++)
-		{
-			try {
-				Image img = ImageIO.read(getClass().getResource("/" + blackSide[i] + ".png"));
-				//Modify the values to get desired pixel width/height
-				img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
-				checkers[0][i].setIcon(new ImageIcon(img));
-			} catch (IOException ex) {
-			// Error
-
-			}
-		}
-		*/
 	}
 	/*--------------------------------------------------------------------------------------------------------*/
   private ActionListener getSquareAction() {
