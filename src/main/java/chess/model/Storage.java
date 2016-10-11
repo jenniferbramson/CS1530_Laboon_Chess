@@ -63,7 +63,7 @@ public class Storage {
 			white_turn = false;
 		}
 		else{
-			System.out.println("error: test point 1");
+			//System.out.println("error: test point 1");
 		}
 	}
 	
@@ -101,7 +101,7 @@ public class Storage {
 			sb.append(" KQkq - 0 ");
 			sb.append(full_moves);
 			
-			System.out.println(sb.toString());
+			//System.out.println(sb.toString());
 			
 			return sb.toString();
 		}
