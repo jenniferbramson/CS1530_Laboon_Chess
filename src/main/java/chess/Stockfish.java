@@ -5,11 +5,16 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.file.*;
+import java.nio.file.attribute.*;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import java.util.concurrent.TimeUnit;
+import java.util.Set;
+import java.util.HashSet;
+
 
 
 /* This class will use the Universal Chess Interface (UCI) to communicate
@@ -35,7 +40,7 @@ public class Stockfish {
    * White pieces are upper-case letters. Black are lower case.
    * w = white's turn.
    * KQkq - = castling availability
-   * - = "en passant target square doesn't exist"  TODO: look up what the heck en passant means
+   * - = "en passant target square doesn't exist"  
    * The second to last number is the "halfmove clock - the number of halfmoves since the last capture or pawn advance
    * Full move number: Starts at one and increments when black moves
    */
@@ -51,18 +56,22 @@ public class Stockfish {
     if (os_name.toLowerCase().contains("windows"))
       path = "engine/stockfish-7-win/Windows/stockfish 7 x64.exe";
     else if (os_name.toLowerCase().contains("mac")){
-      // path to binary. Not sure what the extension should be for mac.
-      // It doesn't show an extension on my computer.
-
-     
       path = pathBase + "/engine/stockfish-7-mac/Mac/stockfish-7-64";
     }
     System.out.println("path is " + path);
 
     try {
 
-      Process p = Runtime.getRuntime().exec("chmod 777 " + path);
-      p.waitFor();
+      // Ensure that the file has permission to execute
+      Path file = Paths.get(path);
+      PosixFileAttributes attrs = Files.getFileAttributeView(file, PosixFileAttributeView.class).readAttributes();
+      Set <PosixFilePermission> perms = PosixFilePermissions.fromString("r--r--r--");
+      Files.setPosixFilePermissions(file, perms);
+
+	// Looking at permissions
+	// FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms); 
+    	// attrs = Files.getFileAttributeView(file, PosixFileAttributeView.class).readAttributes();
+   	 //  System.out.format("%s %s%n", attrs.owner().getName(), PosixFilePermissions.toString(attrs.permissions()));
 
       builder = new ProcessBuilder(path);
       builder.redirectErrorStream(true);
@@ -70,21 +79,26 @@ public class Stockfish {
       engine = builder.start();
       System.out.println( "Process is running" + engine.isAlive());
       while (!(engine.isAlive())){
-        TimeUnit.SECONDS.sleep(1);
+        TimeUnit.SECONDS.sleep(2);
         engine = builder.start(); 
+        System.out.println( "Process is running" + engine.isAlive());
       }
-      System.out.println( "Process is running" + engine.isAlive());
+    
 
       // Open streams to read from and write to engine
       inputStream = engine.getInputStream();
-      System.out.println("INPUT STREAM" + inputStream.read());
       inputStreamReader = new InputStreamReader(inputStream);
       processReader = new BufferedReader(inputStreamReader);
-      System.out.println(processReader.read());
+      
       processWriter = new BufferedWriter(new OutputStreamWriter(engine.getOutputStream()));
       processWriter.write("isready" + "\n");
-      processWriter.flush();
-      System.out.println("OUTPUT: " + processReader.readLine());
+      // System.out.println("INPUT STREAM" + inputStream.read());
+      System.out.println("PROCESS READER : " + processReader.readLine());
+      
+    
+      // 
+      // processWriter.flush();
+      // System.out.println("OUTPUT: " + processReader.readLine());
     }
 
     catch (Exception e) {
@@ -142,7 +156,7 @@ public class Stockfish {
 
 
 
-  // Get raw output from engine
+  // Get all output from engine
   public String getOutput() {
     StringBuffer output = new StringBuffer();
     try {
@@ -163,9 +177,8 @@ public class Stockfish {
   * This function returns the best move for a given position after
   * calculating for 'waitTime' ms
   *
-  * fen Position string
+  * fen string
   * waitTime in milliseconds
-  * @return best move
   */
   public String getBestMove(String fen, int waitTime) {
 
