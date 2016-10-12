@@ -1,5 +1,6 @@
 apply plugin: 'java'
 apply plugin: 'application'
+mainClassName = "chess.HelloWorld"
 mainClassName = "chess.LaboonChess"
 
 repositories {
@@ -10,10 +11,18 @@ dependencies {
   testCompile 'junit:junit:4.12'
 }
 
+
 test {
 	testLogging{
 		events 'passed'
+    showStandardStreams = true
 	}
+}
+
+sourceSets {
+  main {
+     output.resourcesDir = "build/classes/main"
+   }
 }
 
 task plumbus << {
