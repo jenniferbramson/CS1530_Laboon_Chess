@@ -101,7 +101,7 @@ public class ConsoleGraphics {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         // Placeholder for when we add functionality
-
+				
       }
     };
     return action;

@@ -19,14 +19,6 @@ public class BoardPanel extends JPanel {
 	private int imageWidth = 32;
 	private int imageHeight = 32;
 
-	private String[] blackSide = {"BlackRook", "BlackKnight", "BlackBishop",
-								  "BlackQueen", "BlackKing", "BlackBishop",
-								  "BlackKnight", "BlackRook"};
-
-	private String[] whiteSide = {"WhiteRook", "WhiteKnight", "WhiteBishop",
-								  "WhiteQueen", "WhiteKing", "WhiteBishop",
-								  "WhiteKnight", "WhiteRook"};
-
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
@@ -58,66 +50,8 @@ public class BoardPanel extends JPanel {
         checkers[i][j] = b;
       }
     }
-
-		//Added to try and draw letters
-		//for(int i=0; i<8;i++){
-			//for(int j=0; j<8;j++){
-				//checkers[i][j].setText(String.valueOf(my_storage.getSpace(i,j)));
-
-		//Add white pawns to board
-		for(int i=0; i<8; i++)
-		{
-			try {
-				Image img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
-				//Modify the values to get desired pixel width/height
-				img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
-				checkers[6][i].setIcon(new ImageIcon(img));
-			} catch (IOException ex) {
-			// Error
-			}
-		}
-
-		//Add white pieces to board
-		for(int i=0; i<8; i++)
-		{
-			try {
-				Image img = ImageIO.read(getClass().getResource("/" + whiteSide[i] + ".png"));
-				//Modify the values to get desired pixel width/height
-				img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
-				checkers[7][i].setIcon(new ImageIcon(img));
-			} catch (IOException ex) {
-			// Error
-			}
-		}
-
-		//Add black pawns to the board
-		for(int i=0; i<8; i++)
-		{
-			try {
-				Image img = ImageIO.read(getClass().getResource("/BlackPawn.png"));
-				//Modify the values to get desired pixel width/height
-				img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
-				checkers[1][i].setIcon(new ImageIcon(img));
-			} catch (IOException ex) {
-			// Error
-			}
-
-		}
-
-		//Add black pieces to board
-		for(int i=0; i<8; i++)
-		{
-			try {
-				Image img = ImageIO.read(getClass().getResource("/" + blackSide[i] + ".png"));
-				//Modify the values to get desired pixel width/height
-				img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
-				checkers[0][i].setIcon(new ImageIcon(img));
-			} catch (IOException ex) {
-			// Error
-
-			}
-		}
-		//------------------------------------
+	
+		drawPieces();				//call method to draw the pieces
 
     // Create Labels for a through h for the first rows
     this.add(new JLabel(""));  // Corners are empty
@@ -154,7 +88,90 @@ public class BoardPanel extends JPanel {
 
     this.setBorder(new LineBorder(Color.BLACK));
   }
+	
+	/*-----------------------------------------------------------------------------------*/
+	private void drawPieces(){
+		//Added to try and draw letters
+		for(int i=0; i<8;i++){
+			for(int j=0; j<8;j++){
+				checkers[i][j].setIcon(null);			//clear it before you draw (if something was there previously)
+				char c = my_storage.getSpace(i,j, true);
+				try{
+							Image img;
+					switch(c){
+						case 'p':
+							img = ImageIO.read(getClass().getResource("/BlackPawn.png"));
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
+							break;
+						case 'b':
+							img = ImageIO.read(getClass().getResource("/BlackBishop.png"));
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
+							break;
+						case 'r':
+							img = ImageIO.read(getClass().getResource("/BlackRook.png"));
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
+							break;
+						case 'k':
+							img = ImageIO.read(getClass().getResource("/BlackKing.png"));
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
+							break;
+						case 'q':
+							img = ImageIO.read(getClass().getResource("/BlackQueen.png"));
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
+							break;
+						case 'n':
+							img = ImageIO.read(getClass().getResource("/BlackKnight.png"));
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
+							break;
+							
+						case 'P':
+							img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
+							break;
+						case 'B':
+							img = ImageIO.read(getClass().getResource("/WhiteBishop.png"));
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
+							break;
+						case 'R':
+							img = ImageIO.read(getClass().getResource("/WhiteRook.png"));
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
+							break;
+						case 'K':
+							img = ImageIO.read(getClass().getResource("/WhiteKing.png"));
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
+							break;
+						case 'Q':
+							img = ImageIO.read(getClass().getResource("/WhiteQueen.png"));
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
+							break;
+						case 'N':
+							img = ImageIO.read(getClass().getResource("/WhiteKnight.png"));
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
+							break;
+						default: 
+							break;
+					}
+				} catch(IOException e){
+					//error :(
+				}
+				
+			}
+		}
 
+	}
+	/*--------------------------------------------------------------------------------------------------------*/
   private ActionListener getSquareAction() {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -175,11 +192,12 @@ public class BoardPanel extends JPanel {
 				System.out.println("You clicked on " + current_spot);
 				if(second_click){
 					System.out.println("Moving " + old_spot + " to " + current_spot);
-					if( (old_x+old_y) % 2== 0)
-						checkers[old_y][old_x].setBackground(Color.WHITE);
-					else
-						checkers[old_y][old_x].setBackground(Color.GRAY);
+					if( (old_x+old_y) % 2== 0)		checkers[old_y][old_x].setBackground(Color.WHITE);
+					else																				checkers[old_y][old_x].setBackground(Color.GRAY);
 					second_click = false;
+					my_storage.movePiece(old_y, old_x, y, x);
+					//redraw
+					drawPieces();
 				}
 				else{
 					checkers[y][x].setBackground(Color.GREEN);
@@ -188,6 +206,11 @@ public class BoardPanel extends JPanel {
 					old_x = x;
 					old_y = y;
 					second_click = true;
+				}
+				
+				//for testing ONLY
+				if(x==0 && y==0){
+					System.out.println(my_storage.getFen());
 				}
       }
     };
