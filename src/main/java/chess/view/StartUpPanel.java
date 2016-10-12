@@ -86,11 +86,11 @@ public class StartUpPanel extends JPanel {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			// Placeholder for when we add functionality
-				//Run the chessboard
-				ConsoleGraphics chessboard = new ConsoleGraphics();
-				//Make startup frame not visible after user clicks new game
+				//Run the color selection for chess game
+				ChooseColor choice = new ChooseColor();
+				//Dispose of startup screen so it's not visible
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(newGame.getParent());
-				frame.setVisible(false);
+				frame.dispose();
 			}
 		};
 		return action;
@@ -100,10 +100,10 @@ public class StartUpPanel extends JPanel {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			// Placeholder for when we add functionality
-				ConsoleGraphics chessboard = new ConsoleGraphics();
-				//Make startup frame not visible after user clicks load
+				LoadGame loadGame = new LoadGame();
+				//Dispose of startup screen so it's not visible
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(load.getParent());
-				frame.setVisible(false);
+				frame.dispose();
 			}
 		};
 		return action;
@@ -113,6 +113,7 @@ public class StartUpPanel extends JPanel {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			// Placeholder for when we add functionality
+			//Exit/terminate program if user clicks on exit
 				System.exit(0);
 			}
 		};
