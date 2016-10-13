@@ -65,7 +65,7 @@ public class Stockfish {
       // Ensure that the file has permission to execute
       Path file = Paths.get(path);
       PosixFileAttributes attrs = Files.getFileAttributeView(file, PosixFileAttributeView.class).readAttributes();
-      Set <PosixFilePermission> perms = PosixFilePermissions.fromString("r--r--r--");
+      Set <PosixFilePermission> perms = PosixFilePermissions.fromString("r-xr-xr-x");
       Files.setPosixFilePermissions(file, perms);
 
 	// Looking at permissions
