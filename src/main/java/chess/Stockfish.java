@@ -40,7 +40,7 @@ public class Stockfish {
    * White pieces are upper-case letters. Black are lower case.
    * w = white's turn.
    * KQkq - = castling availability
-   * - = "en passant target square doesn't exist"  
+   * - = "en passant target square doesn't exist"
    * The second to last number is the "halfmove clock - the number of halfmoves since the last capture or pawn advance
    * Full move number: Starts at one and increments when black moves
    */
@@ -69,36 +69,28 @@ public class Stockfish {
       Files.setPosixFilePermissions(file, perms);
 
 	// Looking at permissions
-	// FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms); 
+	// FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
     	// attrs = Files.getFileAttributeView(file, PosixFileAttributeView.class).readAttributes();
    	 //  System.out.format("%s %s%n", attrs.owner().getName(), PosixFilePermissions.toString(attrs.permissions()));
 
       builder = new ProcessBuilder(path);
       builder.redirectErrorStream(true);
-  
+
+      //TimeUnit.SECONDS.sleep(2);
       engine = builder.start();
       System.out.println( "Process is running" + engine.isAlive());
-      while (!(engine.isAlive())){
-        TimeUnit.SECONDS.sleep(2);
-        engine = builder.start(); 
-        System.out.println( "Process is running" + engine.isAlive());
-      }
-    
 
       // Open streams to read from and write to engine
       inputStream = engine.getInputStream();
       inputStreamReader = new InputStreamReader(inputStream);
       processReader = new BufferedReader(inputStreamReader);
-      
+
       processWriter = new BufferedWriter(new OutputStreamWriter(engine.getOutputStream()));
       processWriter.write("isready" + "\n");
+      processWriter.flush();
       // System.out.println("INPUT STREAM" + inputStream.read());
       System.out.println("PROCESS READER : " + processReader.readLine());
-      
-    
-      // 
-      // processWriter.flush();
-      // System.out.println("OUTPUT: " + processReader.readLine());
+
     }
 
     catch (Exception e) {
@@ -160,7 +152,7 @@ public class Stockfish {
   public String getOutput() {
     StringBuffer output = new StringBuffer();
     try {
-      this.send("isready");
+      this.send("isready" + "\n");
       String text = "";
       while (!text.equals("readyok")){
         text = processReader.readLine();
