@@ -1,5 +1,7 @@
-  import org.junit.Test;
+import org.junit.Test;
 import static org.junit.Assert.*;
+import java.io.File;
+import java.util.concurrent.TimeUnit;
 
 import chess.Stockfish;
 
@@ -71,15 +73,31 @@ public class StockfishTest {
     assertTrue(fen.contains("3P4"));
     sf.stopEngine();
   }
-  //
-  // @Test
-  // public void getLegalMoves(){
-  //   String os_name = System.getProperty("os.name");
-  //   Stockfish sf = new Stockfish();
-  //   sf.startEngine(os_name);
-  //   // Tell the engine to switch to UCI mode
-  //   sf.send("uci");
-  //   sf.send("ucinewgame");
-  //   sf.getLegalMoves("d2d4", sf.STARTING_POS);
-  // }
+
+  @Test
+  public void getLegalMoves(){
+    String os_name = System.getProperty("os.name");
+    Stockfish sf = new Stockfish();
+    sf.startEngine(os_name);
+    // Tell the engine to switch to UCI mode
+    sf.send("uci");
+    sf.send("ucinewgame");
+    sf.getLegalMoves("d2d4", sf.STARTING_POS);
+    sf.stopEngine();
+  }
+
+  @Test
+  public void testDebugMode(){
+    long currentTime = System.currentTimeMillis();
+    String os_name = System.getProperty("os.name");
+    Stockfish sf = new Stockfish();
+    sf.startEngine(os_name);
+    sf.enableDebugLog();
+    sf.send("uci");
+    sf.stopEngine();
+    File log = new File("io_log.txt");
+    assertTrue(log.exists());
+    long modifiedTime = log.lastModified();
+    assertTrue(modifiedTime > currentTime);
+  }
 }

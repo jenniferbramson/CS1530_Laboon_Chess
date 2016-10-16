@@ -6,14 +6,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.nio.file.*;
-import java.nio.file.attribute.*;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 import java.util.concurrent.TimeUnit;
-import java.util.Set;
-import java.util.HashSet;
+
 
 
 
@@ -23,7 +21,7 @@ import java.util.HashSet;
  * Commands that may be useful:
  * debug [on | off]
  * isready - returns "readyok"
- * position [fen  | startpos ]  moves
+ * position [fen  | startpos ]  moves [moves]
  * d - draws the board and includes a fen string
  */
 
@@ -81,6 +79,7 @@ public class Stockfish {
       processReader = new BufferedReader(inputStreamReader);
       processWriter = new BufferedWriter(new OutputStreamWriter(engine.getOutputStream()));
 
+
     }
 
     catch (Exception e) {
@@ -89,6 +88,10 @@ public class Stockfish {
     }
   return true;
   }
+
+  // public boolean isRunning() {
+  //   return engine.isRunning();
+  // }
 
   // Send UCI command to Stockfish engine
   public boolean send(String command) {
@@ -103,6 +106,12 @@ public class Stockfish {
       return false;
     }
     return true;
+  }
+
+  /* Tell Stockfish process to write debugging output to file. This will create
+    a file named io_log.txt in the project home folder. */
+  public boolean enableDebugLog(){
+    return this.send("setoption name Write Debug Log value true");
   }
 
   public String getFen(){
@@ -176,17 +185,10 @@ public class Stockfish {
     return bestMove;
   }
 
-  /* In the Stockfish documentation, it looks like you should be able to move a piece
-     starting from any point in the game as long as the fen string to represent the
-     board state is correct.
 
-     I can't get that to work--it doesn't move the piece on its internal board when I try.
-     It you use "startpos" instead of the fen and pass in all moves that have been played,
-     it works.
-   */
   // move string needs to be in algebraic notation for chess
   public boolean movePiece(String allMoves, String fen){
-    this.send("go");
+    // this.send("go");
     this.send("position fen " + fen + " moves " + allMoves);
     // check to see if valid - not sure how yet
     return true; // if valid move?
@@ -196,20 +198,21 @@ public class Stockfish {
   // Not working yet
   public void getLegalMoves(String allMoves, String fen) {
     //  this.send("position fen " + fen);
-    System.out.println(this.isReady());
-    this.send("position startpos " + " moves " + allMoves);
-     this.send("d");
-     String output = getOutput();
-     System.out.println("Output" + output);
-     this.send("d");
-     output = getOutput();
-     System.out.println("Output" + output);
-     this.send("d");
-     output = getOutput();
-     System.out.println("Output" + output);
-     this.send("d");
-     output = getOutput();
-     System.out.println("Output" + output);
+    // System.out.println(this.isReady());
+    // this.send("position startpos " + " moves " + allMoves);
+    this.enableDebugLog();
+    // this.send("position fen " + fen);
+    //  this.send("go searchmoves");
+    //  try {
+    //
+    //    TimeUnit.SECONDS.sleep(10);
+    //  }
+    //  catch (Exception e){
+    //
+    //  }
+    //  System.out.println(getOutput());
+    //  System.out.println(getOutput());
+
     //  return getOutput().split("Legal moves: ")[1];
   }
 
@@ -226,11 +229,13 @@ public class Stockfish {
     try {
       this.send("quit");
       inputStream.close();
+      inputStreamReader.close();
       processReader.close();
       processWriter.close();
+      this.engine.waitFor();
       return true;
     }
-    catch (IOException e) {
+    catch (Exception e) {
       e.printStackTrace();
       return false;
     }
@@ -244,6 +249,7 @@ public class Stockfish {
     player1.startEngine(os_name);
     // Tell the engine to switch to UCI mode
     player1.send("uci");
+    // player1.turnOnDebug();
 
     Stockfish player2 = new Stockfish();
     player2.startEngine(os_name);
