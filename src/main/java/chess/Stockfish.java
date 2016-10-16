@@ -52,31 +52,19 @@ public class Stockfish {
   public boolean startEngine(String os_name) {
     String path = "";
     String pathBase = System.getProperty("user.dir");
-    System.out.println("CURRENT PATH " + pathBase);
     if (os_name.toLowerCase().contains("windows"))
       path = "engine/stockfish-7-win/Windows/stockfish 7 x64.exe";
     else if (os_name.toLowerCase().contains("mac")){
       path = pathBase + "/engine/stockfish-7-mac/Mac/stockfish-7-64";
     }
-    System.out.println("path is " + path);
 
     try {
 
-      // Ensure that the file has permission to execute
       Path file = Paths.get(path);
-      PosixFileAttributes attrs = Files.getFileAttributeView(file, PosixFileAttributeView.class).readAttributes();
-      Set <PosixFilePermission> perms = PosixFilePermissions.fromString("r-xr-xr-x");
-      Files.setPosixFilePermissions(file, perms);
-
-	// Looking at permissions
-	// FileAttribute<Set<PosixFilePermission>> attr = PosixFilePermissions.asFileAttribute(perms);
-    	// attrs = Files.getFileAttributeView(file, PosixFileAttributeView.class).readAttributes();
-   	 //  System.out.format("%s %s%n", attrs.owner().getName(), PosixFilePermissions.toString(attrs.permissions()));
 
       builder = new ProcessBuilder(path);
       builder.redirectErrorStream(true);
 
-      //TimeUnit.SECONDS.sleep(2);
       engine = builder.start();
       System.out.println( "Process is running" + engine.isAlive());
 
@@ -84,12 +72,7 @@ public class Stockfish {
       inputStream = engine.getInputStream();
       inputStreamReader = new InputStreamReader(inputStream);
       processReader = new BufferedReader(inputStreamReader);
-
       processWriter = new BufferedWriter(new OutputStreamWriter(engine.getOutputStream()));
-      processWriter.write("isready" + "\n");
-      processWriter.flush();
-      // System.out.println("INPUT STREAM" + inputStream.read());
-      System.out.println("PROCESS READER : " + processReader.readLine());
 
     }
 
