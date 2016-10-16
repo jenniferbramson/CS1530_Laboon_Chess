@@ -50,13 +50,20 @@ public class Stockfish {
 
   // Start Stockfish engine
   public boolean startEngine(String os_name) {
-    String path = "";
-    String pathBase = System.getProperty("user.dir");
+  	String path = "";
+  	String pathBase = System.getProperty("user.dir");
+		//System.out.println(os_name);
     if (os_name.toLowerCase().contains("windows"))
       path = "engine/stockfish-7-win/Windows/stockfish 7 x64.exe";
-    else if (os_name.toLowerCase().contains("mac")){
+    else if (os_name.toLowerCase().contains("mac"))
       path = pathBase + "/engine/stockfish-7-mac/Mac/stockfish-7-64";
-    }
+    else if (os_name.toLowerCase().contains("linux"))
+			path = pathBase + "/engine/stockfish-7-linux/Linux/stockfish 7 x64";	
+    else {
+			System.out.println(os_name + " is not currently supported by Laboon Chess. Please try again on a Windows, Mac, or Linux system");
+			System.exit(1);
+		}
+	
 
     try {
 
@@ -179,12 +186,12 @@ public class Stockfish {
    */
   // move string needs to be in algebraic notation for chess
   public boolean movePiece(String allMoves, String fen){
-    // this.send("position startpos " + " moves " + allMoves);
+    this.send("position startpos " + " moves " + allMoves);
 
     // can't get it to work this way
-    this.send("position " + fen );
-    this.send("go");
-    this.send("position " + fen + " " + allMoves);
+    // this.send("position " + fen );
+    // this.send("go");
+    // this.send("position " + fen + " " + allMoves);
 
     // check to see if valid - not sure how yet
     return true; // if valid move?
