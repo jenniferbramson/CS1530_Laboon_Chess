@@ -58,12 +58,12 @@ public class Stockfish {
     else if (os_name.toLowerCase().contains("mac"))
       path = pathBase + "/engine/stockfish-7-mac/Mac/stockfish-7-64";
     else if (os_name.toLowerCase().contains("linux"))
-			path = pathBase + "/engine/stockfish-7-linux/Linux/stockfish 7 x64";	
+			path = pathBase + "/engine/stockfish-7-linux/Linux/stockfish 7 x64";
     else {
 			System.out.println(os_name + " is not currently supported by Laboon Chess. Please try again on a Windows, Mac, or Linux system");
 			System.exit(1);
 		}
-	
+
 
     try {
 
@@ -186,30 +186,36 @@ public class Stockfish {
    */
   // move string needs to be in algebraic notation for chess
   public boolean movePiece(String allMoves, String fen){
-    this.send("position startpos " + " moves " + allMoves);
-
-    // can't get it to work this way
-    // this.send("position " + fen );
-    // this.send("go");
-    // this.send("position " + fen + " " + allMoves);
-
+    this.send("go");
+    this.send("position fen " + fen + " moves " + allMoves);
     // check to see if valid - not sure how yet
     return true; // if valid move?
 
   }
 
   // Not working yet
-  public String getLegalMoves(String fen) {
-     this.send("position fen " + fen);
+  public void getLegalMoves(String allMoves, String fen) {
+    //  this.send("position fen " + fen);
+    System.out.println(this.isReady());
+    this.send("position startpos " + " moves " + allMoves);
      this.send("d");
      String output = getOutput();
      System.out.println("Output" + output);
-     return getOutput().split("Legal moves: ")[1];
+     this.send("d");
+     output = getOutput();
+     System.out.println("Output" + output);
+     this.send("d");
+     output = getOutput();
+     System.out.println("Output" + output);
+     this.send("d");
+     output = getOutput();
+     System.out.println("Output" + output);
+    //  return getOutput().split("Legal moves: ")[1];
   }
 
   // Not working
   public boolean isLegalMove(String fen, String move){
-    String legalMoves = getLegalMoves(fen);
+    // String legalMoves = getLegalMoves(fen);
     return true;
   }
 

@@ -63,6 +63,7 @@ public class StockfishTest {
     // Tell the engine to switch to UCI mode
     sf.send("uci");
     sf.send("ucinewgame");
+
     // Move white pawn from d2 to d4 while the rest of the pieces are in the starting positions
     sf.movePiece("d2d4", sf.STARTING_POS);
     String fen = sf.getFen();
@@ -70,4 +71,15 @@ public class StockfishTest {
     assertTrue(fen.contains("3P4"));
     sf.stopEngine();
   }
+  //
+  // @Test
+  // public void getLegalMoves(){
+  //   String os_name = System.getProperty("os.name");
+  //   Stockfish sf = new Stockfish();
+  //   sf.startEngine(os_name);
+  //   // Tell the engine to switch to UCI mode
+  //   sf.send("uci");
+  //   sf.send("ucinewgame");
+  //   sf.getLegalMoves("d2d4", sf.STARTING_POS);
+  // }
 }
