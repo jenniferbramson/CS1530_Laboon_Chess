@@ -75,7 +75,7 @@ public class StockfishTest {
   }
 
   @Test
-  public void getLegalMoves(){
+  public void testGetLegalMoves(){
     String os_name = System.getProperty("os.name");
     Stockfish sf = new Stockfish();
     sf.startEngine(os_name);
@@ -86,18 +86,20 @@ public class StockfishTest {
     sf.stopEngine();
   }
 
+
+  /* Enable debug mode, then check to see if log has been modified since the time when
+    this test started. */
   @Test
   public void testDebugMode(){
-    long currentTime = System.currentTimeMillis();
+    long startTime = System.currentTimeMillis();
     String os_name = System.getProperty("os.name");
     Stockfish sf = new Stockfish();
     sf.startEngine(os_name);
     sf.enableDebugLog();
-    sf.send("uci");
     sf.stopEngine();
     File log = new File("io_log.txt");
     assertTrue(log.exists());
     long modifiedTime = log.lastModified();
-    assertTrue(modifiedTime > currentTime);
+    assertTrue(modifiedTime > startTime);
   }
 }

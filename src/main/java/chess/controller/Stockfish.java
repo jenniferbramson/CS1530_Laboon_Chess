@@ -197,20 +197,13 @@ public class Stockfish {
 
   // Not working yet
   public void getLegalMoves(String allMoves, String fen) {
-    //  this.send("position fen " + fen);
+    this.enableDebugLog();
+    this.send("position fen " + fen);
     // System.out.println(this.isReady());
     // this.send("position startpos " + " moves " + allMoves);
-    this.enableDebugLog();
     // this.send("position fen " + fen);
-    //  this.send("go searchmoves");
-    //  try {
-    //
-    //    TimeUnit.SECONDS.sleep(10);
-    //  }
-    //  catch (Exception e){
-    //
-    //  }
-    //  System.out.println(getOutput());
+     this.send("go searchmoves");
+     System.out.println(getOutput());
     //  System.out.println(getOutput());
 
     //  return getOutput().split("Legal moves: ")[1];
