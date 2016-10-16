@@ -66,7 +66,7 @@ public class Stockfish {
       builder.redirectErrorStream(true);
 
       engine = builder.start();
-      System.out.println( "Process is running" + engine.isAlive());
+      // System.out.println( "Process is running" + engine.isAlive());
 
       // Open streams to read from and write to engine
       inputStream = engine.getInputStream();
