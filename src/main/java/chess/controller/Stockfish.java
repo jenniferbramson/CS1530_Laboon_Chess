@@ -261,21 +261,21 @@ public class Stockfish {
       System.out.println("Output" + output);
 
       String bestMove = player1.getBestMove(fen, 100);
-      allMoves.append(bestMove);
-      allMoves.append(" ");
+      // allMoves.append(bestMove);
+      // allMoves.append(" ");
       // player1.send("position startpos moves " + allMoves.toString());
-      player1.movePiece(allMoves.toString(), fen);
+      player1.movePiece(bestMove, fen);
       fen = player1.getFen();
       System.out.println("Fen string after move " + (i+1) + ": " + fen);
       player1.drawBoard();
 
       bestMove = player2.getBestMove(fen, 100);
-      allMoves.append(bestMove);
-      allMoves.append(" ");
+      // allMoves.append(bestMove);
+      // allMoves.append(" ");
 
       // It seems that the stockfish board does not preserve any state.
       // It may be necessary to store all moves in some structure
-      player2.movePiece(allMoves.toString(), fen);
+      player2.movePiece(bestMove, fen);
       fen = player2.getFen();
       i++;
       System.out.println("Fen string after move " + (i+1) + ": " + fen);
