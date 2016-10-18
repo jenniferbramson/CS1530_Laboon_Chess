@@ -156,19 +156,22 @@ public class Storage {
 				} else if (x_1 == x_2 && (y_1 + 1) == y_2 && space == " ") {
 					// Move north ok
 					return true;
-				} else if ((x_1 + 1 || x_1 - 1) == x_2 && (y_1 + 1) == y_2 &&
-									(int) space < 90  && (int) space > 65) {
+				} else if ((x_1 + 1 == x_2) || (x_1 - 1 == x_2) && (y_1 + 1) == y_2 &&
+									Character.isUpperCase(space) {
 					// Take piece diagonally ok
-					// Note: if we are making a taken panel, this is where you could get the
-					// piece taken from
 					return true
 				}
 				break;
 			case: 'n':
-
-				break;
-			case 'r':
-
+				// Knights move in an 'L' shape whether or not opponent piece is there
+				// Ignore moves where own side's piece is there though
+				if ((int) space < 97) { // space or upper case
+					if (((x_1 + 2 == x_2) || (x_1 - 2 == x_2)) && ((y_1 + 1 == y_2) || (y_1 - 1 == y_2))) {
+						return true;
+					} else if (((y_1 + 2 == y_2) || (y_1 - 2 == y_2)) && ((x_1 + 1 == x_2) || (x_1 - 1 == x_2))) {
+						return true;
+					}
+				}
 				break;
 			case 'b':
 
@@ -178,7 +181,41 @@ public class Storage {
 				break;
 
 			case 'q':
+				// Queen is rook plus diagonal ability, so don't break at end and incorporate
+				// rook ability that way
 
+			case 'r':
+				// Rooks can move north/south xor east/west
+				// Shoot have to check every single space in between start and end to
+				// make sure no pieces blocking the path
+				if ((int) space < 97) { // space or upper case
+					if (x_1 == x_2 && y_1 < y_2) {
+						for (int i = y_1; i < y_2; i++) {
+							if (this.getSpace(x_1, i) != " ") {
+								return false; // path blocked if not empty
+							}
+						}
+					} else if (x_1 == x_2 && y_1 > y_2) {
+						for (int i = y_1; i > y_2; i--) {
+							if (this.getSpace(x_1, i) != " ") {
+								return false; // path blocked if not empty
+							}
+						}
+					} else if (y_1 == y_2 && x_1 < x_2) {
+						for (int i = x_1; i < x_2; i++) {
+							if (this.getSpace(i, y_1) != " ") {
+								return false; // path blocked if not empty
+							}
+						}
+					} else if (y_1 == y_2 && x_1 > x_2) {
+						for (int i = x_1; i > x_2; i--) {
+							if (this.getSpace(i, y_1) != " ") {
+								return false; // path blocked if not empty
+							}
+						}
+					}
+					return true;
+				}
 				break;
 			// Black is uppercase
 		}
