@@ -143,6 +143,12 @@ public class Storage {
 	public boolean checkMove(int x_1, int y_1, int x_2, int y_2) {
 		char piece = this.getSpace(x_1, y_1);
 		char space = this.getSpace(x_2, y_2);
+
+		if (x_1 == x_2 && y_1 == y_2) {
+			// No movement, return false
+			return false;
+		}
+
 		// White is lowercase
 		switch (piece) {
 			case 'p':
@@ -176,7 +182,36 @@ public class Storage {
 			case 'b':
 				// Bishop can move along the diagonals
 				if ((int) space < 97) { // space or upper case
-
+			 		if (x_2 > x_1 && y_2 > y_1) {
+						// Moving to upper right
+						for (int i = 1; i < (x_2 - x_1); i++) {
+							if (this.getSpace(x_1 + i, y_1 + i) != " ") {
+								return false; // path blocked if not empty
+							}
+						}
+					} else if (x_2 > x_1 && y_2 < y_1) {
+						// Moving to lower right
+						for (int i = 1; i < (x_2 - x_1); i++) {
+							if (this.getSpace(x_1 + i, y_1 - i) != " ") {
+								return false; // path blocked if not empty
+							}
+						}
+					} else if (x_2 < x_1 && y_2 < y_1) {
+						// Moving to lower left
+						for (int i = 1; i < (x_1 - x_2); i++) {
+							if (this.getSpace(x_1 - i, y_1 - i) != " ") {
+								return false; // path blocked if not empty
+							}
+						}
+					} else if (x_2 < x_1 && y_2 > y_1) {
+						// Moving to upper left
+						for (int i = 1; i < (x_1 - x_2); i++) {
+							if (this.getSpace(x_1 - i, y_1 + i) != " ") {
+								return false; // path blocked if not empty
+							}
+						}
+					}
+					return true;
 				}
 				break;
 			case 'k':
@@ -191,32 +226,66 @@ public class Storage {
 			case 'q':
 				// Queen is rook plus diagonal ability, so don't break at end and incorporate
 				// rook ability that way
+				if (abs(x_1 - x_2) != abs(y_1 - y_2) && y_1 != y_2 && x_1 != x_2) {
+					return false;	// Not moving in a legal diagonal, horizontal, or vertical direction
+				}
 
+				if ((int) space < 97) { // space or upper case
+			 		if (x_2 > x_1 && y_2 > y_1) {
+						// Moving to upper right
+						for (int i = 1; i < (x_2 - x_1); i++) {
+							if (this.getSpace(x_1 + i, y_1 + i) != " ") {
+								return false; // path blocked if not empty
+							}
+						}
+					} else if (x_2 > x_1 && y_2 < y_1) {
+						// Moving to lower right
+						for (int i = 1; i < (x_2 - x_1); i++) {
+							if (this.getSpace(x_1 + i, y_1 - i) != " ") {
+								return false; // path blocked if not empty
+							}
+						}
+					} else if (x_2 < x_1 && y_2 < y_1) {
+						// Moving to lower left
+						for (int i = 1; i < (x_1 - x_2); i++) {
+							if (this.getSpace(x_1 - i, y_1 - i) != " ") {
+								return false; // path blocked if not empty
+							}
+						}
+					} else if (x_2 < x_1 && y_2 > y_1) {
+						// Moving to upper left
+						for (int i = 1; i < (x_1 - x_2); i++) {
+							if (this.getSpace(x_1 - i, y_1 + i) != " ") {
+								return false; // path blocked if not empty
+							}
+						}
+					}
+				}
 			case 'r':
 				// Rooks can move north/south xor east/west
 				// Shoot have to check every single space in between start and end to
 				// make sure no pieces blocking the path
 				if ((int) space < 97) { // space or upper case
 					if (x_1 == x_2 && y_1 < y_2) {
-						for (int i = y_1; i < y_2; i++) {
+						for (int i = y_1 + 1; i < y_2; i++) {
 							if (this.getSpace(x_1, i) != " ") {
 								return false; // path blocked if not empty
 							}
 						}
 					} else if (x_1 == x_2 && y_1 > y_2) {
-						for (int i = y_1; i > y_2; i--) {
+						for (int i = y_1 - 1; i > y_2; i--) {
 							if (this.getSpace(x_1, i) != " ") {
 								return false; // path blocked if not empty
 							}
 						}
 					} else if (y_1 == y_2 && x_1 < x_2) {
-						for (int i = x_1; i < x_2; i++) {
+						for (int i = x_1 + 1; i < x_2; i++) {
 							if (this.getSpace(i, y_1) != " ") {
 								return false; // path blocked if not empty
 							}
 						}
 					} else if (y_1 == y_2 && x_1 > x_2) {
-						for (int i = x_1; i > x_2; i--) {
+						for (int i = x_1 - 1; i > x_2; i--) {
 							if (this.getSpace(i, y_1) != " ") {
 								return false; // path blocked if not empty
 							}
