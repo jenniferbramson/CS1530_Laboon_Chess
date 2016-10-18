@@ -123,7 +123,7 @@ public class Storage {
 			else return String.valueOf(board[x][y]);
 		}
 
-		public char getSpaceChar(int x, int y){
+		public char getSpaceChar(int y, int x){
 			return board[x][y];
 		}
 
@@ -146,29 +146,37 @@ public class Storage {
 		history.add(" ");
 	}
 
-	public boolean checkMove(int x_1, int y_1, int x_2, int y_2) {
+	public boolean checkMove(int y_1, int x_1, int y_2, int x_2) {
 		char piece = this.getSpaceChar(x_1, y_1);
 		char space = this.getSpaceChar(x_2, y_2);
+
+		System.out.println("Empty char is uppercase? " + Character.isUpperCase(space));
+		System.out.println("x1: " + x_1 + " x2: " + x_2);
+		System.out.println("y1: " + y_1 + " y2: " + y_2);
+		System.out.println(getSpaceChar(x_1, y_1));
+		System.out.println(getSpaceChar(x_2, y_2));
 
 		if (x_1 == x_2 && y_1 == y_2) {
 			// No movement, return false
 			return false;
 		}
 
-		// White is lowercase
+		// Black is lowercase
 		switch (piece) {
 			case 'p':
 				// On first move, pawn can move two spaces
-
+				System.out.println("Pawn");
+				System.out.println("x1: " + x_1 + " x2: " + x_2);
+				System.out.println("y1: " + y_1 + " y2: " + y_2);
 				// Otherwise can only move one place - north if space above is empty,
 				// diagonally if taking a piece
 				if (x_1 == x_2 && y_1 == 1 && y_2 == 3 && space == '\u0000') {
-					// First move up 2 ok
+					// First move down 2 ok
 					return true;
 				} else if (x_1 == x_2 && (y_1 + 1) == y_2 && space == '\u0000') {
 					// Move north ok
 					return true;
-				} else if ((x_1 + 1 == x_2) || (x_1 - 1 == x_2) && (y_1 + 1) == y_2 &&
+				} else if (((x_1 + 1 == x_2) || (x_1 - 1 == x_2)) && (y_1 + 1) == y_2 &&
 									Character.isUpperCase(space)) {
 					// Take piece diagonally ok
 					return true;
@@ -187,6 +195,10 @@ public class Storage {
 				break;
 			case 'b':
 				// Bishop can move along the diagonals
+				if (abs(x_1 - x_2) != abs(y_1 - y_2)) {
+					return false;	// Not moving in a legal diagonal direction
+				}
+
 				if ((int) space < 97) { // space or upper case
 			 		if (x_2 > x_1 && y_2 > y_1) {
 						// Moving to upper right
@@ -300,7 +312,7 @@ public class Storage {
 					return true;
 				}
 				break;
-			// Black is uppercase
+			// White is uppercase
 		} // end switch statement
 
 		return false; // If reached this point, false

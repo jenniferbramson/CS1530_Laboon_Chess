@@ -191,7 +191,9 @@ public class BoardPanel extends JPanel {
 				String current_spot = x_board + Integer.toString(y_board);
 				System.out.println("You clicked on " + current_spot);
 				if (second_click) {
+          System.out.println(my_storage.getSpaceChar(old_y, old_x));
           boolean legal = my_storage.checkMove(old_y, old_x, y, x);
+          System.out.println(legal);
           if (legal) {
   					System.out.println("Moving " + old_spot + " to " + current_spot);
   					if ( (old_x+old_y) % 2== 0) {
