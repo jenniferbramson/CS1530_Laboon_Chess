@@ -174,12 +174,18 @@ public class Storage {
 				}
 				break;
 			case 'b':
+				// Can move along the diagonals
 
 				break;
 			case 'k':
-
+				// Can only move one square in any direction
+				if ((int) space < 97) { // space or upper case
+					int totalDiff = (x_1 - x_2) + (y_1 - y_2);
+					if (totalDiff == 1) {
+						return true;
+					}
+				}
 				break;
-
 			case 'q':
 				// Queen is rook plus diagonal ability, so don't break at end and incorporate
 				// rook ability that way
