@@ -50,7 +50,7 @@ public class BoardPanel extends JPanel {
         checkers[i][j] = b;
       }
     }
-	
+
 		drawPieces();				//call method to draw the pieces
 
     // Create Labels for a through h for the first rows
@@ -88,7 +88,7 @@ public class BoardPanel extends JPanel {
 
     this.setBorder(new LineBorder(Color.BLACK));
   }
-	
+
 	/*-----------------------------------------------------------------------------------*/
 	private void drawPieces(){
 		//Added to try and draw letters
@@ -129,7 +129,7 @@ public class BoardPanel extends JPanel {
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
-							
+
 						case 'P':
 							img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
@@ -160,13 +160,13 @@ public class BoardPanel extends JPanel {
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
-						default: 
+						default:
 							break;
 					}
 				} catch(IOException e){
 					//error :(
 				}
-				
+
 			}
 		}
 
@@ -190,14 +190,22 @@ public class BoardPanel extends JPanel {
 				int y_board = 8-y;
 				String current_spot = x_board + Integer.toString(y_board);
 				System.out.println("You clicked on " + current_spot);
-				if(second_click){
-					System.out.println("Moving " + old_spot + " to " + current_spot);
-					if( (old_x+old_y) % 2== 0)		checkers[old_y][old_x].setBackground(Color.WHITE);
-					else																				checkers[old_y][old_x].setBackground(Color.GRAY);
-					second_click = false;
-					my_storage.movePiece(old_y, old_x, y, x);
-					//redraw
-					drawPieces();
+				if (second_click) {
+          boolean legal = my_storage.checkMove(old_y, old_x, y, x);
+          if (legal) {
+  					System.out.println("Moving " + old_spot + " to " + current_spot);
+  					if ( (old_x+old_y) % 2== 0) {
+              checkers[old_y][old_x].setBackground(Color.WHITE);
+            } else {
+              checkers[old_y][old_x].setBackground(Color.GRAY);
+            }
+  					second_click = false;
+  					my_storage.movePiece(old_y, old_x, y, x);
+  					//redraw
+  					drawPieces();
+          } else {
+            // Ignore
+          }
 				}
 				else{
 					checkers[y][x].setBackground(Color.GREEN);
@@ -207,7 +215,7 @@ public class BoardPanel extends JPanel {
 					old_y = y;
 					second_click = true;
 				}
-				
+
 				//for testing ONLY
 				if(x==0 && y==0){
 					System.out.println(my_storage.getFen());
