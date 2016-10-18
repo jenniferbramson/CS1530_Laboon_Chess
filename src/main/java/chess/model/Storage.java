@@ -1,5 +1,7 @@
 package chess;
 import java.util.*;
+import static java.lang.Math.abs;
+
 public class Storage {
 
 	//board
@@ -121,6 +123,10 @@ public class Storage {
 			else return String.valueOf(board[x][y]);
 		}
 
+		public char getSpaceChar(int x, int y){
+			return board[x][y];
+		}
+
 		public char getSpace(int x, int y, boolean filler){
 			return board[x][y];
 		}
@@ -141,8 +147,8 @@ public class Storage {
 	}
 
 	public boolean checkMove(int x_1, int y_1, int x_2, int y_2) {
-		char piece = this.getSpace(x_1, y_1);
-		char space = this.getSpace(x_2, y_2);
+		char piece = this.getSpaceChar(x_1, y_1);
+		char space = this.getSpaceChar(x_2, y_2);
 
 		if (x_1 == x_2 && y_1 == y_2) {
 			// No movement, return false
@@ -156,19 +162,19 @@ public class Storage {
 
 				// Otherwise can only move one place - north if space above is empty,
 				// diagonally if taking a piece
-				if (x_1 == x_2 && y_1 == 1 && y_2 == 3 && space == " ") {
+				if (x_1 == x_2 && y_1 == 1 && y_2 == 3 && space == '\u0000') {
 					// First move up 2 ok
 					return true;
-				} else if (x_1 == x_2 && (y_1 + 1) == y_2 && space == " ") {
+				} else if (x_1 == x_2 && (y_1 + 1) == y_2 && space == '\u0000') {
 					// Move north ok
 					return true;
 				} else if ((x_1 + 1 == x_2) || (x_1 - 1 == x_2) && (y_1 + 1) == y_2 &&
-									Character.isUpperCase(space) {
+									Character.isUpperCase(space)) {
 					// Take piece diagonally ok
-					return true
+					return true;
 				}
 				break;
-			case: 'n':
+			case 'n':
 				// Knights move in an 'L' shape whether or not opponent piece is there
 				// Ignore moves where own side's piece is there though
 				if ((int) space < 97) { // space or upper case
@@ -185,28 +191,28 @@ public class Storage {
 			 		if (x_2 > x_1 && y_2 > y_1) {
 						// Moving to upper right
 						for (int i = 1; i < (x_2 - x_1); i++) {
-							if (this.getSpace(x_1 + i, y_1 + i) != " ") {
+							if (this.getSpaceChar(x_1 + i, y_1 + i) != '\u0000') {
 								return false; // path blocked if not empty
 							}
 						}
 					} else if (x_2 > x_1 && y_2 < y_1) {
 						// Moving to lower right
 						for (int i = 1; i < (x_2 - x_1); i++) {
-							if (this.getSpace(x_1 + i, y_1 - i) != " ") {
+							if (this.getSpaceChar(x_1 + i, y_1 - i) != '\u0000') {
 								return false; // path blocked if not empty
 							}
 						}
 					} else if (x_2 < x_1 && y_2 < y_1) {
 						// Moving to lower left
 						for (int i = 1; i < (x_1 - x_2); i++) {
-							if (this.getSpace(x_1 - i, y_1 - i) != " ") {
+							if (this.getSpaceChar(x_1 - i, y_1 - i) != '\u0000') {
 								return false; // path blocked if not empty
 							}
 						}
 					} else if (x_2 < x_1 && y_2 > y_1) {
 						// Moving to upper left
 						for (int i = 1; i < (x_1 - x_2); i++) {
-							if (this.getSpace(x_1 - i, y_1 + i) != " ") {
+							if (this.getSpaceChar(x_1 - i, y_1 + i) != '\u0000') {
 								return false; // path blocked if not empty
 							}
 						}
@@ -234,28 +240,28 @@ public class Storage {
 			 		if (x_2 > x_1 && y_2 > y_1) {
 						// Moving to upper right
 						for (int i = 1; i < (x_2 - x_1); i++) {
-							if (this.getSpace(x_1 + i, y_1 + i) != " ") {
+							if (this.getSpaceChar(x_1 + i, y_1 + i) != '\u0000') {
 								return false; // path blocked if not empty
 							}
 						}
 					} else if (x_2 > x_1 && y_2 < y_1) {
 						// Moving to lower right
 						for (int i = 1; i < (x_2 - x_1); i++) {
-							if (this.getSpace(x_1 + i, y_1 - i) != " ") {
+							if (this.getSpaceChar(x_1 + i, y_1 - i) != '\u0000') {
 								return false; // path blocked if not empty
 							}
 						}
 					} else if (x_2 < x_1 && y_2 < y_1) {
 						// Moving to lower left
 						for (int i = 1; i < (x_1 - x_2); i++) {
-							if (this.getSpace(x_1 - i, y_1 - i) != " ") {
+							if (this.getSpaceChar(x_1 - i, y_1 - i) != '\u0000') {
 								return false; // path blocked if not empty
 							}
 						}
 					} else if (x_2 < x_1 && y_2 > y_1) {
 						// Moving to upper left
 						for (int i = 1; i < (x_1 - x_2); i++) {
-							if (this.getSpace(x_1 - i, y_1 + i) != " ") {
+							if (this.getSpaceChar(x_1 - i, y_1 + i) != '\u0000') {
 								return false; // path blocked if not empty
 							}
 						}
@@ -268,25 +274,25 @@ public class Storage {
 				if ((int) space < 97) { // space or upper case
 					if (x_1 == x_2 && y_1 < y_2) {
 						for (int i = y_1 + 1; i < y_2; i++) {
-							if (this.getSpace(x_1, i) != " ") {
+							if (this.getSpaceChar(x_1, i) != '\u0000') {
 								return false; // path blocked if not empty
 							}
 						}
 					} else if (x_1 == x_2 && y_1 > y_2) {
 						for (int i = y_1 - 1; i > y_2; i--) {
-							if (this.getSpace(x_1, i) != " ") {
+							if (this.getSpaceChar(x_1, i) != '\u0000') {
 								return false; // path blocked if not empty
 							}
 						}
 					} else if (y_1 == y_2 && x_1 < x_2) {
 						for (int i = x_1 + 1; i < x_2; i++) {
-							if (this.getSpace(i, y_1) != " ") {
+							if (this.getSpaceChar(i, y_1) != '\u0000') {
 								return false; // path blocked if not empty
 							}
 						}
 					} else if (y_1 == y_2 && x_1 > x_2) {
 						for (int i = x_1 - 1; i > x_2; i--) {
-							if (this.getSpace(i, y_1) != " ") {
+							if (this.getSpaceChar(i, y_1) != '\u0000') {
 								return false; // path blocked if not empty
 							}
 						}
@@ -295,7 +301,8 @@ public class Storage {
 				}
 				break;
 			// Black is uppercase
-		}
+		} // end switch statement
 
 		return false; // If reached this point, false
+	} // end checkMove
 }
