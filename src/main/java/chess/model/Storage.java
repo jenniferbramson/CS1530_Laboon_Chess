@@ -171,8 +171,10 @@ public class Storage {
 				// Otherwise can only move one place - north if space above is empty,
 				// diagonally if taking a piece
 				if (x_1 == x_2 && y_1 == 1 && y_2 == 3 && space == '\u0000') {
-					// First move down 2 ok
-					return true;
+					if (this.getSpaceChar(x_1, 2) == '\u0000') {
+						// First move down 2 ok, nothing in the way
+						return true;
+					}
 				} else if (x_1 == x_2 && (y_1 + 1) == y_2 && space == '\u0000') {
 					// Move north ok
 					return true;
@@ -187,8 +189,10 @@ public class Storage {
 				// Otherwise can only move one place - north if space above is empty,
 				// diagonally if taking a piece
 				if (x_1 == x_2 && y_1 == 6 && y_2 == 4 && space == '\u0000') {
-					// First move down 2 ok
-					return true;
+					if (this.getSpaceChar(x_1, 5) == '\u0000') {
+						// First move down 2 ok, nothing in the way
+						return true;
+					}
 				} else if (x_1 == x_2 && (y_1 - 1) == y_2 && space == '\u0000') {
 					// Move north ok
 					return true;
