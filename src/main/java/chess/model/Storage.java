@@ -175,7 +175,9 @@ public class Storage {
 				break;
 			case 'b':
 				// Bishop can move along the diagonals
+				if ((int) space < 97) { // space or upper case
 
+				}
 				break;
 			case 'k':
 				// Can only move one square in any direction
