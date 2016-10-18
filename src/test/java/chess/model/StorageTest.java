@@ -61,22 +61,22 @@ public class StorageTest {
 
   @Test
   public void illegalMoveWhite1() {
-    Storage temp = new Storage("rnbqkb1r/ppp2ppp/4pn2/3p4/3P4/2N2N2/PPP1PPPP/R1BQKB1R b KQkq - 2 4");
-    assertEquals(temp.getSpaceChar(1, 6), 'p');
+    Storage temp = new Storage();
+    assertEquals(temp.getSpaceChar(1, 6), 'P');
     if (temp.checkMove(6, 1, 5, 5)) {
       temp.movePiece(6, 1, 5, 5);
     }
-    assertNotEquals(temp.getSpaceChar(5, 5), 'p');
+    assertNotEquals(temp.getSpaceChar(5, 5), 'P');
   }
 
   @Test
   public void illegalMoveWhite2() {
-    Storage temp = new Storage("rnbqkb1r/ppp2ppp/4pn2/3p4/3P4/2N2N2/PPP1PPPP/R1BQKB1R b KQkq - 2 4");
-    assertEquals(temp.getSpaceChar(1, 7), 'n');
+    Storage temp = new Storage();
+    assertEquals(temp.getSpaceChar(1, 7), 'N');
     if (temp.checkMove(7, 1, 4, 5)) {
       temp.movePiece(7, 1, 4, 5);
     }
-    assertNotEquals(temp.getSpaceChar(5, 4), 'n');
+    assertNotEquals(temp.getSpaceChar(5, 4), 'N');
   }
 
   @Test
@@ -101,22 +101,22 @@ public class StorageTest {
 
   @Test
   public void legalMoveWhite1() {
-    Storage temp = new Storage("rnbqkb1r/ppp2ppp/4pn2/3p4/3P4/2N2N2/PPP1PPPP/R1BQKB1R b KQkq - 2 4");
-    assertEquals(temp.getSpaceChar(1, 7), 'n');
+    Storage temp = new Storage();
+    assertEquals(temp.getSpaceChar(1, 7), 'N');
     if (temp.checkMove(7, 1, 5, 2)) {
       temp.movePiece(7, 1, 5, 2);
     }
-    assertEquals(temp.getSpaceChar(2, 5), 'n');
+    assertEquals(temp.getSpaceChar(2, 5), 'N');
   }
 
   @Test
   public void legalMoveWhite2() {
-    Storage temp = new Storage("rnbqkb1r/ppp2ppp/4pn2/3p4/3P4/2N2N2/PPP1PPPP/R1BQKB1R b KQkq - 2 4");
-    assertEquals(temp.getSpaceChar(1, 7), 'n');
+  	Storage temp = new Storage();
+    assertEquals(temp.getSpaceChar(1, 7), 'N');
     if (temp.checkMove(7, 1, 5, 0)) {
       temp.movePiece(7, 1, 5, 0);
     }
-    assertEquals(temp.getSpaceChar(0, 5), 'n');
+    assertEquals(temp.getSpaceChar(0, 5), 'N');
   }
 
 }

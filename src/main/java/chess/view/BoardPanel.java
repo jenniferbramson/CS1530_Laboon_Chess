@@ -191,24 +191,32 @@ public class BoardPanel extends JPanel {
 				String current_spot = x_board + Integer.toString(y_board);
 				System.out.println("You clicked on " + current_spot);
 				if (second_click) {
-          System.out.println(my_storage.getSpaceChar(old_y, old_x));
-          boolean legal = my_storage.checkMove(old_y, old_x, y, x);
-          System.out.println(legal);
-          if (legal) {
-  					System.out.println("Moving " + old_spot + " to " + current_spot);
-  					if ( (old_x+old_y) % 2== 0) {
+          if (old_x == x && old_y == y) {
+            // No movement, just undo the click
+            if ( (old_x+old_y) % 2== 0) {
               checkers[old_y][old_x].setBackground(Color.WHITE);
             } else {
               checkers[old_y][old_x].setBackground(Color.GRAY);
             }
-  					second_click = false;
-  					my_storage.movePiece(old_y, old_x, y, x);
-  					//redraw
-  					drawPieces();
+            second_click = false;
           } else {
-            // Ignore
-          }
-				}
+            // Movement, so see if the movement is legal
+            boolean legal = my_storage.checkMove(old_y, old_x, y, x);
+            System.out.println(legal);
+            if (legal) {
+    					System.out.println("Moving " + old_spot + " to " + current_spot);
+    					if ( (old_x+old_y) % 2== 0) {
+                checkers[old_y][old_x].setBackground(Color.WHITE);
+              } else {
+                checkers[old_y][old_x].setBackground(Color.GRAY);
+              }
+    					second_click = false;
+    					my_storage.movePiece(old_y, old_x, y, x);
+    					//redraw
+    					drawPieces();
+            } // end legality move check
+          } // end checking move
+				} // end second click
 				else{
 					checkers[y][x].setBackground(Color.GREEN);
 					System.out.println("First click");
