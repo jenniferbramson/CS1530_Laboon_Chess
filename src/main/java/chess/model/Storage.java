@@ -174,13 +174,13 @@ public class Storage {
 				}
 				break;
 			case 'b':
-				// Can move along the diagonals
+				// Bishop can move along the diagonals
 
 				break;
 			case 'k':
 				// Can only move one square in any direction
 				if ((int) space < 97) { // space or upper case
-					int totalDiff = (x_1 - x_2) + (y_1 - y_2);
+					int totalDiff = abs((x_1 - x_2) + (y_1 - y_2));
 					if (totalDiff == 1) {
 						return true;
 					}
