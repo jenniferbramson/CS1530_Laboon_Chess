@@ -11,6 +11,7 @@ public class BoardPanel extends JPanel {
   // These are buttons we will need to use listeners on
   protected JButton[][] checkers;
 	private Storage my_storage;
+  private Rulebook my_rulebook;
 	boolean second_click = false;
 	private String old_spot = "";
 	private int old_x = 0;
@@ -24,6 +25,7 @@ public class BoardPanel extends JPanel {
   public BoardPanel() {
     this.setLayout(new GridLayout(10, 10));
 		my_storage = new Storage();
+    my_rulebook = new Rulebook(my_storage);
     checkers = new JButton[8][8];
     Insets margins = new Insets(0, 0, 0, 0);  // For setting button margins
 
@@ -201,7 +203,7 @@ public class BoardPanel extends JPanel {
             second_click = false;
           } else {
             // Movement, so see if the movement is legal
-            boolean legal = my_storage.checkMove(old_y, old_x, y, x);
+            boolean legal = my_rulebook.checkMove(old_y, old_x, y, x);
             System.out.println(legal);
             if (legal) {
     					System.out.println("Moving " + old_spot + " to " + current_spot);
