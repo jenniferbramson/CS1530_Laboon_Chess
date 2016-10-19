@@ -3,7 +3,7 @@ import static java.lang.Math.abs;
 
 public class Rulebook {
 
-  Storage my_storage;
+  private Storage my_storage;
 
   public Rulebook(Storage my_storage) {
     this.my_storage = my_storage;
@@ -139,7 +139,8 @@ public class Rulebook {
     return false; // If reached this point, false
   } // end checkMove
 
-  public boolean bishopCheck(int x_1, int y_1, int x_2, int y_2) {
+  // Helper function for checkMove(), looks at the legal moves for a bishop
+  private boolean bishopCheck(int x_1, int y_1, int x_2, int y_2) {
     if (x_2 > x_1 && y_2 > y_1) {
       // Moving to upper right
       for (int i = 1; i < (x_2 - x_1); i++) {
