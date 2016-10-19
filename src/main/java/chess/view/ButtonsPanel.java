@@ -1,7 +1,5 @@
 package chess;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 
@@ -29,7 +27,7 @@ public class ButtonsPanel extends JPanel {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         // Placeholder for when we add functionality
-
+		//Run the save file window 
       }
     };
     return action;
@@ -39,7 +37,14 @@ public class ButtonsPanel extends JPanel {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         // Placeholder for when we add functionality
-
+		
+		//Get fen that was read in from file and current fen
+		//If fen are different then ask if user wants to save before loading new game
+		//If user hits save then open up the save menu
+		//else load up current menu
+		//If user wants to return then close load and go back to game
+		LoadGame loadGame = new LoadGame();
+		//Dispose of startup screen so it's not visible
       }
     };
     return action;
