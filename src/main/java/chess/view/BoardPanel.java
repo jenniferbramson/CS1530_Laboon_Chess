@@ -10,7 +10,7 @@ public class BoardPanel extends JPanel {
 
   // These are buttons we will need to use listeners on
   protected JButton[][] checkers;
-	private Storage my_storage;
+	protected static Storage my_storage;
 	boolean second_click = false;
 	private String old_spot = "";
 	private int old_x = 0;
@@ -18,12 +18,33 @@ public class BoardPanel extends JPanel {
 
 	private int imageWidth = 32;
 	private int imageHeight = 32;
-
+	
+	protected static String lastSaveFen;
+	
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
     this.setLayout(new GridLayout(10, 10));
+	
+	//Check if fen has been found from file
+	//No fen was loaded from a file
+	if(LoadPanel.fen == "" || LoadPanel.fen == null) {
+		System.out.println("No fen to load");
+		//default storage constructor
 		my_storage = new Storage();
+		lastSaveFen = null;
+	}
+	else {
+		System.out.println("Fen loaded!: " + LoadPanel.fen);
+		
+		//Save the fen from the file, will be used when the user try to load a different game
+		//or close the current game they are on, get a new fen and compare it with the one
+		//from the file, if different then prompt if user wants to save, else let use continue action
+		lastSaveFen = LoadPanel.fen;
+		my_storage = new Storage(lastSaveFen);
+		//add fen to storage constructor
+	}
+	
     checkers = new JButton[8][8];
     Insets margins = new Insets(0, 0, 0, 0);  // For setting button margins
 
@@ -216,5 +237,4 @@ public class BoardPanel extends JPanel {
     };
     return action;
   }
-
 }
