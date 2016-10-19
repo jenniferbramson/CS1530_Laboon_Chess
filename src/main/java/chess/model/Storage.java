@@ -133,8 +133,9 @@ public class Storage {
 		public void movePiece(int x_1, int y_1, int x_2, int y_2){
 			if(board[x_1][y_1] == '\u0000') return;			//if the original is a null space, don't bother doing anything
 			//if they are the same case, then don't take out your own pieces!
-			if(Character.isUpperCase(board[x_1][y_1]) && Character.isUpperCase(board[x_2][y_2])) return;
-			if(Character.isLowerCase(board[x_1][y_1]) && Character.isLowerCase(board[x_2][y_2])) return;
+			// This part is redundent now with legality checks
+			//if(Character.isUpperCase(board[x_1][y_1]) && Character.isUpperCase(board[x_2][y_2])) return;
+			//if(Character.isLowerCase(board[x_1][y_1]) && Character.isLowerCase(board[x_2][y_2])) return;
 			board[x_2][y_2] = board[x_1][y_1];
 			if(x_2!=x_1 || y_2!=y_1)board[x_1][y_1] = '\u0000';
 		}
