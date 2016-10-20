@@ -108,6 +108,10 @@ public class Rulebook {
         // Rooks can move north/south xor east/west
         // Shoot have to check every single space in between start and end to
         // make sure no pieces blocking the path
+        if (y_1 != y_2 && x_1 != x_2) {
+          return false;	// Not moving in a legal diagonal, horizontal, or vertical direction
+        }
+
         if (x_1 == x_2 && y_1 < y_2) {
           for (int i = y_1 + 1; i < y_2; i++) {
             if (my_storage.getSpaceChar(x_1, i) != '\u0000') {
