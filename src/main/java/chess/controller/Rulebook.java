@@ -109,7 +109,7 @@ public class Rulebook {
         // Shoot have to check every single space in between start and end to
         // make sure no pieces blocking the path
         if (y_1 != y_2 && x_1 != x_2) {
-          return false;	// Not moving in a legal diagonal, horizontal, or vertical direction
+          return false;	// Not moving in a legal horizontal, or vertical direction
         }
 
         if (x_1 == x_2 && y_1 < y_2) {
