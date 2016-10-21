@@ -91,14 +91,13 @@ public class ChooseColorPanel extends JPanel {
 	private ActionListener playWhite() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			// Placeholder for when we add functionality
-			//TODO - Pass in color to console graphics
-				//Run the chessboard
 
+				//Run the chessboard
 				ConsoleGraphics chessboard = new ConsoleGraphics();
 
 				LaboonChess.controller = new TurnController();   // default starts as white
 				LaboonChess.controller.addGraphicalTurn(chessboard);
+				LaboonChess.controller.setPlayersTurn(true);			// true for white
 
 				//Dispose color choice frame after user picks color
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(white.getParent());
@@ -111,13 +110,13 @@ public class ChooseColorPanel extends JPanel {
 	private ActionListener playBlack() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			// Placeholder for when we add functionality
-			//TODO - Pass in color to console graphics
 
 				ConsoleGraphics chessboard = new ConsoleGraphics();
 
 				LaboonChess.controller = new TurnController();   // default starts as white
 				LaboonChess.controller.addGraphicalTurn(chessboard);
+				LaboonChess.controller.setPlayersTurn(false);		// false for black (not currently)
+																												// black's turn
 
 				//Dispose color choice frame after user picks color
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(black.getParent());

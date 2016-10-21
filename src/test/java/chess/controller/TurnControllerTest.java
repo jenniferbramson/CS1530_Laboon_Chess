@@ -20,4 +20,19 @@ public class TurnControllerTest {
 
   }
 
+  @Test
+  public void SwitchTurn2() {
+    TurnController controller = new TurnController();
+    controller.setPlayersTurn(true);
+
+    if (controller.getPlayersTurn()) {
+      controller.changeTurn();
+      assertTrue(!controller.getPlayersTurn());
+    } else if (!controller.getPlayersTurn()) {
+      controller.changeTurn();
+      assertTrue(controller.getPlayersTurn());
+    }
+
+  }
+
 }

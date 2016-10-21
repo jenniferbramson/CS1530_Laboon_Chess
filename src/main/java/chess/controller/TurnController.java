@@ -1,8 +1,11 @@
 package chess;
 
 // Tells whose turn it is. Must call changeTurn() after each turn is made.
+// Tells if it is white or black's turn and if it is the player's or the
+// computer's turn.
 public class TurnController {
 
+  private boolean player = true;  // Default: start off with player's turn
   private char turn;
   private ConsoleGraphics graphics;
   private boolean graphicsExist = false;
@@ -31,6 +34,15 @@ public class TurnController {
     }
   }
 
+  public boolean getPlayersTurn() {
+    return player;
+  }
+
+  // Set to false initially if the player chooses black, true if white.
+  public void setPlayersTurn(boolean playersChoice) {
+    this.player = playersChoice;
+  }
+
   public void changeTurn() {
     if (turn == 'w') {
       turn = 'b';
@@ -42,6 +54,13 @@ public class TurnController {
       if (graphicsExist) {
         graphics.setWhite();
       }
+    }
+
+    if (player) {
+      player = false; // Comment this out and start as white to test black/white
+                      // turn switching
+    } else {
+      player = true;
     }
   }
 

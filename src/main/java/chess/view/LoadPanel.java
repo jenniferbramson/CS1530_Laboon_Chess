@@ -86,6 +86,7 @@ public class LoadPanel extends JPanel {
 				// TODO: set controller to whoever's turn it should be
 				// LaboonChess.controller = new TurnController('w'); or 'b'
 				// LaboonChess.controller.addGraphicalTurn(chessboard);
+				// LaboonChess.controller.setPlayersTurn(boolean); // true if currently player's turn
 
 				//Make load frame not visible after user clicks new game
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(enter.getParent());

@@ -219,28 +219,32 @@ public class BoardPanel extends JPanel {
           } // end checking move
 				} // end second click
 				else{
-          boolean validColor = false;     // Tells if the right color piece is trying to move
-          if (Character.isUpperCase(my_storage.getSpaceChar(x, y))) {
-            if (LaboonChess.getTurn() == 'w') {
-              validColor = true;
-            }
-          } else if (Character.isLowerCase(my_storage.getSpaceChar(x, y))) {
-            if (LaboonChess.getTurn() == 'b') {
-              validColor = true;
-            }
-          }
 
-          if (validColor) {               // Continue if right color piece clicked
-  					checkers[y][x].setBackground(Color.GREEN);
-  					System.out.println("First click");
-  					old_spot = current_spot;
-  					old_x = x;
-  					old_y = y;
-  					second_click = true;
-          } else {
-            // Invalid color piece clicked or empty, so ignore
-          }
-				}
+          if (LaboonChess.getPlayersTurn()) { // Ignore input unless it is the player's turn
+            boolean validColor = false;     // Tells if the right color piece is trying to move
+            if (Character.isUpperCase(my_storage.getSpaceChar(x, y))) {
+              if (LaboonChess.getTurn() == 'w') {
+                validColor = true;
+              }
+            } else if (Character.isLowerCase(my_storage.getSpaceChar(x, y))) {
+              if (LaboonChess.getTurn() == 'b') {
+                validColor = true;
+              }
+            }
+
+            if (validColor) {               // Continue if right color piece clicked
+    					checkers[y][x].setBackground(Color.GREEN);
+    					System.out.println("First click");
+    					old_spot = current_spot;
+    					old_x = x;
+    					old_y = y;
+    					second_click = true;
+            } else {
+              // Invalid color piece clicked or empty, so ignore
+            } // end if (validColor)
+          } // end if (playersTurn())
+
+				} // end ActionListener
 
 				//for testing ONLY
 				if(x==0 && y==0){
