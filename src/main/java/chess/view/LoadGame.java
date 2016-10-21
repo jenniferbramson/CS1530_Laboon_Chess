@@ -14,8 +14,11 @@ public class LoadGame extends JPanel {
 	private int screenWidth = 600;
 	private int screenHeight = 250;
 	
+	//Access frame in LoadPanel when resizing the panel to fit extra buttons
+	protected static JFrame frame;
+	
 	public LoadGame() {
-		JFrame frame = new JFrame("Load Game");
+		frame = new JFrame("Load Game");
 		Container content = frame.getContentPane();
 
 		LoadPanel loadPanel = new LoadPanel();
