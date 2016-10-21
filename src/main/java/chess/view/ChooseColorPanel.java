@@ -92,9 +92,14 @@ public class ChooseColorPanel extends JPanel {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			// Placeholder for when we add functionality
-			//TODO - Pass in color to console graphics 
+			//TODO - Pass in color to console graphics
 				//Run the chessboard
+
 				ConsoleGraphics chessboard = new ConsoleGraphics();
+
+				LaboonChess.controller = new TurnController();   // default starts as white
+				LaboonChess.controller.addGraphicalTurn(chessboard);
+
 				//Dispose color choice frame after user picks color
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(white.getParent());
 				frame.dispose();
@@ -108,7 +113,12 @@ public class ChooseColorPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 			// Placeholder for when we add functionality
 			//TODO - Pass in color to console graphics
+
 				ConsoleGraphics chessboard = new ConsoleGraphics();
+
+				LaboonChess.controller = new TurnController();   // default starts as white
+				LaboonChess.controller.addGraphicalTurn(chessboard);
+
 				//Dispose color choice frame after user picks color
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(black.getParent());
 				frame.dispose();

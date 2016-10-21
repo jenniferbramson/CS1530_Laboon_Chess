@@ -8,14 +8,12 @@ public class ConsoleGraphics {
   // These are buttons we will need to use listeners on
   protected JButton whiteTurn;
   protected JButton blackTurn;
-  protected static TurnController controller;
 
 
   // Puts all the components together to create the screen
   public ConsoleGraphics() {
     JFrame frame = new JFrame("Laboon Chess");
     Container content = frame.getContentPane();   // Get reference to content pane
-    controller = new TurnController();            // ALWAYS starts as white
 
     // Left side of the board has the timer, chess board, and buttons (load and
     // save) stacked vertically
@@ -35,8 +33,8 @@ public class ConsoleGraphics {
 
     // Right side of the board has the the taken black and white pieces stacked
     // vertically
-   // TakenPanel takenBlack = new TakenPanel("Taken Black Pieces");
-    //TakenPanel takenWhite = new TakenPanel("Taken White Pieces");
+    TakenPanel takenBlack = new TakenPanel("Taken Black Pieces");
+    TakenPanel takenWhite = new TakenPanel("Taken White Pieces");
 
     // Entire screen has both the leftand right sides of the board put together
     // in a horizontal fashion
@@ -65,13 +63,13 @@ public class ConsoleGraphics {
     c.gridheight = 6;
     c.ipadx = 150;
     c.ipady = 200;
-    //content.add(takenBlack, c);
+    content.add(takenBlack, c);
     c.gridx = 2;
     c.gridy = 6;
     c.gridheight = 6;
     c.ipadx = 150;
     c.ipady = 200;
-    //content.add(takenWhite, c);
+    content.add(takenWhite, c);
 
     //Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.pack();
@@ -95,10 +93,10 @@ public class ConsoleGraphics {
     b.setOpaque(true);            // Necessary to see background color
     b.setBackground(Color.WHITE);
     b.setBorder(BorderFactory.createLineBorder(Color.black));
-    b.addActionListener(getTurnAction());
+    //b.addActionListener(getTurnAction());
     return b;
   }
-
+/*
   private ActionListener getTurnAction() {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -108,7 +106,17 @@ public class ConsoleGraphics {
     };
     return action;
   }
+*/
 
+  public void setWhite() {
+    blackTurn.setBackground(Color.WHITE);
+    whiteTurn.setBackground(Color.YELLOW);
+  }
+
+  public void setBlack() {
+    whiteTurn.setBackground(Color.WHITE);
+    blackTurn.setBackground(Color.YELLOW);
+  }
 
   public static void main(String[] args) {
     ConsoleGraphics chessBoard = new ConsoleGraphics();

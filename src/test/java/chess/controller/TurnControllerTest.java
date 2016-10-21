@@ -10,13 +10,11 @@ public class TurnControllerTest {
     TurnController controller = new TurnController();
     char turn = controller.getTurn();
 
-    Storage temp = new Storage();
-
     if (turn == 'b') {
-      temp.movePiece(1, 1, 3, 1);
+      controller.changeTurn();
       assertEquals(controller.getTurn(), 'w');
     } else if (turn == 'w') {
-      temp.movePiece(6, 1, 4, 1);
+      controller.changeTurn();
       assertEquals(controller.getTurn(), 'b');
     }
 

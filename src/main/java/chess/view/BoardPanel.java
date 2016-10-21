@@ -214,18 +214,18 @@ public class BoardPanel extends JPanel {
     					//redraw
     					drawPieces();
               // Switch whose turn it is
-              ConsoleGraphics.controller.changeTurn();
+              LaboonChess.changeTurn();
             } // end legality move check
           } // end checking move
 				} // end second click
 				else{
           boolean validColor = false;     // Tells if the right color piece is trying to move
           if (Character.isUpperCase(my_storage.getSpaceChar(x, y))) {
-            if (ConsoleGraphics.controller.getTurn() == 'w') {
+            if (LaboonChess.getTurn() == 'w') {
               validColor = true;
             }
           } else if (Character.isLowerCase(my_storage.getSpaceChar(x, y))) {
-            if (ConsoleGraphics.controller.getTurn() == 'b') {
+            if (LaboonChess.getTurn() == 'b') {
               validColor = true;
             }
           }
