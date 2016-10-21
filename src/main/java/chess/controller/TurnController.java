@@ -5,18 +5,34 @@ package chess;
 // computer's turn.
 public class TurnController {
 
-  private boolean player = true;  // Default: start off with player's turn
+  private boolean playersTurn = true;  // Default: start off with player's turn
+  private char playersColor;
   private char turn;
   private ConsoleGraphics graphics;
   private boolean graphicsExist = false;
 
-  public TurnController() {
+  public TurnController(char playersColor) {
     turn = 'w';
+    this.playersColor = playersColor;
+    if (playersColor == 'w') {
+      playersTurn = true;
+    } else if (playersColor == 'b') {
+      playersTurn = false;
+    } else {
+      System.out.println("Error. Invalid TurnController input.");
+      System.exit(2);
+    }
   }
 
-  public TurnController(char c) {
-    if (c == 'b' || c == 'w') {
-      turn = c;
+  public TurnController(char currentColor, char playersColor) {
+    if ((currentColor == 'b' || currentColor == 'w') && (playersColor == 'b' || playersColor == 'w')) {
+      turn = currentColor;
+      this.playersColor = playersColor;
+      if (playersColor == currentColor) {
+        playersTurn = true;
+      } else {
+        playersTurn = false;
+      }
     } else {
       System.out.println("Error. Invalid TurnController input.");
       System.exit(2);
@@ -35,12 +51,11 @@ public class TurnController {
   }
 
   public boolean getPlayersTurn() {
-    return player;
+    return playersTurn;
   }
 
-  // Set to false initially if the player chooses black, true if white.
-  public void setPlayersTurn(boolean playersChoice) {
-    this.player = playersChoice;
+  public char getPlayersColor() {
+    return playersColor;
   }
 
   public void changeTurn() {
@@ -56,11 +71,11 @@ public class TurnController {
       }
     }
 
-    if (player) {
-      player = false; // Comment this out and start as white to test black/white
-                      // turn switching
+    if (playersTurn) {
+      playersTurn = false;  // Comment this out and start as white to test black/white
+                            // turn switching
     } else {
-      player = true;
+      playersTurn = true;
     }
   }
 

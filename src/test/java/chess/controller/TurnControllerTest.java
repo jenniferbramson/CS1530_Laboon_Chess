@@ -7,7 +7,8 @@ public class TurnControllerTest {
 
   @Test
   public void SwitchTurn1() {
-    TurnController controller = new TurnController();
+    char playersColor = 'b';
+    TurnController controller = new TurnController(playersColor);
     char turn = controller.getTurn();
 
     if (turn == 'b') {
@@ -22,8 +23,8 @@ public class TurnControllerTest {
 
   @Test
   public void SwitchTurn2() {
-    TurnController controller = new TurnController();
-    controller.setPlayersTurn(true);
+    char playersColor = 'w';
+    TurnController controller = new TurnController(playersColor);
 
     if (controller.getPlayersTurn()) {
       controller.changeTurn();
