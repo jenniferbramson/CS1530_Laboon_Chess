@@ -19,33 +19,27 @@ public class BoardPanel extends JPanel {
 
 	private int imageWidth = 32;
 	private int imageHeight = 32;
-<<<<<<< HEAD
 
 	protected static String lastSaveFen;
 
-=======
-	
+
 	//Keep track of the last saved fen
 	//Used for testing loss of progress
 	protected static String lastSaveFen = "";		//Used to check if player made moves after load
-	protected static String lastSaveFilePath;		//Test code 
-	
+	protected static String lastSaveFilePath;		//Test code
+
 	private String defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-	
->>>>>>> 567d872a65600671d66c83e6bebc2f201e6f9804
+
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
     this.setLayout(new GridLayout(10, 10));
-<<<<<<< HEAD
 
-=======
-	
+
 	//Test code
 	//lastSaveFilePath = LoadPanel.fileNamePath;
 	//System.out.println("Loaded file name path: " + lastSaveFilePath);
 	
->>>>>>> 567d872a65600671d66c83e6bebc2f201e6f9804
 	//Check if fen has been found from file
 	//No fen was loaded from a file
 	if(LoadPanel.fen == "" || LoadPanel.fen == null) {
