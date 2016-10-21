@@ -1,14 +1,15 @@
 import org.junit.Test;
 import static org.junit.Assert.*;
 
-import chess.ConsoleGraphics;
+import chess.StartUpMenu;
 
 public class GraphicsTest {
 
   @Test
   public void testGraphics() {
     String[] args = new String[1];
-    ConsoleGraphics.main(args);
+	
+    StartUpMenu.main(args);
   }
 
 }

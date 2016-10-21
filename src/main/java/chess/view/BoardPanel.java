@@ -10,7 +10,7 @@ public class BoardPanel extends JPanel {
 
   // These are buttons we will need to use listeners on
   protected JButton[][] checkers;
-	private Storage my_storage;
+	protected static Storage my_storage;
   private Rulebook my_rulebook;
 	boolean second_click = false;
 	private String old_spot = "";
@@ -20,11 +20,46 @@ public class BoardPanel extends JPanel {
 	private int imageWidth = 32;
 	private int imageHeight = 32;
 
+	//protected static String lastSaveFen;
+
+
+	//Keep track of the last saved fen
+	//Used for testing loss of progress
+	protected static String lastSaveFen = "";		//Used to check if player made moves after load
+	protected static String lastSaveFilePath;		//Test code
+
+	private String defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
+
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
     this.setLayout(new GridLayout(10, 10));
+
+
+	//Test code
+	//lastSaveFilePath = LoadPanel.fileNamePath;
+	//System.out.println("Loaded file name path: " + lastSaveFilePath);
+
+	//Check if fen has been found from file
+	//No fen was loaded from a file
+	if(LoadPanel.fen == "" || LoadPanel.fen == null) {
+		System.out.println("No fen to load");
+		//default storage constructor
 		my_storage = new Storage();
+		//Set last saved fen to the default fen
+		lastSaveFen = defaultFen;
+	}
+	else {
+		System.out.println("Fen loaded!: " + LoadPanel.fen);
+
+		//Save the fen from the file, will be used when the user try to load a different game
+		//or close the current game they are on, get a new fen and compare it with the one
+		//from the file, if different then prompt if user wants to save, else let use continue action
+		lastSaveFen = LoadPanel.fen;
+		my_storage = new Storage(lastSaveFen);
+		//add fen to storage constructor
+	}
+
     my_rulebook = new Rulebook(my_storage);
     checkers = new JButton[8][8];
     Insets margins = new Insets(0, 0, 0, 0);  // For setting button margins
@@ -236,5 +271,4 @@ public class BoardPanel extends JPanel {
     };
     return action;
   }
-
 }

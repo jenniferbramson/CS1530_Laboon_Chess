@@ -8,11 +8,11 @@ public class ConsoleGraphics {
   // These are buttons we will need to use listeners on
   protected JButton whiteTurn;
   protected JButton blackTurn;
-
-
+  protected static JFrame frame;
+  
   // Puts all the components together to create the screen
   public ConsoleGraphics() {
-    JFrame frame = new JFrame("Laboon Chess");
+    frame = new JFrame("Laboon Chess");
     Container content = frame.getContentPane();   // Get reference to content pane
 
     // Left side of the board has the timer, chess board, and buttons (load and
@@ -106,8 +106,7 @@ public class ConsoleGraphics {
     };
     return action;
   }
-
-
+  
   public static void main(String[] args) {
     ConsoleGraphics chessBoard = new ConsoleGraphics();
   }

@@ -1,7 +1,5 @@
 package chess;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JButton;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 
@@ -28,8 +26,8 @@ public class ButtonsPanel extends JPanel {
   private ActionListener getSaveAction() {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        // Placeholder for when we add functionality
-
+        //Save functionality
+		SaveGame saveGame = new SaveGame();
       }
     };
     return action;
@@ -39,7 +37,9 @@ public class ButtonsPanel extends JPanel {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         // Placeholder for when we add functionality
-
+		
+		//Load functionality
+		LoadGame loadGame = new LoadGame();
       }
     };
     return action;

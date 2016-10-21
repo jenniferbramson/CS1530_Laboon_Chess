@@ -5,7 +5,7 @@ import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 import java.io.*;
 import javax.imageio.*;
 
-public class LoadGame extends JPanel {
+public class SaveGame extends JPanel {
 	
 	private Toolkit t;
 	private Dimension screen;
@@ -14,20 +14,17 @@ public class LoadGame extends JPanel {
 	private int screenWidth = 600;
 	private int screenHeight = 250;
 	
-	//Access frame in LoadPanel when resizing the panel to fit extra buttons
-	protected static JFrame frame;
-	
-	public LoadGame() {
-		frame = new JFrame("Load Game");
+	public SaveGame() {
+		JFrame frame = new JFrame("Save Game");
 		Container content = frame.getContentPane();
 
-		LoadPanel loadPanel = new LoadPanel();
+		SavePanel savePanel = new SavePanel();
 		
 		JPanel mainPanel = new JPanel();
 		
 		//Room to add anything else
 		mainPanel.setLayout(new BorderLayout());
-		mainPanel.add(loadPanel, BorderLayout.CENTER);
+		mainPanel.add(savePanel, BorderLayout.CENTER);
 		
 		content.add(mainPanel);
 		
@@ -47,7 +44,7 @@ public class LoadGame extends JPanel {
 	}
 	
 	public static void main(String[] args) {
-		LoadGame textFileInput = new LoadGame();
+		SaveGame save = new SaveGame();
 	}
 }
 	
