@@ -192,8 +192,11 @@ public class LoadPanel extends JPanel {
 				
 				//If not then it must be from the startup menu where the user clicked on load game
 				else {
-					System.out.println("Board is not visible!");
-					loadFile();
+					if(checkValidFileExtension() == true)
+					{
+						System.out.println("Board is not visible!");
+						loadFile();
+					}
 				}
 			}
 		};
@@ -277,14 +280,28 @@ public class LoadPanel extends JPanel {
 						System.out.println("Row " + i + " : " + fileContents.get(i));
 					}
 					
-					//Remove previous chessboard before creating the new one
-					//If there is some lag when loading the images
-					//Might just call drawpieces on the current board with new fen
-					ConsoleGraphics.frame.dispose();
+					//Try to see if the board is open/visible
+					try {
+						checkChessboardVisible = ConsoleGraphics.frame.isShowing();
+					}
+					catch(NullPointerException ex) {
+						checkChessboardVisible = false;
+					}
+					
+					if(checkChessboardVisible != false) {
+						//Remove previous chessboard before creating the new one
+						//If there is some lag when loading the images
+						//Might just call drawpieces on the current board with new fen
+						ConsoleGraphics.frame.dispose();
+					}
 					
 					//Load chessboard
 					ConsoleGraphics chessboard = new ConsoleGraphics();			
-
+					
+					//Update last saved fen
+					//Last saved fen as the new fen that was just loaded
+					BoardPanel.lastSaveFen = fen;
+					
 					//Make load frame not visible after user clicks load game
 					JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(enter.getParent());
 					frame.dispose();
@@ -299,9 +316,6 @@ public class LoadPanel extends JPanel {
 				System.out.println(eeeee.getMessage());
 				prompt.setText("<html>ERROR: File doesn't exists!<br>Enter save file name with extention:</html>");
 			}
-			//Update last saved fen
-			//Last saved fen as the new fen that was just loaded
-			BoardPanel.lastSaveFen = fen;
 		}
 	}
 	
