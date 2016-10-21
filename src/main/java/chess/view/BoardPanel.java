@@ -20,7 +20,7 @@ public class BoardPanel extends JPanel {
 	private int imageWidth = 32;
 	private int imageHeight = 32;
 
-	protected static String lastSaveFen;
+	//protected static String lastSaveFen;
 
 
 	//Keep track of the last saved fen
@@ -39,7 +39,7 @@ public class BoardPanel extends JPanel {
 	//Test code
 	//lastSaveFilePath = LoadPanel.fileNamePath;
 	//System.out.println("Loaded file name path: " + lastSaveFilePath);
-	
+
 	//Check if fen has been found from file
 	//No fen was loaded from a file
 	if(LoadPanel.fen == "" || LoadPanel.fen == null) {
