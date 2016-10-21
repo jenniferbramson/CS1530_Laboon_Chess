@@ -47,7 +47,8 @@ public class Stockfish {
 
 
   // Start Stockfish engine
-  public boolean startEngine(String os_name) {
+  public boolean startEngine() {
+    String os_name = System.getProperty("os.name");
   	String path = "";
   	String pathBase = System.getProperty("user.dir");
 		//System.out.println(os_name);
@@ -78,6 +79,7 @@ public class Stockfish {
       inputStreamReader = new InputStreamReader(inputStream);
       processReader = new BufferedReader(inputStreamReader);
       processWriter = new BufferedWriter(new OutputStreamWriter(engine.getOutputStream()));
+      System.out.println("Stockfish engine started");
 
 
     }
@@ -88,10 +90,6 @@ public class Stockfish {
     }
   return true;
   }
-
-  // public boolean isRunning() {
-  //   return engine.isRunning();
-  // }
 
   // Send UCI command to Stockfish engine
   public boolean send(String command) {
@@ -188,31 +186,10 @@ public class Stockfish {
 
   // move string needs to be in algebraic notation for chess
   public boolean movePiece(String allMoves, String fen){
-    // this.send("go");
     this.send("position fen " + fen + " moves " + allMoves);
     // check to see if valid - not sure how yet
     return true; // if valid move?
 
-  }
-
-  // Not working yet
-  public void getLegalMoves(String allMoves, String fen) {
-    this.enableDebugLog();
-    this.send("position fen " + fen);
-    // System.out.println(this.isReady());
-    // this.send("position startpos " + " moves " + allMoves);
-    // this.send("position fen " + fen);
-     this.send("go searchmoves");
-     System.out.println(getOutput());
-    //  System.out.println(getOutput());
-
-    //  return getOutput().split("Legal moves: ")[1];
-  }
-
-  // Not working
-  public boolean isLegalMove(String fen, String move){
-    // String legalMoves = getLegalMoves(fen);
-    return true;
   }
 
   /**
@@ -226,6 +203,7 @@ public class Stockfish {
       processReader.close();
       processWriter.close();
       this.engine.waitFor();
+      System.out.println("Stockfish closed");
       return true;
     }
     catch (Exception e) {
@@ -234,18 +212,51 @@ public class Stockfish {
     }
   }
 
+  public static void gameTracker() {
+
+    Stockfish game = new Stockfish();
+    game.startEngine();
+    game.enableDebugLog();
+    game.send("ucinewgame");
+
+    game.send("position startpos");
+    game.send("d");
+    String output = game.getOutput();
+    System.out.println("Output" + output);
+
+    String bestMove = game.getBestMove(game.STARTING_POS, 100);
+    game.movePiece(bestMove, game.STARTING_POS);
+    String fen = game.getFen();
+    System.out.println("Fen string after move 1" + ": " + fen);
+    game.drawBoard();
+
+    bestMove = game.getBestMove(fen, 100);
+    // allMoves.append(bestMove);
+    // allMoves.append(" ");
+
+    // It seems that the stockfish board does not preserve any state.
+    // It may be necessary to store all moves in some structure
+    game.movePiece(bestMove, fen);
+    fen = game.getFen();
+    System.out.println("Fen string after move 2" + ": " + fen);
+    game.drawBoard();
+
+
+
+  }
+
   // Just for testing to see how engine acts over many turns
   public static void playGame(int rounds) {
     String os_name = System.getProperty("os.name");
 
     Stockfish player1 = new Stockfish();
-    player1.startEngine(os_name);
+    player1.startEngine();
     // Tell the engine to switch to UCI mode
     player1.send("uci");
     // player1.turnOnDebug();
 
     Stockfish player2 = new Stockfish();
-    player2.startEngine(os_name);
+    player2.startEngine();
     player2.send("uci");
 
     String fen = player1.STARTING_POS;
@@ -293,10 +304,8 @@ public class Stockfish {
   }
 
   public static void demoStockfish(){
-    String os_name = System.getProperty("os.name");
-    System.out.println(os_name);
     Stockfish player1 = new Stockfish();
-    player1.startEngine(os_name);
+    player1.startEngine();
     // Tell the engine to switch to UCI mode
     player1.send("uci");
     String output = player1.getOutput();
@@ -314,7 +323,7 @@ public class Stockfish {
 
     // Start a second stockfish engine to represent player 2
     Stockfish player2 = new Stockfish();
-    player2.startEngine(os_name);
+    player2.startEngine();
     player2.send("uci");
 
     output = player2.getOutput();
