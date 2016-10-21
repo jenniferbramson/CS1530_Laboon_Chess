@@ -20,6 +20,7 @@ public class TurnController {
     }
   }
 
+  // Graphics must contain setBlack() and setWhite() methods.
   public void addGraphicalTurn(ConsoleGraphics graphics) {
     this.graphics = graphics;
     graphicsExist = true;
