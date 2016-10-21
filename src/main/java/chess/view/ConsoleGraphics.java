@@ -3,13 +3,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 
-public class ConsoleGraphics {
+public class ConsoleGraphics extends JFrame {
 
   // These are buttons we will need to use listeners on
+  private Toolkit t;
+  private Dimension screen;
   protected JButton whiteTurn;
   protected JButton blackTurn;
   protected static JFrame frame;
-  
+
   // Puts all the components together to create the screen
   public ConsoleGraphics() {
     frame = new JFrame("Laboon Chess");
@@ -33,8 +35,8 @@ public class ConsoleGraphics {
 
     // Right side of the board has the the taken black and white pieces stacked
     // vertically
-   // TakenPanel takenBlack = new TakenPanel("Taken Black Pieces");
-    //TakenPanel takenWhite = new TakenPanel("Taken White Pieces");
+    TakenPanel takenBlack = new TakenPanel("Taken Black Pieces");
+    TakenPanel takenWhite = new TakenPanel("Taken White Pieces");
 
     // Entire screen has both the leftand right sides of the board put together
     // in a horizontal fashion
@@ -44,8 +46,8 @@ public class ConsoleGraphics {
     c.gridx = 0;              // specifies which column
     c.gridy = 0;              // specifies which row
     c.gridheight = 12;        // gridheight = number of rows it takes up
-    c.ipadx = 400;            // ipad = size in pixels
-    c.ipady = 400;
+    c.ipadx = 250;            // ipad = size in pixels
+    c.ipady = 250;
     content.add(left, c);
     c.gridheight = 2;
     c.gridx = 1;
@@ -61,18 +63,25 @@ public class ConsoleGraphics {
     c.gridx = 2;
     c.gridy = 0;
     c.gridheight = 6;
-    c.ipadx = 150;
+    c.ipadx = 200;
     c.ipady = 200;
-    //content.add(takenBlack, c);
+    content.add(takenBlack, c);
     c.gridx = 2;
     c.gridy = 6;
     c.gridheight = 6;
-    c.ipadx = 150;
+    c.ipadx = 200;
     c.ipady = 200;
-    //content.add(takenWhite, c);
+    content.add(takenWhite, c);
 
     //Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.pack();
+
+    //Get size of computer screen
+    //Set the screen so it appears in the middle
+    t = getToolkit();
+    screen = t.getScreenSize();
+    frame.setLocation(screen.width/2-frame.getWidth()/2,screen.height/2-frame.getHeight()/2);
+
 		//frame.setSize(screenSize.width,screenSize.height);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setVisible(true);                     // Do this last
@@ -93,20 +102,31 @@ public class ConsoleGraphics {
     b.setOpaque(true);            // Necessary to see background color
     b.setBackground(Color.WHITE);
     b.setBorder(BorderFactory.createLineBorder(Color.black));
-    b.addActionListener(getTurnAction());
+    //b.addActionListener(getTurnAction());
     return b;
   }
-
+/*
   private ActionListener getTurnAction() {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         // Placeholder for when we add functionality
-				
+
       }
     };
     return action;
   }
-  
+*/
+
+  public void setWhite() {
+    blackTurn.setBackground(Color.WHITE);
+    whiteTurn.setBackground(Color.YELLOW);
+  }
+
+  public void setBlack() {
+    whiteTurn.setBackground(Color.WHITE);
+    blackTurn.setBackground(Color.YELLOW);
+  }
+
   public static void main(String[] args) {
     ConsoleGraphics chessBoard = new ConsoleGraphics();
   }
