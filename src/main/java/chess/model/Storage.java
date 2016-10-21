@@ -1,5 +1,6 @@
 package chess;
 import java.util.*;
+import chess.Stockfish;
 
 public class Storage {
 
@@ -11,6 +12,7 @@ public class Storage {
 	int full_moves = 0;
 	//arraylist to keep track of history
 	ArrayList<String> history;
+  private String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 
 	//constructor

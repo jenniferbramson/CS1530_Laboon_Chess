@@ -208,7 +208,7 @@ public class Stockfish {
       processWriter.close();
       // Wait for process to completely exit
       this.engine.waitFor();
-      System.out.println("Stockfish closed");
+      System.out.println("Stockfish engine stopped");
       return true;
     }
     catch (Exception e) {
