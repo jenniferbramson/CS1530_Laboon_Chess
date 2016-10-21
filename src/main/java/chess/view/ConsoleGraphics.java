@@ -8,12 +8,14 @@ public class ConsoleGraphics {
   // These are buttons we will need to use listeners on
   protected JButton whiteTurn;
   protected JButton blackTurn;
+  protected static TurnController controller;
 
 
   // Puts all the components together to create the screen
   public ConsoleGraphics() {
     JFrame frame = new JFrame("Laboon Chess");
     Container content = frame.getContentPane();   // Get reference to content pane
+    controller = new TurnController();            // ALWAYS starts as white
 
     // Left side of the board has the timer, chess board, and buttons (load and
     // save) stacked vertically
@@ -101,7 +103,7 @@ public class ConsoleGraphics {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         // Placeholder for when we add functionality
-				
+
       }
     };
     return action;
