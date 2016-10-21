@@ -1,6 +1,5 @@
 package chess;
 import java.util.*;
-import chess.Stockfish;
 
 public class Storage {
 
@@ -12,9 +11,7 @@ public class Storage {
 	int full_moves = 0;
 	//arraylist to keep track of history
 	ArrayList<String> history;
-  private String fen = Stockfish.STARTING_POS;
-  private Stockfish stockfish;
-  private boolean stockfishOn = false;
+
 
 	//constructor
 	public Storage(){
@@ -72,13 +69,6 @@ public class Storage {
 			//System.out.println("error: test point 1");
 		}
 	}
-
-  public Storage(String fen, Stockfish stockfish) {
-    this(fen);
-    this.stockfish = stockfish;
-    stockfishOn = true;
-
-  }
 
   public void loadBoard(String fen){
     this.fen=fen;
@@ -192,10 +182,6 @@ public class Storage {
 			//if(Character.isUpperCase(board[x_1][y_1]) && Character.isUpperCase(board[x_2][y_2])) return;
 			//if(Character.isLowerCase(board[x_1][y_1]) && Character.isLowerCase(board[x_2][y_2])) return;
 			board[x_2][y_2] = board[x_1][y_1];
-      // String move = Integer.toString(x_1) + Integer.toString(y_1) + Integer.toString(x_2) + Integer.toString(y_2);
-      // System.out.println("Translated move string is " + move);
-      // if (stockfishOn)
-      // stockfish.movePiece(move, fen);
 
 			if(x_2!=x_1 || y_2!=y_1)board[x_1][y_1] = '\u0000';
 		}
