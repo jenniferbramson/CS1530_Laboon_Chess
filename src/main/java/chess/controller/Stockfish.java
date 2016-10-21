@@ -48,6 +48,7 @@ public class Stockfish {
 
   // Start Stockfish engine
   public boolean startEngine() {
+    // First get name of operating system to file appropriate executable file
     String os_name = System.getProperty("os.name");
   	String path = "";
   	String pathBase = System.getProperty("user.dir");
@@ -66,11 +67,12 @@ public class Stockfish {
 
     try {
 
+      // path to executable stockfish file
       Path file = Paths.get(path);
-
       builder = new ProcessBuilder(path);
-      builder.redirectErrorStream(true);
 
+      // Send standard error to same stream as standard out
+      builder.redirectErrorStream(true);
       engine = builder.start();
       // System.out.println( "Process is running" + engine.isAlive());
 
@@ -81,6 +83,8 @@ public class Stockfish {
       processWriter = new BufferedWriter(new OutputStreamWriter(engine.getOutputStream()));
       System.out.println("Stockfish engine started");
 
+      // Tell stockfish process to start communicating in UCI mode
+      this.send("ucinewgame");
 
     }
 
@@ -185,8 +189,8 @@ public class Stockfish {
 
 
   // move string needs to be in algebraic notation for chess
-  public boolean movePiece(String allMoves, String fen){
-    this.send("position fen " + fen + " moves " + allMoves);
+  public boolean movePiece(String move, String fen){
+    this.send("position fen " + fen + " moves " + move);
     // check to see if valid - not sure how yet
     return true; // if valid move?
 
@@ -202,6 +206,7 @@ public class Stockfish {
       inputStreamReader.close();
       processReader.close();
       processWriter.close();
+      // Wait for process to completely exit
       this.engine.waitFor();
       System.out.println("Stockfish closed");
       return true;
@@ -212,52 +217,16 @@ public class Stockfish {
     }
   }
 
-  public static void gameTracker() {
-
-    Stockfish game = new Stockfish();
-    game.startEngine();
-    game.enableDebugLog();
-    game.send("ucinewgame");
-
-    game.send("position startpos");
-    game.send("d");
-    String output = game.getOutput();
-    System.out.println("Output" + output);
-
-    String bestMove = game.getBestMove(game.STARTING_POS, 100);
-    game.movePiece(bestMove, game.STARTING_POS);
-    String fen = game.getFen();
-    System.out.println("Fen string after move 1" + ": " + fen);
-    game.drawBoard();
-
-    bestMove = game.getBestMove(fen, 100);
-    // allMoves.append(bestMove);
-    // allMoves.append(" ");
-
-    // It seems that the stockfish board does not preserve any state.
-    // It may be necessary to store all moves in some structure
-    game.movePiece(bestMove, fen);
-    fen = game.getFen();
-    System.out.println("Fen string after move 2" + ": " + fen);
-    game.drawBoard();
-
-
-
-  }
-
+  // Have stockfish play against itself for specified number of rounds
   // Just for testing to see how engine acts over many turns
   public static void playGame(int rounds) {
-    String os_name = System.getProperty("os.name");
-
     Stockfish player1 = new Stockfish();
     player1.startEngine();
     // Tell the engine to switch to UCI mode
     player1.send("uci");
     // player1.turnOnDebug();
 
-    Stockfish player2 = new Stockfish();
-    player2.startEngine();
-    player2.send("uci");
+    Stockfish player2 = player1;
 
     String fen = player1.STARTING_POS;
     StringBuilder allMoves = new StringBuilder();
@@ -272,84 +241,22 @@ public class Stockfish {
       System.out.println("Output" + output);
 
       String bestMove = player1.getBestMove(fen, 100);
-      // allMoves.append(bestMove);
-      // allMoves.append(" ");
-      // player1.send("position startpos moves " + allMoves.toString());
       player1.movePiece(bestMove, fen);
       fen = player1.getFen();
-      System.out.println("Fen string after move " + (i+1) + ": " + fen);
+      System.out.println("Fen string after move " + (i+1) + ": " + bestMove + " --- "  + fen);
       player1.drawBoard();
 
       bestMove = player2.getBestMove(fen, 100);
-      // allMoves.append(bestMove);
-      // allMoves.append(" ");
-
-      // It seems that the stockfish board does not preserve any state.
-      // It may be necessary to store all moves in some structure
       player2.movePiece(bestMove, fen);
       fen = player2.getFen();
       i++;
-      System.out.println("Fen string after move " + (i+1) + ": " + fen);
+      System.out.println("Fen string after move " + (i+1) + ": " + bestMove + " --- " + fen);
       player2.drawBoard();
-
-      // System.out.println();
-      // System.out.println("ALL MOVES AFTER ITERATION " + (i/2));
-      // System.out.println("All moves string " + allMoves);
-      // System.out.println();
 
     }
     player1.stopEngine();
-    player2.stopEngine();
-
-  }
-
-  public static void demoStockfish(){
-    Stockfish player1 = new Stockfish();
-    player1.startEngine();
-    // Tell the engine to switch to UCI mode
-    player1.send("uci");
-    String output = player1.getOutput();
-    // System.out.println("PLAYER 1 INIT: demoStockfish()" + output);
-
-    String bestMove1 = player1.getBestMove(player1.STARTING_POS, 100);
-    System.out.println("best move calculated by stockfish: " + bestMove1);
-
-    // Send first move
-    String fen = player1.getFen();
-    player1.movePiece(bestMove1, fen);
-    fen = player1.getFen();
-    System.out.println("Fen string after first move: " + fen);
-    player1.drawBoard();
-
-    // Start a second stockfish engine to represent player 2
-    Stockfish player2 = new Stockfish();
-    player2.startEngine();
-    player2.send("uci");
-
-    output = player2.getOutput();
-    // System.out.println("PLAYER 2 INIT: demoStockfish()" + output);
-    String bestMove2 = player2.getBestMove(fen, 100);
-    System.out.println("best move calculated by stockfish for player 2: " + bestMove2);
-
-    // player2.send("position startpos moves " + bestMove1 + " " + bestMove2);
-    // player2.send("position " + fen + " moves " + bestMove2);
-    player2.movePiece(bestMove2, fen);
-    player2.drawBoard();
-    fen = player2.getFen();
-    System.out.println("Fen string after second move: " + fen);
 
 
-    String bestMove3 = player1.getBestMove(fen, 100);
-    System.out.println("best move calculated by stockfish: " + bestMove3);
-
-    // Send first move
-    player1.send("position startpos moves " + bestMove1 + " " + bestMove2 + " "  + bestMove3);
-    fen = player1.getFen();
-    System.out.println("Fen string after third move: " + fen);
-    player1.drawBoard();
-
-    player1.stopEngine();
-    player2.stopEngine();
 
   }
 
