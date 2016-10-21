@@ -17,8 +17,8 @@ public class BoardPanel extends JPanel {
 	private int old_x = 0;
 	private int old_y = 0;
 
-	private int imageWidth = 32;
-	private int imageHeight = 32;
+	private int imageWidth = 30;
+	private int imageHeight = 30;
 
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
@@ -33,7 +33,7 @@ public class BoardPanel extends JPanel {
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         JButton b = new JButton("");
-				b.setPreferredSize(new Dimension(64, 64));					//set preferred size to 64px by 64px
+				b.setPreferredSize(new Dimension(41, 41));					//set preferred size to 64px by 64px
         b.setMargin(margins);       // Make the button have no margins
         b.setOpaque(true);          // Necessary to see the colors (otherwise white)
         b.addActionListener(getSquareAction());

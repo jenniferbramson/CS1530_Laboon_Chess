@@ -3,9 +3,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 
-public class ConsoleGraphics {
+public class ConsoleGraphics extends JFrame {
 
   // These are buttons we will need to use listeners on
+  private Toolkit t;
+  private Dimension screen;
   protected JButton whiteTurn;
   protected JButton blackTurn;
 
@@ -44,8 +46,8 @@ public class ConsoleGraphics {
     c.gridx = 0;              // specifies which column
     c.gridy = 0;              // specifies which row
     c.gridheight = 12;        // gridheight = number of rows it takes up
-    c.ipadx = 400;            // ipad = size in pixels
-    c.ipady = 400;
+    c.ipadx = 250;            // ipad = size in pixels
+    c.ipady = 250;
     content.add(left, c);
     c.gridheight = 2;
     c.gridx = 1;
@@ -61,18 +63,25 @@ public class ConsoleGraphics {
     c.gridx = 2;
     c.gridy = 0;
     c.gridheight = 6;
-    c.ipadx = 150;
+    c.ipadx = 200;
     c.ipady = 200;
     content.add(takenBlack, c);
     c.gridx = 2;
     c.gridy = 6;
     c.gridheight = 6;
-    c.ipadx = 150;
+    c.ipadx = 200;
     c.ipady = 200;
     content.add(takenWhite, c);
 
     //Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.pack();
+
+    //Get size of computer screen
+    //Set the screen so it appears in the middle
+    t = getToolkit();
+    screen = t.getScreenSize();
+    frame.setLocation(screen.width/2-frame.getWidth()/2,screen.height/2-frame.getHeight()/2);
+
 		//frame.setSize(screenSize.width,screenSize.height);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     frame.setVisible(true);                     // Do this last
