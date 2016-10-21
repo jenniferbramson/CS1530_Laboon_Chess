@@ -10,7 +10,12 @@ public class BoardPanel extends JPanel {
 
   // These are buttons we will need to use listeners on
   protected JButton[][] checkers;
+<<<<<<< HEAD
 	protected static Storage my_storage;
+=======
+	private Storage my_storage;
+  private Rulebook my_rulebook;
+>>>>>>> 8a135754e99d6a232ea5e3eb73059cf276628d0b
 	boolean second_click = false;
 	private String old_spot = "";
 	private int old_x = 0;
@@ -32,6 +37,7 @@ public class BoardPanel extends JPanel {
 		System.out.println("No fen to load");
 		//default storage constructor
 		my_storage = new Storage();
+<<<<<<< HEAD
 		lastSaveFen = null;
 	}
 	else {
@@ -45,6 +51,9 @@ public class BoardPanel extends JPanel {
 		//add fen to storage constructor
 	}
 	
+=======
+    my_rulebook = new Rulebook(my_storage);
+>>>>>>> 8a135754e99d6a232ea5e3eb73059cf276628d0b
     checkers = new JButton[8][8];
     Insets margins = new Insets(0, 0, 0, 0);  // For setting button margins
 
@@ -71,7 +80,7 @@ public class BoardPanel extends JPanel {
         checkers[i][j] = b;
       }
     }
-	
+
 		drawPieces();				//call method to draw the pieces
 
     // Create Labels for a through h for the first rows
@@ -109,7 +118,7 @@ public class BoardPanel extends JPanel {
 
     this.setBorder(new LineBorder(Color.BLACK));
   }
-	
+
 	/*-----------------------------------------------------------------------------------*/
 	private void drawPieces(){
 		//Added to try and draw letters
@@ -150,7 +159,7 @@ public class BoardPanel extends JPanel {
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
-							
+
 						case 'P':
 							img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
@@ -181,13 +190,13 @@ public class BoardPanel extends JPanel {
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
-						default: 
+						default:
 							break;
 					}
 				} catch(IOException e){
 					//error :(
 				}
-				
+
 			}
 		}
 
@@ -211,15 +220,33 @@ public class BoardPanel extends JPanel {
 				int y_board = 8-y;
 				String current_spot = x_board + Integer.toString(y_board);
 				System.out.println("You clicked on " + current_spot);
-				if(second_click){
-					System.out.println("Moving " + old_spot + " to " + current_spot);
-					if( (old_x+old_y) % 2== 0)		checkers[old_y][old_x].setBackground(Color.WHITE);
-					else																				checkers[old_y][old_x].setBackground(Color.GRAY);
-					second_click = false;
-					my_storage.movePiece(old_y, old_x, y, x);
-					//redraw
-					drawPieces();
-				}
+				if (second_click) {
+          if (old_x == x && old_y == y) {
+            // No movement, just undo the click
+            if ( (old_x+old_y) % 2== 0) {
+              checkers[old_y][old_x].setBackground(Color.WHITE);
+            } else {
+              checkers[old_y][old_x].setBackground(Color.GRAY);
+            }
+            second_click = false;
+          } else {
+            // Movement, so see if the movement is legal
+            boolean legal = my_rulebook.checkMove(old_y, old_x, y, x);
+            System.out.println(legal);
+            if (legal) {
+    					System.out.println("Moving " + old_spot + " to " + current_spot);
+    					if ( (old_x+old_y) % 2== 0) {
+                checkers[old_y][old_x].setBackground(Color.WHITE);
+              } else {
+                checkers[old_y][old_x].setBackground(Color.GRAY);
+              }
+    					second_click = false;
+    					my_storage.movePiece(old_y, old_x, y, x);
+    					//redraw
+    					drawPieces();
+            } // end legality move check
+          } // end checking move
+				} // end second click
 				else{
 					checkers[y][x].setBackground(Color.GREEN);
 					System.out.println("First click");
@@ -228,7 +255,7 @@ public class BoardPanel extends JPanel {
 					old_y = y;
 					second_click = true;
 				}
-				
+
 				//for testing ONLY
 				if(x==0 && y==0){
 					System.out.println(my_storage.getFen());
