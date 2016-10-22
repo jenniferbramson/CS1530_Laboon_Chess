@@ -9,12 +9,11 @@ public class ConsoleGraphics {
   protected JButton whiteTurn;
   protected JButton blackTurn;
   protected static JFrame frame;
-  private static final Stockfish stockfish = new Stockfish();
+  protected static final Stockfish stockfish = new Stockfish();
 
   // Puts all the components together to create the screen
   public ConsoleGraphics() {
 
-    // this.stockfish = new Stockfish();
     stockfish.startEngine();
 
     frame = new JFrame("Laboon Chess");
@@ -23,7 +22,7 @@ public class ConsoleGraphics {
     // Left side of the board has the timer, chess board, and buttons (load and
     // save) stacked vertically
     TimerPanel timer = new TimerPanel();           // Get the timer panel
-    BoardPanel board = new BoardPanel(stockfish);           // Get the square board
+    BoardPanel board = new BoardPanel();           // Get the square board
     ButtonsPanel buttons = new ButtonsPanel();     // Get the buttons panel
 
     JPanel left = new JPanel();                    // Stack the three panels above

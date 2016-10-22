@@ -37,10 +37,10 @@ public class BoardPanel extends JPanel {
 
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
-  public BoardPanel(Stockfish stockfish) {
+  public BoardPanel() {
 
-    this.stockfish = stockfish;
-    stockfishOn = true;
+    // this.stockfish = stockfish;
+    // stockfishOn = true;
 
     this.setLayout(new GridLayout(10, 10));
 
@@ -265,13 +265,14 @@ public class BoardPanel extends JPanel {
               System.out.println("Fen before move " + fen);
               String move = old_spot + current_spot;
               System.out.println("move is " + move);
-              stockfish.movePiece(move, my_storage.getFen());
-              fen = stockfish.getFen();
+              ConsoleGraphics.stockfish.movePiece(move, my_storage.getFen());
+              fen = ConsoleGraphics.stockfish.getFen();
               System.out.println("New fen " + fen);
-              stockfish.drawBoard();
+              ConsoleGraphics.stockfish.drawBoard();
 
-              //update storage fen with new fen pulled from stockfish output 
+              //update storage fen with new fen pulled from stockfish output
               my_storage.setFen(fen);
+
     					//redraw
     					drawPieces();
             } // end legality move check
