@@ -22,11 +22,13 @@ TODO - Add variable that keeps track of the last saved fen - Remove all forced f
 public class LoadPanel extends JPanel {
 	
 	private JLabel prompt;
+	
 	private JButton loadGame;
+	private int loadGameWidth = 200;
+	private int loadGameHeight = 25;
+	
 	private String fileName;
-	
-	private boolean isPromptUp;
-	
+
 	private JButton save;
 	private JButton continueLoad;
 	
@@ -64,7 +66,7 @@ public class LoadPanel extends JPanel {
 		if(listOfAllSaveFiles.size() <= 9) {
 			centerPrompt = 3;
 			numberColumns = 3;
-
+			
 			setNewFrameSize(750, 300);
 		}
 		else {
@@ -102,8 +104,10 @@ public class LoadPanel extends JPanel {
 		{
 			//Add buttons to the panel
 			loadGame = new JButton(listOfAllSaveFiles.get(i));
+			loadGame.setToolTipText(listOfAllSaveFiles.get(i));
 			loadGame.setAlignmentX(Component.CENTER_ALIGNMENT);
 			loadGame.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
+			loadGame.setPreferredSize(new Dimension(loadGameWidth,loadGameHeight));
 			loadGame.addActionListener(loadChessGame());
 			
 			gbc.ipadx = 25;	
@@ -260,8 +264,6 @@ public class LoadPanel extends JPanel {
 	}
 	
 	private void setUpPrompt() {
-		isPromptUp = true;
-		
 		//Remove all components in the board
 		this.removeAll();
 		
