@@ -19,8 +19,8 @@ public class BoardPanel extends JPanel {
 	private int old_x = 0;
 	private int old_y = 0;
 
-	private int imageWidth = 32;
-	private int imageHeight = 32;
+	private int imageWidth = 30;
+	private int imageHeight = 30;
 
 	//protected static String lastSaveFen;
 
@@ -77,21 +77,18 @@ public class BoardPanel extends JPanel {
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         JButton b = new JButton("");
-				b.setPreferredSize(new Dimension(64, 64));					//set prefered size to 64px by 64px
-				//ImageIcon icon = new    ImageIcon(this.getClass().getResource("/img/WhitePawn.png"));  //get image
-        b.setMargin(margins);     // Make the button have no margins
-        b.setOpaque(true);        // Necessary to see the colors (otherwise white)
+				b.setPreferredSize(new Dimension(41, 41));					//set preferred size to 64px by 64px
+        b.setMargin(margins);       // Make the button have no margins
+        b.setOpaque(true);          // Necessary to see the colors (otherwise white)
         b.addActionListener(getSquareAction());
-        b.setBorder(null);        // Necessary to not have button covering colors
+        b.setBorder(null);          // Necessary to not have button covering colors
         b.setBorderPainted(false);  // Necessary for mac icon transparency
-				//b.setFont(new Font("Arial", Font.BOLD, 20));				//make the letters big
+
         if ((i + j) % 2 == 0) {   // White square
           b.setBackground(Color.WHITE);
         } else {                  // Black Square
           b.setBackground(Color.GRAY);
         }
-
-				//b.setIcon(icon);
 
         checkers[i][j] = b;
       }
@@ -275,17 +272,38 @@ public class BoardPanel extends JPanel {
 
     					//redraw
     					drawPieces();
+              // Switch whose turn it is
+              LaboonChess.changeTurn();
             } // end legality move check
           } // end checking move
 				} // end second click
 				else{
-					checkers[y][x].setBackground(Color.GREEN);
-					System.out.println("First click");
-					old_spot = current_spot;
-					old_x = x;
-					old_y = y;
-					second_click = true;
-				}
+
+          if (LaboonChess.getPlayersTurn()) { // Ignore input unless it is the player's turn
+            boolean validColor = false;     // Tells if the right color piece is trying to move
+            if (Character.isUpperCase(my_storage.getSpaceChar(x, y))) {
+              if (LaboonChess.getTurn() == 'w') {
+                validColor = true;
+              }
+            } else if (Character.isLowerCase(my_storage.getSpaceChar(x, y))) {
+              if (LaboonChess.getTurn() == 'b') {
+                validColor = true;
+              }
+            }
+
+            if (validColor) {               // Continue if right color piece clicked
+    					checkers[y][x].setBackground(Color.GREEN);
+    					System.out.println("First click");
+    					old_spot = current_spot;
+    					old_x = x;
+    					old_y = y;
+    					second_click = true;
+            } else {
+              // Invalid color piece clicked or empty, so ignore
+            } // end if (validColor)
+          } // end if (playersTurn())
+
+				} // end ActionListener
 
 				//for testing ONLY
 				if(x==0 && y==0){
