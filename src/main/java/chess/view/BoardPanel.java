@@ -6,6 +6,8 @@ import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 import java.io.*;
 import javax.imageio.*;
 
+import chess.Stockfish;
+
 public class BoardPanel extends JPanel {
 
   // These are buttons we will need to use listeners on
@@ -30,9 +32,16 @@ public class BoardPanel extends JPanel {
 
 	private String defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
+  private Stockfish stockfish;
+  private boolean stockfishOn = false;
+
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
+
+    // this.stockfish = stockfish;
+    // stockfishOn = true;
+
     this.setLayout(new GridLayout(10, 10));
 
 
@@ -248,7 +257,22 @@ public class BoardPanel extends JPanel {
                 checkers[old_y][old_x].setBackground(Color.GRAY);
               }
     					second_click = false;
-    					my_storage.movePiece(old_y, old_x, y, x);
+
+              String fen = my_storage.getFen();
+              my_storage.movePiece(old_y, old_x, y, x);
+
+              // Play move on stockfish's internal board
+              System.out.println("Fen before move " + fen);
+              String move = old_spot + current_spot;
+              System.out.println("move is " + move);
+              ConsoleGraphics.stockfish.movePiece(move, my_storage.getFen());
+              fen = ConsoleGraphics.stockfish.getFen();
+              System.out.println("New fen " + fen);
+              ConsoleGraphics.stockfish.drawBoard();
+
+              //update storage fen with new fen pulled from stockfish output
+              my_storage.setFen(fen);
+
     					//redraw
     					drawPieces();
             } // end legality move check
