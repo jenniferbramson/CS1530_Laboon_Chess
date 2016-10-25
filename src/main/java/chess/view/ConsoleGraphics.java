@@ -9,9 +9,13 @@ public class ConsoleGraphics {
   protected JButton whiteTurn;
   protected JButton blackTurn;
   protected static JFrame frame;
-  
+  protected static final Stockfish stockfish = new Stockfish();
+
   // Puts all the components together to create the screen
   public ConsoleGraphics() {
+
+    stockfish.startEngine();
+
     frame = new JFrame("Laboon Chess");
     Container content = frame.getContentPane();   // Get reference to content pane
 
@@ -75,6 +79,14 @@ public class ConsoleGraphics {
 		frame.pack();
 		//frame.setSize(screenSize.width,screenSize.height);
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    frame.addWindowListener(new WindowAdapter() {
+      public void windowClosing(WindowEvent e) {
+        stockfish.stopEngine();
+      }
+    });
+
+
     frame.setVisible(true);                     // Do this last
   }
 
@@ -101,12 +113,12 @@ public class ConsoleGraphics {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         // Placeholder for when we add functionality
-				
+
       }
     };
     return action;
   }
-  
+
   public static void main(String[] args) {
     ConsoleGraphics chessBoard = new ConsoleGraphics();
   }
