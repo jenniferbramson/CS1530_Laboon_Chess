@@ -12,7 +12,7 @@ public class StartUpMenu extends JPanel {
 	
 	//Modify startup screen sizes
 	private int screenWidth = 1000;
-	private int screenHeight = 600;
+	private int screenHeight = 650;
 	
 	public StartUpMenu() {
 		JFrame frame = new JFrame("Laboon's Chess");
