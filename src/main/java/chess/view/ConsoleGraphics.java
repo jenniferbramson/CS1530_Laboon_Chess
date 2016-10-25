@@ -114,20 +114,8 @@ public class ConsoleGraphics extends JFrame {
     b.setOpaque(true);            // Necessary to see background color
     b.setBackground(Color.WHITE);
     b.setBorder(BorderFactory.createLineBorder(Color.black));
-    //b.addActionListener(getTurnAction());
     return b;
   }
-/*
-  private ActionListener getTurnAction() {
-    ActionListener action = new ActionListener() {
-      public void actionPerformed(ActionEvent e) {
-        // Placeholder for when we add functionality
-
-      }
-    };
-    return action;
-  }
-*/
 
   public void setWhite() {
     blackTurn.setBackground(Color.WHITE);

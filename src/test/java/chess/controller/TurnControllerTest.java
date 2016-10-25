@@ -21,6 +21,7 @@ public class TurnControllerTest {
 
   }
 
+/*
   @Test
   public void SwitchTurn2() {
     char playersColor = 'w';
@@ -35,5 +36,5 @@ public class TurnControllerTest {
     }
 
   }
-
+*/
 }

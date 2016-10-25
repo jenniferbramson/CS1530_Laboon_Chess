@@ -72,7 +72,7 @@ public class TurnController {
     }
 
     if (playersTurn) {
-      playersTurn = false;  // Comment this out and start as white to test black/white
+      //playersTurn = false;  // Comment this out and start as white to test black/white
                             // turn switching
     } else {
       playersTurn = true;
