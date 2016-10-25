@@ -48,33 +48,22 @@ public class LoadPanel extends JPanel {
 	private int promptTextSize = 20;
 	private int buttonTextSize = 16;
 	private int textFieldSize = 16;
-
-	private int centerPrompt;
-	
-	private int numberColumns;
 	
 	private GridBagConstraints gbc;
 	
 	private int promptWidth = 600;
 	private int promptHeight = 200;
 	
+	private int calculatedHeight;
+	private int defaultWidth = 800;
+	
+	private int numberColumns = 3;
+	private int centerPrompt = 3;
+	
 	public LoadPanel() {
 		
+		//Retrieve all valid file names
 		getListOfSaveFiles();
-		
-		//Determine layout of save files
-		if(listOfAllSaveFiles.size() <= 9) {
-			centerPrompt = 3;
-			numberColumns = 3;
-			
-			setNewFrameSize(750, 300);
-		}
-		else {
-			centerPrompt = 4;
-			numberColumns = 4;
-
-			setNewFrameSize(950, 375);
-		}
 		
 		GridBagLayout layout = new GridBagLayout();
 		this.setLayout(layout);
@@ -127,6 +116,17 @@ public class LoadPanel extends JPanel {
 				colNumber = 0;
 			}
 		}
+		
+		//Calculate dynamic height based on the number of row
+		calculatedHeight = (rowNumber * (loadGameHeight + 31)) + 100;
+		
+		//If height is too large, limit it
+		if(calculatedHeight > 700) {
+			calculatedHeight = 700;
+		}
+
+		//Set frame to new height and the default width, determined by number of columns
+		setNewFrameSize(defaultWidth, calculatedHeight);
 	}
 	
 	private ActionListener loadChessGame() {
@@ -252,7 +252,6 @@ public class LoadPanel extends JPanel {
 				frame.dispose();
 				
 			} catch (Exception eee) {
-				System.out.println("OH NO DISASTER!");
 				System.out.print("Exception: ");
 				System.out.println(eee.getMessage());
 			}
@@ -304,9 +303,12 @@ public class LoadPanel extends JPanel {
 		gbc.gridwidth = 1;  		
 		this.add(continueLoad, gbc);
 		
+		//Set up the prompt frame to the default size listed in variable declaration
 		setNewFrameSize(promptWidth, promptHeight);
 	}
 	
+	//Method used for yes button in the prompt
+	//If user clicks the no button, then it confirms that the user wants to save the current game
 	private ActionListener confirmSave() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {				
@@ -321,6 +323,8 @@ public class LoadPanel extends JPanel {
 		return action;
 	}
 	
+	//Method used for the no button in the prompt
+	//If user clicked the no button, then the load would continue
 	private ActionListener confirmLoad() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -335,6 +339,8 @@ public class LoadPanel extends JPanel {
 		return action;
 	}
 	
+	//Retrieves all the save files and stores it in a global variable
+	//	Gets all files, removes any files that aren't txt files
 	private void getListOfSaveFiles() {
 		try {
 			//Retrieve all files or directories in the resource folder
@@ -365,12 +371,12 @@ public class LoadPanel extends JPanel {
 			System.out.println(listOfAllSaveFiles);
 			
 		} catch (Exception ex) {
-			System.out.println("Something terrible has happened...");
 			System.out.print("Exception: ");
 			System.out.println(ex.getMessage());
 		}
 	}
 	
+	//Sets the frame size for the load panel dynamically
 	private void setNewFrameSize(int width, int height) {
 		//Set the new frame width and height
 		LoadGame.screenWidth = width;
