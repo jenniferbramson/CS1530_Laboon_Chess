@@ -7,18 +7,6 @@ import javax.imageio.*;
 import java.util.*;
 import java.lang.*;
 
-/*
-TODO - Add variable that keeps track of the last saved fen - Remove all forced fen values used for testing
-	 - Get updates on the current fen, compare it to the last saved fen
-		- If fen are the same skip prompt and continue action
-		- Else set up prompt 
-	 - Handle edge case if the fen string and previously loaded or saved fen string are the same
-		- Want to not prompt if they are the same
-	 - Write test code that generates random text files 
-		- Check number of files, if that number of files hasn't been reached, create them
-	 - Dynamic/set maximum size for buttons, dynamically generate width from button sizes
-*/
-
 public class LoadPanel extends JPanel {
 	
 	private JLabel prompt;
@@ -137,6 +125,8 @@ public class LoadPanel extends JPanel {
 				//Get the file name based on what button was clicked
 				fileName = e.getActionCommand();
 				
+				fileNamePath = "/" + fileName;
+				
 				System.out.println("FileName of button clicked: " + fileName);
 				
 				//Try to see if the board is open/visible
@@ -151,34 +141,23 @@ public class LoadPanel extends JPanel {
 				if(checkChessboardVisible == true) {
 					System.out.println("Board is visible!");
 					
-					//Get current fen of the board
+					//Get current fen from the board
 					String currFen = BoardPanel.my_storage.getFen();
 					
 					//Get fen that was read in from file before save
 					String prevSaveFen = BoardPanel.lastSaveFen;
 					
-					//Assume that currFen is the last loaded in fen for testing
-					//currFen = BoardPanel.lastSaveFen;
-					
-					//Assume that currFen is different from last loaded in fen
+					//Assume that currFen is different from the previous fen, test prompts
 					currFen = "test";
 					
-					try {
-						//Check if file exists
-						File file = new File(this.getClass().getResource(fileNamePath).toURI());
-						//Fen strings are different, prompt user if they want to save or not
-						//Click save to save the game, or return or confirm
-						if(currFen.equals(prevSaveFen) == false) {
-							System.out.println("Fen strings are not equal! Prompt for save!");
-							setUpPrompt(); 
-						}
-						else {
-							loadFile();
-						}
-					} catch(Exception E) {
-						System.out.print("Exception: ");
-						System.out.println(E.getMessage());
-						prompt.setText("<html>ERROR: File doesn't exists!<br>Enter save file name with extention:</html>");
+
+					if(currFen.equals(prevSaveFen) == false) {
+						System.out.println("Fen strings are not equal! Prompt for save!");
+						setUpPrompt(); 
+					}
+					else {
+						System.out.println("Loading file: " + fileNamePath);
+						loadFile();
 					}
 				}
 				
@@ -197,68 +176,62 @@ public class LoadPanel extends JPanel {
 		//Test prompt back to default settings
 		prompt.setText("Enter save file name with extention:");
 		
-		fileNamePath = "/" + fileName;
+		System.out.println("Filename in load file method: " + fileName);
 		
 		fileContents = new ArrayList<String>();
+		//Try to open contents of the file
 		try {
-			//Check if file exists
 			File file = new File(this.getClass().getResource(fileNamePath).toURI());
-			//Try to open contents of the file
-			try {
-				//Read in all contents of the file and store it into an ArrayList
-				BufferedReader readFile = new BufferedReader(new FileReader(file));
-				while((tempLine = readFile.readLine()) != null)
-				{
-					fileContents.add(tempLine);
-				}
-				readFile.close();
-				
-				//Get fen from the file
-				//Assume that fen is the first line in the file
-				fen = fileContents.get(0);
-				
-				//TEST CODE
-				//Read out the board in the file to make sure its the same
-				//As what is displayed
-				System.out.println("Read in fen from file: \n" + fen);
-				for(int i = 1; i < 9; i++) {
-					System.out.println("Row " + i + " : " + fileContents.get(i));
-				}
-				
-				//Try to see if the board is open/visible
-				try {
-					checkChessboardVisible = ConsoleGraphics.frame.isShowing();
-				}
-				catch(NullPointerException ex) {
-					checkChessboardVisible = false;
-				}
-				
-				if(checkChessboardVisible != false) {
-					//Remove previous chessboard before creating the new one
-					//If there is some lag when loading the images
-					//Might just call drawpieces on the current board with new fen
-					ConsoleGraphics.frame.dispose();
-				}
-				
-				//Load chessboard
-				ConsoleGraphics chessboard = new ConsoleGraphics();			
-				
-				//Update last saved fen
-				//Last saved fen as the new fen that was just loaded
-				BoardPanel.lastSaveFen = fen;
-				
-				//Make load frame not visible after user clicks load game
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this.getParent());
-				frame.dispose();
-				
-			} catch (Exception eee) {
-				System.out.print("Exception: ");
-				System.out.println(eee.getMessage());
+			
+			//Read in all contents of the file and store it into an ArrayList
+			BufferedReader readFile = new BufferedReader(new FileReader(file));
+			while((tempLine = readFile.readLine()) != null)
+			{
+				fileContents.add(tempLine);
 			}
-		} catch(Exception eeeee) {
+			readFile.close();
+			
+			//Get fen from the file
+			//Assume that fen is the first line in the file
+			fen = fileContents.get(0);
+			
+			//TEST CODE
+			//Read out the board in the file to make sure its the same
+			//As what is displayed
+			System.out.println("Read in fen from file: \n" + fen);
+			for(int i = 1; i < 9; i++) {
+				System.out.println("Row " + i + " : " + fileContents.get(i));
+			}
+			
+			//Try to see if the board is open/visible
+			try {
+				checkChessboardVisible = ConsoleGraphics.frame.isShowing();
+			}
+			catch(NullPointerException ex) {
+				checkChessboardVisible = false;
+			}
+			
+			if(checkChessboardVisible != false) {
+				//Remove previous chessboard before creating the new one
+				//If there is some lag when loading the images
+				//Might just call drawpieces on the current board with new fen
+				ConsoleGraphics.frame.dispose();
+			}
+			
+			//Load chessboard
+			ConsoleGraphics chessboard = new ConsoleGraphics();			
+			
+			//Update last saved fen
+			//Last saved fen as the new fen that was just loaded
+			BoardPanel.lastSaveFen = fen;
+			
+			//Make load frame not visible after user clicks load game
+			JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this.getParent());
+			frame.dispose();
+			
+		} catch (Exception eee) {
 			System.out.print("Exception: ");
-			System.out.println(eeeee.getMessage());
-			prompt.setText("<html>ERROR: File doesn't exists!<br>Enter save file name with extention:</html>");
+			System.out.println(eee.getMessage());
 		}
 	}
 	
