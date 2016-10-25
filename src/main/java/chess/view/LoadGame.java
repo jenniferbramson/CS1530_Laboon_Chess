@@ -11,8 +11,8 @@ public class LoadGame extends JPanel {
 	private Dimension screen;
 	
 	//Modify startup screen sizes
-	private int screenWidth = 600;
-	private int screenHeight = 250;
+	protected static int screenWidth = 1000;
+	protected static int screenHeight = 1000;
 	
 	//Access frame in LoadPanel when resizing the panel to fit extra buttons
 	protected static JFrame frame;
@@ -30,6 +30,10 @@ public class LoadGame extends JPanel {
 		mainPanel.add(loadPanel, BorderLayout.CENTER);
 		
 		content.add(mainPanel);
+		
+		//Add scroll bar to the frame
+		JScrollPane jsp = new JScrollPane(mainPanel);
+		frame.add(jsp);
 		
 		frame.pack();
 		
