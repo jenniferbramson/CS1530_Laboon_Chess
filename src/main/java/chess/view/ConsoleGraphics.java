@@ -11,11 +11,14 @@ public class ConsoleGraphics extends JFrame {
   protected JButton whiteTurn;
   protected JButton blackTurn;
   protected static JFrame frame;
+
+  // The stockfish process will be used as the NPC and also to generate fen strings
   protected static final Stockfish stockfish = new Stockfish();
 
   // Puts all the components together to create the screen
   public ConsoleGraphics() {
 
+    // Start stockfish process 
     stockfish.startEngine();
 
     frame = new JFrame("Laboon Chess");
