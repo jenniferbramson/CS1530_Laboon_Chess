@@ -115,45 +115,6 @@ public class Storage {
     return fen;
   }
 
-	//returns fen string to output
-		// public String getFen(){
-		// 	StringBuilder sb = new StringBuilder();
-		// 	for(int i=0; i<8; i++){
-		// 		int space_count = 0;
-		// 		for(int j=0; j<8; j++){
-		// 			if(board[i][j] == '\u0000'){	//"empty" space
-		// 				space_count++;									//keep track of how many blank spaces in a row
-		// 				if(j == 7){														//if loop is about to end, we need to print the number of spaces
-		// 					sb.append(space_count);
-		// 				}
-		// 			}
-		// 			else{																				//if not an empty space
-		// 				if(space_count > 0){								//if it was preceded by an empty space
-		// 					sb.append(space_count);			//add the length of the spaces
-		// 					space_count=0;										//reset empty space counter
-		// 				}
-		// 				sb.append(board[i][j]);			//add the character to the string
-		// 			}
-		// 		}
-		// 		if(i<7) sb.append("/");				//don't want to append the last one
-		// 	}
-    //
-		// 	if(white_turn){
-		// 		sb.append(" w");
-		// 	}
-		// 	else{
-		// 		sb.append(" b");
-		// 	}
-    //
-		// 	//TODO: fix this later
-		// 	sb.append(" KQkq - 0 ");
-		// 	sb.append(full_moves);
-    //
-		// 	//System.out.println(sb.toString());
-    //
-		// 	return sb.toString();
-		// }
-
 
 	//returns whether it is white's turn or not
 		public boolean isWhiteTurn(){
