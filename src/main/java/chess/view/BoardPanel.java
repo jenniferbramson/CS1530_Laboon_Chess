@@ -32,15 +32,9 @@ public class BoardPanel extends JPanel {
 
 	private String defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-  private Stockfish stockfish;
-  private boolean stockfishOn = false;
-
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
-
-    // this.stockfish = stockfish;
-    // stockfishOn = true;
 
     this.setLayout(new GridLayout(10, 10));
 
