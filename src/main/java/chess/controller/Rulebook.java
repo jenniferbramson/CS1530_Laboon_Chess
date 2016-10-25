@@ -143,6 +143,130 @@ public class Rulebook {
     return false; // If reached this point, false
   } // end checkMove
 
+
+  // Method that checks if an input King at x, y of c color is or would
+  // be checked. Color is indicated by the original king piece's letter case.
+  // Returns false if not checked, true if checked
+  // There does not actually need to be a king at x, y
+  // Assumes valid x, y, c input
+  protected boolean kingDanger(int x, int y, char c) {
+    boolean kingWhite = Character.isUpperCase(c);
+    boolean danger;
+
+    // Check east (for rook, queen, king)
+    for(int i = x + 1; i < 7; i++) {
+      danger = eastWestCheck(x, y, kingWhite, i);
+      if (danger) {
+        return true;
+      }
+    } // end east check
+
+    // check west (for rook, queen, king)
+    for(int i = x - 1; i > -1; i--) {
+      danger = eastWestCheck(x, y, kingWhite, i);
+      if (danger) {
+        return true;
+      }
+    } // end east check
+
+    // If east and west check out, look at south (for rook, queen, king)
+    for(int i = y + 1; i < 7; i++) {
+      danger = northSouthCheck(x, y, kingWhite, i);
+      if (danger) {
+        return true;
+      }
+    } // end south check
+
+    // check north (for rook, queen, king)
+    for(int i = y - 1; i > -1; i--) {
+      danger = northSouthCheck(x, y, kingWhite, i);
+      if (danger) {
+        return true;
+      }
+    } // end north check
+
+    // check diagonals
+    // Check for pawn
+    if (kingWhite) {
+      if ()
+    }
+    // northeast
+    // (for bishop, queen, king)
+
+    // check for knights
+
+
+  } // end KingDanger()
+
+  // Helper method for kingDanger(), checks current space based on input i
+  private boolean diagonalCheck(int x, int y, boolean kingWhite, int i, int j) {
+    char pieceThere = my_storage.getSpaceChar(i, j);
+
+    if (pieceThere != '\u0000') {
+      // Return false if char there is one that can take King
+      boolean pieceThereWhite = Character.isUpperCase(pieceThere);
+      if ((pieceThereWhite && !kingWhite) || (!pieceThereWhite && kingWhite)) {
+        // If of opposite colors
+        char pieceThereLower = Character.toLowerCase(pieceThere);
+        if ( (pieceThereLower == 'b') || (pieceThereLower == 'q') ) {
+          return true;
+        }
+
+        if ( (abs(i - x) == 1) && (pieceThereLower == 'k') ) {
+          return true;
+        }
+      }
+    }
+
+    return false; // No danger found
+  } // end eastWestCheck()
+
+  // Helper method for kingDanger(), checks current space based on input i
+  private boolean eastWestCheck(int x, int y, boolean kingWhite, int i) {
+    char pieceThere = my_storage.getSpaceChar(i, y);
+
+    if (pieceThere != '\u0000') {
+      // Return false if char there is one that can take King
+      boolean pieceThereWhite = Character.isUpperCase(pieceThere);
+      if ((pieceThereWhite && !kingWhite) || (!pieceThereWhite && kingWhite)) {
+        // If of opposite colors
+        char pieceThereLower = Character.toLowerCase(pieceThere);
+        if ( (pieceThereLower == 'r') || (pieceThereLower == 'q') ) {
+          return true;
+        }
+
+        if ( (abs(i - x) == 1) && (pieceThereLower == 'k') ) {
+          return true;
+        }
+      }
+    }
+
+    return false; // No danger found
+  } // end eastWestCheck()
+
+  // Helper method for kingDanger(), checks current space based on input i
+  private boolean northSouthCheck(int x, int y, boolean kingWhite, int i) {
+    char pieceThere = my_storage.getSpaceChar(x, i);
+
+    if (pieceThere != '\u0000') {
+      // Return false if char there is one that can take King
+      boolean pieceThereWhite = Character.isUpperCase(pieceThere);
+      if ((pieceThereWhite && !kingWhite) || (!pieceThereWhite && kingWhite)) {
+        // If of opposite colors
+        char pieceThereLower = Character.toLowerCase(pieceThere);
+        if ( (pieceThereLower == 'r') || (pieceThereLower == 'q') ) {
+          return true;
+        }
+
+        if ( (abs(i - y) == 1) && (pieceThereLower == 'k') ) {
+          return true;
+        }
+      }
+    }
+
+    return false; // No danger found
+  } // end northSouthCheck()
+
   // Helper function for checkMove(), looks at the legal moves for a bishop
   private boolean bishopCheck(int x_1, int y_1, int x_2, int y_2) {
     if (x_2 > x_1 && y_2 > y_1) {
