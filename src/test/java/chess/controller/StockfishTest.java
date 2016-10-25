@@ -11,8 +11,7 @@ public class StockfishTest {
   public void testEngineStart() {
     Stockfish sf = new Stockfish();
     // Get OS type to pass in to startEngine() so that the correct file can be executed
-    String os_name = System.getProperty("os.name");
-    boolean started = sf.startEngine(os_name);
+    boolean started = sf.startEngine();
     if (started) sf.stopEngine();
     assertTrue(started);
   }
@@ -20,17 +19,15 @@ public class StockfishTest {
    @Test
    public void testEngineStop() {
      Stockfish sf = new Stockfish();
-     String os_name = System.getProperty("os.name");
-     sf.startEngine(os_name);
+     sf.startEngine();
      boolean stopped = sf.stopEngine();
      assertTrue(stopped);
    }
 
   @Test
   public void testUCIMode(){
-    String os_name = System.getProperty("os.name");
     Stockfish sf = new Stockfish();
-    sf.startEngine(os_name);
+    sf.startEngine();
     // Tell the engine to switch to UCI mode
     sf.send("uci");
     String output = sf.getOutput();
@@ -41,9 +38,8 @@ public class StockfishTest {
 
   @Test
   public void testGetFen() {
-    String os_name = System.getProperty("os.name");
     Stockfish sf = new Stockfish();
-    sf.startEngine(os_name);
+    sf.startEngine();
     // Tell the engine to switch to UCI mode
     sf.send("uci");
     sf.send("ucinewgame");
@@ -59,9 +55,8 @@ public class StockfishTest {
 
   @Test
   public void testMovePiece(){
-    String os_name = System.getProperty("os.name");
     Stockfish sf = new Stockfish();
-    sf.startEngine(os_name);
+    sf.startEngine();
     // Tell the engine to switch to UCI mode
     sf.send("uci");
     sf.send("ucinewgame");
@@ -73,19 +68,6 @@ public class StockfishTest {
     assertTrue(fen.contains("3P4"));
     sf.stopEngine();
   }
-
-  @Test
-  public void testGetLegalMoves(){
-    String os_name = System.getProperty("os.name");
-    Stockfish sf = new Stockfish();
-    sf.startEngine(os_name);
-    // Tell the engine to switch to UCI mode
-    sf.send("uci");
-    sf.send("ucinewgame");
-    sf.getLegalMoves("d2d4", sf.STARTING_POS);
-    sf.stopEngine();
-  }
-
 
   //   Not working  on all OS's yet
   /* Enable debug mode, then check to see if log has been modified since the time when
