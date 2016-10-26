@@ -66,7 +66,8 @@ public class BoardPanel extends JPanel {
 		
 		
 		//Setting up Display --------------------------------------------------------------------------------------
-		
+		// this.setBorder(new LineBorder(Color.BLACK));
+		this.setBackground(Color.WHITE); 	//make it white
 		gbl = new GridBagLayout();
 		gbc = new GridBagConstraints();
 		this.setLayout(gbl);
@@ -128,8 +129,6 @@ public class BoardPanel extends JPanel {
 			addComponent(i+1,9,1,1, label);
     }
 		addComponent(9,9,1,1,new JLabel(""));
-
-    this.setBorder(new LineBorder(Color.BLACK));
   }
 
 	/*-----------------------------------------------------------------------------------*/
