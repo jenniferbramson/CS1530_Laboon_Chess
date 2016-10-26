@@ -52,6 +52,7 @@ public class Stockfish {
     String os_name = System.getProperty("os.name");
   	String path = "";
   	String pathBase = System.getProperty("user.dir");
+    boolean started = false;
 		//System.out.println(os_name);
     if (os_name.toLowerCase().contains("windows"))
       path = "engine/stockfish-7-win/Windows/stockfish 7 x64.exe";
@@ -75,7 +76,7 @@ public class Stockfish {
 
       // Start stockfish process
       engine = builder.start();
-      boolean started = engine.isAlive();
+
       // System.out.println( "Process is running" + started);
 
       // Open streams to read from and write to engine
@@ -84,6 +85,8 @@ public class Stockfish {
       processReader = new BufferedReader(inputStreamReader);
       processWriter = new BufferedWriter(new OutputStreamWriter(engine.getOutputStream()));
       System.out.println("Stockfish engine started");
+
+      started = engine.isAlive();
 
       // Tell stockfish process to start communicating in UCI mode
       this.send("ucinewgame");
@@ -96,23 +99,26 @@ public class Stockfish {
      */
     catch (Exception e) {
       e.printStackTrace();
-      try {
-        if (inputStream != null) inputStream.close();
-      } catch(IOException e){}
-      try {
-        if (inputStreamReader != null) inputStreamReader.close();
-      } catch(IOException e){}
-      try {
-        if (processReader != null) processWriter.close();
-      } catch(IOException e){}
-      try {
-        if (processWriter != null) processWriter.close();
-      } catch(IOException e){}
-      if (started)
-        engine.stopEngine()
-      return false;
+      started = false;
+      this.stopEngine();
     }
-  return true;
+    finally {
+      if (!started){
+        try {
+          if (inputStream != null) inputStream.close();
+        } catch(IOException ioe){}
+        try {
+          if (inputStreamReader != null) inputStreamReader.close();
+        } catch(IOException ioe){}
+        try {
+          if (processReader != null) processWriter.close();
+        } catch(IOException ioe){}
+        try {
+          if (processWriter != null) processWriter.close();
+        } catch(IOException ioe){}
+      }
+    }
+  return started;
   }
 
 
@@ -254,7 +260,8 @@ public class Stockfish {
       processReader.close();
       processWriter.close();
       // Wait for process to completely exit
-
+      this.engine.waitFor();
+      stopped = true;
       System.out.println("Stockfish engine stopped");
     }
     catch (Exception e) {
@@ -275,9 +282,6 @@ public class Stockfish {
       try {
         if (processWriter != null) processWriter.close();
       } catch(IOException e){}
-
-      // Wait for process to completely exit
-      this.engine.waitFor();
     }
     return stopped;
   }
