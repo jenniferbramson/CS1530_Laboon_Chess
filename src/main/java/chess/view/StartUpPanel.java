@@ -13,7 +13,7 @@ public class StartUpPanel extends JPanel {
 	private JButton title;
 	
 	//Variables to change the spacing of buttons and title
-	private int topSpace = 100;
+	private int topSpace = 50;
 	private int buttonSpace = 10;
 	
 	private int titleTextSize = 96;
@@ -28,7 +28,7 @@ public class StartUpPanel extends JPanel {
 		this.add(Box.createRigidArea(new Dimension(0,topSpace)));
 		
 		//Add Image/modify title
-		title = new JButton("Laboon's Chess");
+		title = new JButton("");
 		title.setOpaque(true);
 		title.setBackground(Color.WHITE);
 		title.setBorder(null);
@@ -37,16 +37,13 @@ public class StartUpPanel extends JPanel {
 		//title.setPreferredSize(new Dimension(500, 300));
 		title.setFont(new Font("Arial", Font.BOLD, titleTextSize));
 		
-		/* Add Title image here
+		//Add Title image
 		try {
-			Image img = ImageIO.read(getClass().getResource("/ImageName.what"));
-			//Modify the values to get desired pixel width/height
-			img = img.getScaledInstance(32, 32, Image.SCALE_DEFAULT);
+			Image img = ImageIO.read(getClass().getResource("/Header.png"));
 			title.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
-		// Error
+			title = new JButton("Laboon Chess");
 		}
-		*/
 		
 		title.addActionListener(getFeature());
 		this.add(title);
@@ -55,30 +52,60 @@ public class StartUpPanel extends JPanel {
 		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
 		
 		//Add new game button
-		newGame = new JButton("New Game");
+		newGame = new JButton("");
 		newGame.setAlignmentX(Component.CENTER_ALIGNMENT);
 		newGame.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
 		newGame.addActionListener(startNewGame());
+		//new game button image
+		try {
+			Image ngImg = ImageIO.read(getClass().getResource("/NewGame.png"));
+			newGame.setIcon(new ImageIcon(ngImg ));
+			//get rid of button background stuff
+			newGame.setBackground(Color.WHITE);
+			newGame.setBorder(null);
+		} catch (IOException ex) {
+			newGame = new JButton("New Game");
+		}
 		this.add(newGame);
 		
 		//Add spacing between buttons
 		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
 		
 		//Add load game button
-		load = new JButton("Load");
+		load = new JButton("");
 		load.setAlignmentX(Component.CENTER_ALIGNMENT);
 		load.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
 		load.addActionListener(getLoadGame());
+		//add the load game image button
+		try {
+			Image lgImg = ImageIO.read(getClass().getResource("/LoadGame.png"));
+			load.setIcon(new ImageIcon(lgImg));
+			//get rid of button background stuff
+			load.setBackground(Color.WHITE);
+			load.setBorder(null);
+		} catch (IOException ex) {
+			load = new JButton("Load Game");
+		}
 		this.add(load);
 		
 		//Add spacing between buttons
 		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
 		
 		//Add exit button
-		exit = new JButton("Exit");
+		exit = new JButton("");
 		exit.setAlignmentX(Component.CENTER_ALIGNMENT);
 		exit.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
 		exit.addActionListener(exitMenu());
+		//add the exit image button
+		try {
+			Image exitImg = ImageIO.read(getClass().getResource("/Exit.png"));
+			exit.setIcon(new ImageIcon(exitImg));
+			//get rid of button background stuff
+			exit.setBackground(Color.WHITE);
+			exit.setBorder(null);
+		} catch (IOException ex) {
+			exit = new JButton("Exit");
+		}
 		this.add(exit);
 	}
 	

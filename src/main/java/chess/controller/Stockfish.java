@@ -15,23 +15,20 @@ import java.util.concurrent.TimeUnit;
 
 
 
-/* This class will use the Universal Chess Interface (UCI) to communicate
- * with the Stockfish engine.
- *
- * Commands that may be useful:
- * debug [on | off]
- * isready - returns "readyok"
- * position [fen  | startpos ]  moves [moves]
- * d - draws the board and includes a fen string
+/** This class will use the Universal Chess Interface (UCI) to communicate
+  * with the Stockfish engine, which can be started from the JVM  as a process
+  * using java.lang.ProcessBuilder.
+  *
+  *
  */
 
 public class Stockfish {
 
   private Process engine;
-  private BufferedReader processReader;
-  private BufferedWriter processWriter;
-  private InputStream inputStream;
-  private InputStreamReader inputStreamReader;
+  private BufferedReader processReader = null;
+  private BufferedWriter processWriter = null;
+  private InputStream inputStream = null;
+  private InputStreamReader inputStreamReader = null;
   private ProcessBuilder builder;
 
   /* This is the FEN notation for the starting positions on a chessboard.
@@ -46,12 +43,16 @@ public class Stockfish {
   public String fen = STARTING_POS;
 
 
-  // Start Stockfish engine
+  /** Start Stockfish process.
+    *
+    *  @return boolean indicating whether process started or not
+    */
   public boolean startEngine() {
-    // First get name of operating system to file appropriate executable file
+    // First get name of operating system to find appropriate executable file
     String os_name = System.getProperty("os.name");
   	String path = "";
   	String pathBase = System.getProperty("user.dir");
+    boolean started = false;
 		//System.out.println(os_name);
     if (os_name.toLowerCase().contains("windows"))
       path = "engine/stockfish-7-win/Windows/stockfish 7 x64.exe";
@@ -64,7 +65,6 @@ public class Stockfish {
 			System.exit(1);
 		}
 
-
     try {
 
       // path to executable stockfish file
@@ -73,8 +73,11 @@ public class Stockfish {
 
       // Send standard error to same stream as standard out
       builder.redirectErrorStream(true);
+
+      // Start stockfish process
       engine = builder.start();
-      // System.out.println( "Process is running" + engine.isAlive());
+
+      // System.out.println( "Process is running" + started);
 
       // Open streams to read from and write to engine
       inputStream = engine.getInputStream();
@@ -83,25 +86,52 @@ public class Stockfish {
       processWriter = new BufferedWriter(new OutputStreamWriter(engine.getOutputStream()));
       System.out.println("Stockfish engine started");
 
+      started = engine.isAlive();
+
       // Tell stockfish process to start communicating in UCI mode
       this.send("ucinewgame");
-
     }
 
+    /* If there has been a FileNotFoundException or an IOException,
+     * then the engine didn't start successfully. Try to stop each output
+     * stream individually, so that if one fails to close, it does not
+     * leave the others open. If Stockfish process was started, stop it.
+     */
     catch (Exception e) {
       e.printStackTrace();
-      return false;
+      started = false;
+      this.stopEngine();
     }
-  return true;
+    finally {
+      if (!started){
+        try {
+          if (inputStream != null) inputStream.close();
+        } catch(IOException ioe){}
+        try {
+          if (inputStreamReader != null) inputStreamReader.close();
+        } catch(IOException ioe){}
+        try {
+          if (processReader != null) processWriter.close();
+        } catch(IOException ioe){}
+        try {
+          if (processWriter != null) processWriter.close();
+        } catch(IOException ioe){}
+      }
+    }
+  return started;
   }
 
-  // Send UCI command to Stockfish engine
+
+  /** Send UCI command to Stockfish process.
+    *
+    * @param  command - a string that is a Universal Chess Interface command
+    * @return boolean indicating if command was sent successfully
+    */
   public boolean send(String command) {
     try {
       // UCI commands must end with newline
       processWriter.write(command + "\n");
       processWriter.flush();
-
     }
     catch (IOException e) {
       e.printStackTrace();
@@ -110,8 +140,9 @@ public class Stockfish {
     return true;
   }
 
-  /* Tell Stockfish process to write debugging output to file. This will create
-    a file named io_log.txt in the project home folder. */
+  /** Tell Stockfish process to write debugging output to file. This will create
+    * a file named io_log.txt in the project home folder.
+    */
   public boolean enableDebugLog(){
     return this.send("setoption name Write Debug Log value true");
   }
@@ -127,6 +158,11 @@ public class Stockfish {
     return fen;
   }
 
+
+  /** Ask the engine if it is ready
+    *
+    * @return boolean
+    */
   public boolean isReady(){
     this.send("isready");
     String output = getOutput();
@@ -135,6 +171,8 @@ public class Stockfish {
     return false;
   }
 
+  /** Print the current state of Stockfish's internal board to the console.
+  */
   public void drawBoard() {
     // tell stockfish to draw the current board
     this.send("d");
@@ -149,10 +187,17 @@ public class Stockfish {
 
 
 
-  // Get all output from engine
+  /** Read the Stockfish process output and return it as a string.
+    *
+    * @return String containing process output
+    */
   public String getOutput() {
     StringBuffer output = new StringBuffer();
     try {
+      /* Output which has been received previously and not yet read
+        will be present in the input stream. Send the engine "isready"
+        so that it will respond with "readyok" which can be used as an
+        endpoint for reading the stream. */
       this.send("isready" + "\n");
       String text = "";
       while (!text.equals("readyok")){
@@ -167,11 +212,11 @@ public class Stockfish {
   }
 
   /**
-  * This function returns the best move for a given position after
-  * calculating for 'waitTime' ms
+  * This function returns the best move for a given board state after
+  * calculating for the specified wait time in milliseconds
   *
-  * fen string
-  * waitTime in milliseconds
+  * @param fen  - a string which represents the board state in Forsyth-Edwards notation (fen)
+  * @param waitTime - int which specifies time for stockfish to calculate in milliseconds
   */
   public String getBestMove(String fen, int waitTime) {
 
@@ -188,11 +233,18 @@ public class Stockfish {
   }
 
 
-  // move string needs to be in algebraic notation for chess
+  /** Move a piece on the internal Stockfish board. If the move is illegal,
+    * the behavior of Stockfish is undefined, and the process could potentially
+    * crash.
+    *
+    * @param move - a String which represents the move in algebraic notation for chess
+    * @param fen - a fen string
+    */
   public boolean movePiece(String move, String fen){
     this.send("position fen " + fen + " moves " + move);
     // check to see if valid - not sure how yet
-    return true; // if valid move?
+    // maybe should call RuleBook?
+    return true; // if valid move
 
   }
 
@@ -200,21 +252,38 @@ public class Stockfish {
   * Stops Stockfish and cleans up before closing it
   */
   public boolean stopEngine() {
+    boolean stopped = false;
+    this.send("quit");
     try {
-      this.send("quit");
       inputStream.close();
       inputStreamReader.close();
       processReader.close();
       processWriter.close();
       // Wait for process to completely exit
       this.engine.waitFor();
+      stopped = true;
       System.out.println("Stockfish engine stopped");
-      return true;
     }
     catch (Exception e) {
       e.printStackTrace();
-      return false;
     }
+
+    // Try to close each stream individually
+    finally {
+      try {
+        if (inputStream != null) inputStream.close();
+      } catch(IOException e){}
+      try {
+        if (inputStreamReader != null) inputStreamReader.close();
+      } catch(IOException e){}
+      try {
+        if (processReader != null) processWriter.close();
+      } catch(IOException e){}
+      try {
+        if (processWriter != null) processWriter.close();
+      } catch(IOException e){}
+    }
+    return stopped;
   }
 
   // Have stockfish play against itself for specified number of rounds
@@ -255,9 +324,6 @@ public class Stockfish {
 
     }
     player1.stopEngine();
-
-
-
   }
 
 
