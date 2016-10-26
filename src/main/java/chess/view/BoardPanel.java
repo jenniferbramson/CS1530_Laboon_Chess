@@ -11,6 +11,8 @@ import chess.Stockfish;
 public class BoardPanel extends JPanel {
 
   // These are buttons we will need to use listeners on
+	GridBagLayout gbl;
+	GridBagConstraints gbc;
   protected JButton[][] checkers;
 	protected static Storage my_storage;
   private Rulebook my_rulebook;
@@ -19,8 +21,8 @@ public class BoardPanel extends JPanel {
 	private int old_x = 0;
 	private int old_y = 0;
 
-	private int imageWidth = 30;
-	private int imageHeight = 30;
+	private int imageWidth = 64;
+	private int imageHeight = 64;
 
 	//protected static String lastSaveFen;
 
@@ -36,34 +38,39 @@ public class BoardPanel extends JPanel {
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
 
-    this.setLayout(new GridLayout(10, 10));
+		//Test code
+		//lastSaveFilePath = LoadPanel.fileNamePath;
+		//System.out.println("Loaded file name path: " + lastSaveFilePath);
 
+		//Check if fen has been found from file
+		//No fen was loaded from a file
+		if(LoadPanel.fen == "" || LoadPanel.fen == null) {
+			System.out.println("No fen to load");
+			//default storage constructor
+			my_storage = new Storage();
+			//Set last saved fen to the default fen
+			lastSaveFen = defaultFen;
+		}
+		else {
+			System.out.println("Fen loaded!: " + LoadPanel.fen);
 
-	//Test code
-	//lastSaveFilePath = LoadPanel.fileNamePath;
-	//System.out.println("Loaded file name path: " + lastSaveFilePath);
-
-	//Check if fen has been found from file
-	//No fen was loaded from a file
-	if(LoadPanel.fen == "" || LoadPanel.fen == null) {
-		System.out.println("No fen to load");
-		//default storage constructor
-		my_storage = new Storage();
-		//Set last saved fen to the default fen
-		lastSaveFen = defaultFen;
-	}
-	else {
-		System.out.println("Fen loaded!: " + LoadPanel.fen);
-
-		//Save the fen from the file, will be used when the user try to load a different game
-		//or close the current game they are on, get a new fen and compare it with the one
-		//from the file, if different then prompt if user wants to save, else let use continue action
-		lastSaveFen = LoadPanel.fen;
-		my_storage = new Storage(lastSaveFen);
-		//add fen to storage constructor
-	}
+			//Save the fen from the file, will be used when the user try to load a different game
+			//or close the current game they are on, get a new fen and compare it with the one
+			//from the file, if different then prompt if user wants to save, else let use continue action
+			lastSaveFen = LoadPanel.fen;
+			my_storage = new Storage(lastSaveFen);
+			//add fen to storage constructor
+		}
 
     my_rulebook = new Rulebook(my_storage);
+		
+		
+		//Setting up Display --------------------------------------------------------------------------------------
+		// this.setBorder(new LineBorder(Color.BLACK));
+		this.setBackground(Color.WHITE); 	//make it white
+		gbl = new GridBagLayout();
+		gbc = new GridBagConstraints();
+		this.setLayout(gbl);
     checkers = new JButton[8][8];
     Insets margins = new Insets(0, 0, 0, 0);  // For setting button margins
 
@@ -71,7 +78,7 @@ public class BoardPanel extends JPanel {
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
         JButton b = new JButton("");
-				b.setPreferredSize(new Dimension(41, 41));					//set preferred size to 64px by 64px
+				b.setPreferredSize(new Dimension(64, 64));					//set preferred size to 64px by 64px
         b.setMargin(margins);       // Make the button have no margins
         b.setOpaque(true);          // Necessary to see the colors (otherwise white)
         b.addActionListener(getSquareAction());
@@ -87,17 +94,17 @@ public class BoardPanel extends JPanel {
         checkers[i][j] = b;
       }
     }
-
-		drawPieces();				//call method to draw the pieces
-
+		setPieces();				//call method to draw the pieces
+		
+		
     // Create Labels for a through h for the first rows
-    this.add(new JLabel(""));  // Corners are empty
+    addComponent(0,0,1,1,new JLabel(""));  // Corners are empty
     for (int i = 0; i < 8; i++) {
       JLabel label = new JLabel("" + (char)(97 + i));
       label.setHorizontalAlignment(SwingConstants.CENTER);
-      this.add(label);
+			addComponent(i+1,0,1,1,label);
     }
-    this.add(new JLabel(""));  // Corners are empty
+    addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
 
     // Fill out the center of the panel
     for (int i = 0; i < 8; i++) {       // columns
@@ -106,28 +113,26 @@ public class BoardPanel extends JPanel {
           // Beginning or end of row, add column number
           JLabel label = new JLabel("" + (8 - i));
           label.setHorizontalAlignment(SwingConstants.CENTER);
-          this.add(label);
+          addComponent(j,i+1,1,1,label);
         } else {
           // Add chess squares
-          this.add(checkers[i][j-1]);
+          addComponent(j,i+1,1,1,checkers[i][j-1]);
         }
       }
     }
 
     // Fill out the last row of letters a through h
-    this.add(new JLabel(""));  // Corners are empty
+    addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
     for (int i = 0; i < 8; i++) {
       JLabel label = new JLabel("" + (char)(97 + i));
       label.setHorizontalAlignment(SwingConstants.CENTER);
-      this.add(label);
+			addComponent(i+1,9,1,1, label);
     }
-    this.add(new JLabel(""));  // Corners are empty
-
-    this.setBorder(new LineBorder(Color.BLACK));
+		addComponent(9,9,1,1,new JLabel(""));
   }
 
 	/*-----------------------------------------------------------------------------------*/
-	private void drawPieces(){
+	private void setPieces(){
 		//Added to try and draw letters
 		for(int i=0; i<8;i++){
 			for(int j=0; j<8;j++){
@@ -265,10 +270,13 @@ public class BoardPanel extends JPanel {
               my_storage.setFen(fen);
 
     					//redraw
-    					drawPieces();
+    					setPieces();
               // Switch whose turn it is
               LaboonChess.changeTurn();
             } // end legality move check
+						else{
+							System.out.println("Not a legal move.");
+						}
           } // end checking move
 				} // end second click
 				else{
@@ -307,4 +315,14 @@ public class BoardPanel extends JPanel {
     };
     return action;
   }
+	
+	//helper method to add Components to a Container using GridBagLayout
+	public void addComponent(int x, int y, int w, int h, Component aComponent) {
+		gbc.gridx=x;
+		gbc.gridy=y;
+		gbc.gridwidth=w;
+		gbc.gridheight=h;
+		gbl.setConstraints(aComponent,gbc);
+		this.add(aComponent);
+	}
 }
