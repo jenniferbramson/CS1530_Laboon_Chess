@@ -8,7 +8,6 @@ import java.util.*;
 import java.lang.*;
 
 public class LoadPanel extends JPanel {
-	
 	private JLabel prompt;
 	
 	private JButton loadGame;
@@ -19,24 +18,24 @@ public class LoadPanel extends JPanel {
 
 	private JButton save;
 	private JButton continueLoad;
-	
+
 	protected static String fen;
 	boolean checkChessboardVisible;
-	
+
 	private ArrayList<String> fileContents;
 	private String tempLine;
-	
+
 	private String acceptedFileExtension = "txt";
 	private String saveFilePath = "/";
 	private ArrayList<String> listOfAllSaveFiles;
-	
+
 	protected static String fileNamePath;
-	
+
 	//Set text sizes
 	private int promptTextSize = 20;
 	private int buttonTextSize = 16;
 	private int textFieldSize = 16;
-	
+
 	private GridBagConstraints gbc;
 	
 	private int promptWidth = 600;
@@ -47,30 +46,34 @@ public class LoadPanel extends JPanel {
 	
 	private int numberColumns = 3;
 	private int centerPrompt = 3;
-	
+
 	public LoadPanel() {
-		
+
 		//Retrieve all valid file names
 		getListOfSaveFiles();
 		
 		GridBagLayout layout = new GridBagLayout();
 		this.setLayout(layout);
 		this.setBackground(Color.WHITE);
-		
+
+		GridBagConstraints gbc = new GridBagConstraints();
+
 		gbc = new GridBagConstraints();
-		
+
 		//Adding prompt
 		prompt = new JLabel("Select save file to load");
 		prompt.setHorizontalAlignment(JLabel.CENTER);
 		prompt.setFont(new Font("Arial", Font.BOLD, promptTextSize));
 		
 		gbc.insets = new Insets(7, 7, 7, 7);
-		
+
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
+
 		gbc.gridwidth = centerPrompt;           
 		gbc.ipady = 15;		
+
 		this.add(prompt, gbc);
 		
 		//Code related to new load file layout
@@ -116,7 +119,7 @@ public class LoadPanel extends JPanel {
 		//Set frame to new height and the default width, determined by number of columns
 		setNewFrameSize(defaultWidth, calculatedHeight);
 	}
-	
+
 	private ActionListener loadChessGame() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -140,16 +143,15 @@ public class LoadPanel extends JPanel {
 				//If so then the user is trying to load a game from the chessboard layout
 				if(checkChessboardVisible == true) {
 					System.out.println("Board is visible!");
-					
+		
 					//Get current fen from the board
 					String currFen = BoardPanel.my_storage.getFen();
-					
+
 					//Get fen that was read in from file before save
 					String prevSaveFen = BoardPanel.lastSaveFen;
-					
+		
 					//Assume that currFen is different from the previous fen, test prompts
 					currFen = "test";
-					
 
 					if(currFen.equals(prevSaveFen) == false) {
 						System.out.println("Fen strings are not equal! Prompt for save!");
@@ -160,12 +162,13 @@ public class LoadPanel extends JPanel {
 						loadFile();
 					}
 				}
-				
+
 				//If not then it must be from the startup menu where the user clicked on load game
 				else {
 					System.out.println("Board is not visible!");
 					loadFile();
 				}
+
 			}
 		};
 		return action;
@@ -203,27 +206,24 @@ public class LoadPanel extends JPanel {
 				System.out.println("Row " + i + " : " + fileContents.get(i));
 			}
 			
-			//Try to see if the board is open/visible
-			try {
-				checkChessboardVisible = ConsoleGraphics.frame.isShowing();
-			}
-			catch(NullPointerException ex) {
-				checkChessboardVisible = false;
-			}
-			
-			if(checkChessboardVisible != false) {
-				//Remove previous chessboard before creating the new one
-				//If there is some lag when loading the images
-				//Might just call drawpieces on the current board with new fen
-				ConsoleGraphics.frame.dispose();
-			}
+			//Remove previous chessboard before creating the new one
+			//If there is some lag when loading the images
+			//Might just call drawpieces on the current board with new fen
+			ConsoleGraphics.frame.dispose();
 			
 			//Load chessboard
 			ConsoleGraphics chessboard = new ConsoleGraphics();			
 			
-			//Update last saved fen
-			//Last saved fen as the new fen that was just loaded
-			BoardPanel.lastSaveFen = fen;
+			// Set controller to whoever's turn it should be
+			String[] splitFen = fen.split(" ");
+			// Whether it is currently white or black's turn is second string in fen
+			// Fen stores white's turn as 'w', black's turn as 'b' already
+			char currentColor = splitFen[1].charAt(0);
+			// Last line in file stores what color the player is
+			char playersColor = fileContents.get(fileContents.size() - 1).charAt(0);
+			System.out.println("Players color is: " + playersColor);
+			LaboonChess.controller = new TurnController(currentColor, playersColor);
+			LaboonChess.controller.addGraphicalTurn(chessboard);
 			
 			//Make load frame not visible after user clicks load game
 			JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this.getParent());
@@ -233,53 +233,57 @@ public class LoadPanel extends JPanel {
 			System.out.print("Exception: ");
 			System.out.println(eee.getMessage());
 		}
+		
+		//Update last saved fen
+		//Last saved fen as the new fen that was just loaded
+		BoardPanel.lastSaveFen = fen;
 	}
-	
+
 	private void setUpPrompt() {
 		//Remove all components in the board
 		this.removeAll();
 		
-		//Add the prompt back to the panel
+		//Add prompt back to panel
 		//Change the label text
 		prompt.setText("<html>Game hasn't been saved!<br>Do you want to save your progress?</html>");
 
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.gridwidth = 3;           
-		gbc.ipady = 15;		
+		gbc.gridwidth = 3;
+		gbc.ipady = 15;
 		this.add(prompt, gbc);
-		
+
 		//Add a yes button that causes the save window to pop up
 		save = new JButton("Yes");
 		save.setAlignmentX(Component.CENTER_ALIGNMENT);
 		save.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
 		save.addActionListener(confirmSave());
-		
-		gbc.ipadx = 150;	
-		
+
+		gbc.ipadx = 150;
+
 		gbc.gridx = 0;
 		gbc.gridy = 2;
-		gbc.gridwidth = 1;  		
+		gbc.gridwidth = 1;
 		this.add(save, gbc);
-		
-		//Add a no button that will automatically load the file the file that the user wanted
+
+		//Add a no button that will automatically load the file that the user wanted
 		continueLoad = new JButton("No");
 		continueLoad.setAlignmentX(Component.CENTER_ALIGNMENT);
 		continueLoad.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
 		continueLoad.addActionListener(confirmLoad());
-		
-		gbc.ipadx = 150;	
-		
+
+		gbc.ipadx = 150;
+
 		gbc.gridx = 2;
 		gbc.gridy = 2;
-		gbc.gridwidth = 1;  		
+		gbc.gridwidth = 1;
 		this.add(continueLoad, gbc);
-		
+
 		//Set up the prompt frame to the default size listed in variable declaration
 		setNewFrameSize(promptWidth, promptHeight);
 	}
-	
+
 	//Method used for yes button in the prompt
 	//If user clicks the no button, then it confirms that the user wants to save the current game
 	private ActionListener confirmSave() {
@@ -287,7 +291,7 @@ public class LoadPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {				
 				//Open save file panel, let user save the game
 				SaveGame saveGame = new SaveGame();
-				
+
 				//Make save frame not visible after user clicks return/cancel
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(prompt.getParent());
 				frame.dispose();
@@ -295,7 +299,7 @@ public class LoadPanel extends JPanel {
 		};
 		return action;
 	}
-	
+
 	//Method used for the no button in the prompt
 	//If user clicked the no button, then the load would continue
 	private ActionListener confirmLoad() {
@@ -303,7 +307,7 @@ public class LoadPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 				//Load game to the board
 				loadFile();
-				
+
 				//Make save frame not visible after user clicks return/cancel
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(prompt.getParent());
 				frame.dispose();
@@ -311,7 +315,7 @@ public class LoadPanel extends JPanel {
 		};
 		return action;
 	}
-	
+
 	//Retrieves all the save files and stores it in a global variable
 	//	Gets all files, removes any files that aren't txt files
 	private void getListOfSaveFiles() {
