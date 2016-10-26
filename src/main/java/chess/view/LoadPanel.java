@@ -56,8 +56,6 @@ public class LoadPanel extends JPanel {
 		this.setLayout(layout);
 		this.setBackground(Color.WHITE);
 
-		GridBagConstraints gbc = new GridBagConstraints();
-
 		gbc = new GridBagConstraints();
 
 		//Adding prompt
@@ -176,9 +174,6 @@ public class LoadPanel extends JPanel {
 	
 	//Load the entered file, retrieve it's contents and display it on the board
 	private void loadFile() {
-		//Test prompt back to default settings
-		prompt.setText("Enter save file name with extention:");
-		
 		System.out.println("Filename in load file method: " + fileName);
 		
 		fileContents = new ArrayList<String>();
@@ -205,11 +200,20 @@ public class LoadPanel extends JPanel {
 			for(int i = 1; i < 9; i++) {
 				System.out.println("Row " + i + " : " + fileContents.get(i));
 			}
+			//Try to see if the board is open/visible
+			try {
+				checkChessboardVisible = ConsoleGraphics.frame.isShowing();
+			}
+			catch(NullPointerException ex) {
+				checkChessboardVisible = false;
+			}
 			
-			//Remove previous chessboard before creating the new one
-			//If there is some lag when loading the images
-			//Might just call drawpieces on the current board with new fen
-			ConsoleGraphics.frame.dispose();
+			if(checkChessboardVisible != false) {
+				//Remove previous chessboard before creating the new one
+				//If there is some lag when loading the images
+				//Might just call drawpieces on the current board with new fen
+				ConsoleGraphics.frame.dispose();
+			}
 			
 			//Load chessboard
 			ConsoleGraphics chessboard = new ConsoleGraphics();			
