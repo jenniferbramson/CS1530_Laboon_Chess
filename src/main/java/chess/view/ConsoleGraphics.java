@@ -53,8 +53,8 @@ public class ConsoleGraphics extends JFrame {
     c.gridx = 0;              // specifies which column
     c.gridy = 0;              // specifies which row
     c.gridheight = 12;        // gridheight = number of rows it takes up
-    c.ipadx = 250;            // ipad = size in pixels
-    c.ipady = 250;
+    c.ipadx = 50;            // ipad = size in pixels
+    c.ipady = 50;
     content.add(left, c);
     c.gridheight = 2;
     c.gridx = 1;
