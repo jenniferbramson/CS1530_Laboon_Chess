@@ -147,9 +147,6 @@ public class LoadPanel extends JPanel {
 
 					//Get fen that was read in from file before save
 					String prevSaveFen = BoardPanel.lastSaveFen;
-		
-					//Assume that currFen is different from the previous fen, test prompts
-					currFen = "test";
 
 					if(currFen.equals(prevSaveFen) == false) {
 						System.out.println("Fen strings are not equal! Prompt for save!");
