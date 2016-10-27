@@ -77,8 +77,6 @@ public class Stockfish {
       // Start stockfish process
       engine = builder.start();
 
-      // System.out.println( "Process is running" + started);
-
       // Open streams to read from and write to engine
       inputStream = engine.getInputStream();
       inputStreamReader = new InputStreamReader(inputStream);

@@ -24,8 +24,6 @@ public class BoardPanel extends JPanel {
 	private int imageWidth = 64;
 	private int imageHeight = 64;
 
-	//protected static String lastSaveFen;
-
 
 	//Keep track of the last saved fen
 	//Used for testing loss of progress
@@ -37,10 +35,6 @@ public class BoardPanel extends JPanel {
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
-
-		//Test code
-		//lastSaveFilePath = LoadPanel.fileNamePath;
-		//System.out.println("Loaded file name path: " + lastSaveFilePath);
 
 		//Check if fen has been found from file
 		//No fen was loaded from a file
@@ -63,10 +57,9 @@ public class BoardPanel extends JPanel {
 		}
 
     my_rulebook = new Rulebook(my_storage);
-		
-		
+
+
 		//Setting up Display --------------------------------------------------------------------------------------
-		// this.setBorder(new LineBorder(Color.BLACK));
 		this.setBackground(Color.WHITE); 	//make it white
 		gbl = new GridBagLayout();
 		gbc = new GridBagConstraints();
@@ -95,8 +88,8 @@ public class BoardPanel extends JPanel {
       }
     }
 		setPieces();				//call method to draw the pieces
-		
-		
+
+
     // Create Labels for a through h for the first rows
     addComponent(0,0,1,1,new JLabel(""));  // Corners are empty
     for (int i = 0; i < 8; i++) {
@@ -139,7 +132,7 @@ public class BoardPanel extends JPanel {
 				checkers[i][j].setIcon(null);			//clear it before you draw (if something was there previously)
 				char c = my_storage.getSpace(i,j, true);
 				try{
-							Image img;
+					Image img;
 					switch(c){
 						case 'p':
 							img = ImageIO.read(getClass().getResource("/BlackPawn.png"));
@@ -315,7 +308,7 @@ public class BoardPanel extends JPanel {
     };
     return action;
   }
-	
+
 	//helper method to add Components to a Container using GridBagLayout
 	public void addComponent(int x, int y, int w, int h, Component aComponent) {
 		gbc.gridx=x;
