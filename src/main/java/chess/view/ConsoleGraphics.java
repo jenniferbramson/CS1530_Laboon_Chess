@@ -13,6 +13,13 @@ public class ConsoleGraphics extends JFrame {
   protected JButton whiteTurn;
   protected JButton blackTurn;
   protected static JFrame frame;
+	protected JButton blackColorButton;
+	protected JButton whiteColorButton;
+	boolean whiteColorize = false;
+	boolean blackColorize = false;
+	BoardPanel board;
+	ButtonsPanel buttons;
+	TimerPanel timer;
 
   // The stockfish process will be used as the NPC and also to generate fen strings
   protected static final Stockfish stockfish = new Stockfish();
@@ -29,9 +36,9 @@ public class ConsoleGraphics extends JFrame {
 
     // Left side of the board has the timer, chess board, and buttons (load and
     // save) stacked vertically
-    TimerPanel timer = new TimerPanel();           // Get the timer panel
-    BoardPanel board = new BoardPanel();           // Get the square board
-    ButtonsPanel buttons = new ButtonsPanel();     // Get the buttons panel
+		timer = new TimerPanel();           // Get the timer panel
+    board = new BoardPanel();           // Get the square board
+    buttons = new ButtonsPanel();     // Get the buttons panel
 
     JPanel left = new JPanel();                    // Stack the three panels above
     left.setLayout(new BorderLayout());
@@ -42,6 +49,11 @@ public class ConsoleGraphics extends JFrame {
     // Middle part of board has the turn signals
     whiteTurn = playerTurnButton("White");
     blackTurn = playerTurnButton("Black");
+		
+		blackColorButton = new JButton("Change Black to Green");
+		blackColorButton.addActionListener(changeBlackColor());
+		whiteColorButton = new JButton("Change White to Red");
+		whiteColorButton.addActionListener(changeWhiteColor());
 
     // Right side of the board has the the taken black and white pieces stacked
     // vertically
@@ -70,6 +82,12 @@ public class ConsoleGraphics extends JFrame {
     c.ipadx = 0;
     c.ipady = 0;
     content.add(whiteTurn, c);
+		c.gridx = 1;
+		c.gridy = 7;
+		content.add(blackColorButton, c);
+		c.gridx = 1;
+		c.gridy = 9;
+		content.add(whiteColorButton, c);
     c.gridx = 2;
     c.gridy = 0;
     c.gridheight = 6;
@@ -146,6 +164,26 @@ public class ConsoleGraphics extends JFrame {
     whiteTurn.setBackground(Color.WHITE);
     blackTurn.setBackground(Color.YELLOW);
   }
+	
+	private ActionListener changeWhiteColor() {
+		ActionListener action = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				board.colorizeWhite(!(whiteColorize), 150, 0, 0);
+				whiteColorize = !whiteColorize;
+			}
+		};
+		return action;
+	}
+	
+	private ActionListener changeBlackColor() {
+		ActionListener action = new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				board.colorizeBlack(!(blackColorize), 0, 150, 0);
+				blackColorize = !blackColorize;
+			}
+		};
+		return action;
+	}
 
   public static void main(String[] args) {
     ConsoleGraphics chessBoard = new ConsoleGraphics();
