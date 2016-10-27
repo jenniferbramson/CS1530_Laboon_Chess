@@ -117,6 +117,7 @@ public class ConsoleGraphics extends JFrame {
 				img = ImageIO.read(getClass().getResource("/WhiteTurn.png"));
 			}
 			b.setIcon(new ImageIcon(img));
+      b.setOpaque(true);            // Necessary to see background color
 			b.setBackground(Color.WHITE);
 			b.setPreferredSize(new Dimension(62, 58));
 			b.setBorderPainted(false);
