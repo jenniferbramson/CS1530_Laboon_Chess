@@ -20,7 +20,7 @@ public class ConsoleGraphics extends JFrame {
   // Puts all the components together to create the screen
   public ConsoleGraphics() {
 
-    // Start stockfish process 
+    // Start stockfish process
     stockfish.startEngine();
 
     frame = new JFrame("Laboon Chess");
@@ -32,7 +32,7 @@ public class ConsoleGraphics extends JFrame {
     TimerPanel timer = new TimerPanel();           // Get the timer panel
     BoardPanel board = new BoardPanel();           // Get the square board
     ButtonsPanel buttons = new ButtonsPanel();     // Get the buttons panel
-		
+
     JPanel left = new JPanel();                    // Stack the three panels above
     left.setLayout(new BorderLayout());
     left.add(timer, BorderLayout.NORTH);
@@ -47,7 +47,7 @@ public class ConsoleGraphics extends JFrame {
     // vertically
     TakenPanel takenBlack = new TakenPanel("Taken Black Pieces");
     TakenPanel takenWhite = new TakenPanel("Taken White Pieces");
-		
+
     // Entire screen has both the leftand right sides of the board put together
     // in a horizontal fashion
     content.setLayout(new GridBagLayout());
@@ -83,7 +83,6 @@ public class ConsoleGraphics extends JFrame {
     c.ipady = 200;
     content.add(takenWhite, c);
 
-    //Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.pack();
 
     //Get size of computer screen
@@ -92,7 +91,7 @@ public class ConsoleGraphics extends JFrame {
     screen = t.getScreenSize();
     frame.setLocation(screen.width/2-frame.getWidth()/2,screen.height/2-frame.getHeight()/2);
 
-		//frame.setSize(screenSize.width,screenSize.height);
+		//frame.setSize(screen.width,screen.height);  // For maybe fitting game to screen later
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     frame.addWindowListener(new WindowAdapter() {
@@ -116,8 +115,9 @@ public class ConsoleGraphics extends JFrame {
 			//if it's white, load the proper image
 			if(s.equals("White")){
 				img = ImageIO.read(getClass().getResource("/WhiteTurn.png"));
-			} 
+			}
 			b.setIcon(new ImageIcon(img));
+      b.setOpaque(true);            // Necessary to see background color
 			b.setBackground(Color.WHITE);
 			b.setPreferredSize(new Dimension(62, 58));
 			b.setBorderPainted(false);
