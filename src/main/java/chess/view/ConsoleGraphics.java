@@ -1,7 +1,9 @@
 package chess;
 import javax.swing.*;
+import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;  // awt.* does not import Action or Event Listeners
+import javax.imageio.*;
 
 public class ConsoleGraphics extends JFrame {
 
@@ -18,11 +20,12 @@ public class ConsoleGraphics extends JFrame {
   // Puts all the components together to create the screen
   public ConsoleGraphics() {
 
-    // Start stockfish process 
+    // Start stockfish process
     stockfish.startEngine();
 
     frame = new JFrame("Laboon Chess");
     Container content = frame.getContentPane();   // Get reference to content pane
+		content.setBackground(Color.WHITE); 	//make it white
 
     // Left side of the board has the timer, chess board, and buttons (load and
     // save) stacked vertically
@@ -37,8 +40,8 @@ public class ConsoleGraphics extends JFrame {
     left.add(buttons, BorderLayout.SOUTH);
 
     // Middle part of board has the turn signals
-    whiteTurn = multiLineBtn("White's", "Turn");
-    blackTurn = multiLineBtn("Black's", "Turn");
+    whiteTurn = playerTurnButton("White");
+    blackTurn = playerTurnButton("Black");
 
     // Right side of the board has the the taken black and white pieces stacked
     // vertically
@@ -53,19 +56,19 @@ public class ConsoleGraphics extends JFrame {
     c.gridx = 0;              // specifies which column
     c.gridy = 0;              // specifies which row
     c.gridheight = 12;        // gridheight = number of rows it takes up
-    c.ipadx = 250;            // ipad = size in pixels
-    c.ipady = 250;
+    c.ipadx = 50;            // ipad = size in pixels
+    c.ipady = 50;
     content.add(left, c);
     c.gridheight = 2;
     c.gridx = 1;
     c.gridy = 5;
-    c.ipadx = 10;
-    c.ipady = 10;
+    c.ipadx = 0;
+    c.ipady = 0;
     content.add(blackTurn, c);
     c.gridx = 1;
     c.gridy = 10;
-    c.ipadx = 10;
-    c.ipady = 11;
+    c.ipadx = 0;
+    c.ipady = 0;
     content.add(whiteTurn, c);
     c.gridx = 2;
     c.gridy = 0;
@@ -80,7 +83,6 @@ public class ConsoleGraphics extends JFrame {
     c.ipady = 200;
     content.add(takenWhite, c);
 
-    //Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		frame.pack();
 
     //Get size of computer screen
@@ -89,7 +91,7 @@ public class ConsoleGraphics extends JFrame {
     screen = t.getScreenSize();
     frame.setLocation(screen.width/2-frame.getWidth()/2,screen.height/2-frame.getHeight()/2);
 
-		//frame.setSize(screenSize.width,screenSize.height);
+		//frame.setSize(screen.width,screen.height);  // For maybe fitting game to screen later
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     frame.addWindowListener(new WindowAdapter() {
@@ -105,18 +107,33 @@ public class ConsoleGraphics extends JFrame {
 
   // Creates a multi-line button. The multi line part of this code is from
   // http://www.javaworld.com/article/2077368/learn-java/a-multiline-button-is-possible.html
-  private JButton multiLineBtn(String s1, String s2) {
+  private JButton playerTurnButton(String s) {
     JButton b = new JButton();
-    b.setLayout(new BorderLayout());
-    JLabel label1 = new JLabel(s1);
-    label1.setHorizontalAlignment(SwingConstants.CENTER);
-    JLabel label2 = new JLabel(s2);
-    label2.setHorizontalAlignment(SwingConstants.CENTER);
-    b.add(BorderLayout.NORTH,label1);
-    b.add(BorderLayout.SOUTH,label2);
-    b.setOpaque(true);            // Necessary to see background color
-    b.setBackground(Color.WHITE);
-    b.setBorder(BorderFactory.createLineBorder(Color.black));
+		try{
+			//just initializing to black or compiler complains about it not being initialized
+			Image img = ImageIO.read(getClass().getResource("/BlackTurn.png"));
+			//if it's white, load the proper image
+			if(s.equals("White")){
+				img = ImageIO.read(getClass().getResource("/WhiteTurn.png"));
+			}
+			b.setIcon(new ImageIcon(img));
+      b.setOpaque(true);            // Necessary to see background color
+			b.setBackground(Color.WHITE);
+			b.setPreferredSize(new Dimension(62, 58));
+			b.setBorderPainted(false);
+		} catch( Exception e){
+			//if something went wrong, use the old buttons
+			b.setLayout(new BorderLayout());
+			JLabel label1 = new JLabel(s);
+			label1.setHorizontalAlignment(SwingConstants.CENTER);
+			JLabel label2 = new JLabel("Turn");
+			label2.setHorizontalAlignment(SwingConstants.CENTER);
+			b.add(BorderLayout.NORTH,label1);
+			b.add(BorderLayout.SOUTH,label2);
+			b.setOpaque(true);            // Necessary to see background color
+			b.setBackground(Color.WHITE);
+			b.setBorder(BorderFactory.createLineBorder(Color.black));
+		}
     return b;
   }
 

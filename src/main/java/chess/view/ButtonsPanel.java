@@ -10,6 +10,8 @@ public class ButtonsPanel extends JPanel {
 
   // Makes the load and save buttons
   public ButtonsPanel() {
+		this.setBackground(Color.WHITE); 	//make it white
+
     this.setLayout(new FlowLayout(FlowLayout.CENTER));
 
     // Add save button
@@ -27,7 +29,7 @@ public class ButtonsPanel extends JPanel {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
         //Save functionality
-		SaveGame saveGame = new SaveGame();
+		    SaveGame saveGame = new SaveGame();
       }
     };
     return action;
@@ -36,10 +38,8 @@ public class ButtonsPanel extends JPanel {
   private ActionListener getLoadAction() {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        // Placeholder for when we add functionality
-		
-		//Load functionality
-		LoadGame loadGame = new LoadGame();
+    		//Load functionality
+    		LoadGame loadGame = new LoadGame();
       }
     };
     return action;

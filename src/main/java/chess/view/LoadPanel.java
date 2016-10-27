@@ -7,22 +7,14 @@ import javax.imageio.*;
 import java.util.*;
 import java.lang.*;
 
-/*
-TODO - Add variable that keeps track of the last saved fen - Remove all forced fen values used for testing
-	 - Get updates on the current fen, compare it to the last saved fen
-		- If fen are the same skip prompt and continue action
-		- Else set up prompt
-	 - Handle edge case if the fen string and previously loaded or saved fen string are the same
-		- Want to not prompt if they are the same
-*/
-
 public class LoadPanel extends JPanel {
-
-	//Buttons for the board
-	private JButton enter;
-	private JButton cancel;
 	private JLabel prompt;
-	private JTextField fileName;
+	
+	private JButton loadGame;
+	private int loadGameWidth = 200;
+	private int loadGameHeight = 25;
+	
+	private String fileName;
 
 	private JButton save;
 	private JButton continueLoad;
@@ -45,122 +37,99 @@ public class LoadPanel extends JPanel {
 	private int textFieldSize = 16;
 
 	private GridBagConstraints gbc;
-
+	
+	private int promptWidth = 600;
+	private int promptHeight = 200;
+	
+	private int calculatedHeight;
+	private int defaultWidth = 800;
+	
+	private int numberColumns = 3;
+	private int centerPrompt = 3;
 
 	public LoadPanel() {
-		/*
-		//This is a setup for potentially something later
-		//Might reformat how the load screen looks and works so user
-		//doesn't have to type in the file name every time
-		//Plan: Create buttons dynamically that have the file name on them
-		//When clicked retrieve the file name and open it, retrieve fen, etc
-		try {
-			//Retrieve all files or directories in the resource folder
-			File resourceFolder = new File(this.getClass().getResource(saveFilePath).toURI());
-			File[] listOfFiles = resourceFolder.listFiles();
 
-			listOfAllSaveFiles = new ArrayList<String>();
-
-			//Check all files
-			for(File f : listOfFiles) {
-				//Check if file is a folder
-				if(f.isFile()) {
-					String saveFileName = f.getName();
-
-					//Display all files
-					System.out.println(saveFileName);
-
-					//Check the extension to make sure it's a text file
-					//If file is a text file, then most likely it's a save file
-					String checkExtension = saveFileName.substring(saveFileName.lastIndexOf(".") + 1, saveFileName.length());
-					if(checkExtension.equals(acceptedFileExtension)) {
-						listOfAllSaveFiles.add(saveFileName);
-					}
-				}
-			}
-
-			//Print out what files are saved in the list
-			System.out.println(listOfAllSaveFiles);
-
-		} catch (Exception ex) {
-			System.out.println("Something terrible has happened...");
-			System.out.print("Exception: ");
-			System.out.println(ex.getMessage());
-		}
-		*/
+		//Retrieve all valid file names
+		getListOfSaveFiles();
+		
 		GridBagLayout layout = new GridBagLayout();
 		this.setLayout(layout);
 		this.setBackground(Color.WHITE);
 
-		GridBagConstraints gbc = new GridBagConstraints();
-
-
 		gbc = new GridBagConstraints();
 
 		//Adding prompt
-		prompt = new JLabel("Enter save file name with extention:");
+		prompt = new JLabel("Select save file to load");
 		prompt.setHorizontalAlignment(JLabel.CENTER);
 		prompt.setFont(new Font("Arial", Font.BOLD, promptTextSize));
-
-		gbc.insets = new Insets(5, 5, 5, 5);
+		
+		gbc.insets = new Insets(7, 7, 7, 7);
 
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		gbc.gridwidth = 2;
-		gbc.ipady = 15;
+
+		gbc.gridwidth = centerPrompt;           
+		gbc.ipady = 15;		
+
 		this.add(prompt, gbc);
+		
+		//Code related to new load file layout
+		int rowNumber = 1;
+		int colNumber = 0;
+		
+		for(int i = 0; i < listOfAllSaveFiles.size(); i++)
+		{
+			//Add buttons to the panel
+			loadGame = new JButton(listOfAllSaveFiles.get(i));
+			loadGame.setToolTipText(listOfAllSaveFiles.get(i));
+			loadGame.setAlignmentX(Component.CENTER_ALIGNMENT);
+			loadGame.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
+			loadGame.setPreferredSize(new Dimension(loadGameWidth,loadGameHeight));
+			loadGame.addActionListener(loadChessGame());
+			
+			gbc.ipadx = 25;	
+			
+			gbc.gridx = colNumber;
+			gbc.gridy = rowNumber;
+			gbc.gridwidth = 1;  		
+			this.add(loadGame, gbc);
+			
+			//If button hasn't filled up the row add another one
+			if(colNumber < (numberColumns-1)) {
+				colNumber++;
+			}
+			//Else move onto the next row
+			else {
+				rowNumber++;
+				colNumber = 0;
+			}
+		}
+		
+		//Calculate dynamic height based on the number of row
+		calculatedHeight = (rowNumber * (loadGameHeight + 31)) + 100;
+		
+		//If height is too large, limit it
+		if(calculatedHeight > 700) {
+			calculatedHeight = 700;
+		}
 
-		//Adding text field
-		fileName = new JTextField(30);
-		fileName.setFont(new Font("Arial", Font.PLAIN, textFieldSize));
-
-		gbc.gridx = 0;
-		gbc.gridy = 1;
-		gbc.gridwidth = 2;
-		this.add(fileName, gbc);
-
-		//Add enter button to confirm text field input
-		enter = new JButton("Confirm");
-		enter.setAlignmentX(Component.CENTER_ALIGNMENT);
-		enter.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
-		enter.addActionListener(loadChessGame());
-
-		//Add cancel button to return back to the start up menu
-		cancel = new JButton("Return");
-		cancel.setAlignmentX(Component.CENTER_ALIGNMENT);
-		cancel.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
-		cancel.addActionListener(returnBackToStartup());
-
-		gbc.ipadx = 150;
-
-		gbc.gridx = 0;
-		gbc.gridy = 2;
-		gbc.gridwidth = 1;
-		this.add(enter, gbc);
-
-		gbc.gridx = 1;
-		gbc.gridy = 2;
-		gbc.gridwidth = 1;
-		this.add(cancel, gbc);
+		//Set frame to new height and the default width, determined by number of columns
+		setNewFrameSize(defaultWidth, calculatedHeight);
 	}
 
 	private ActionListener loadChessGame() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-			// Placeholder for when we add functionality
-				//Load and read the text file so it can be displayed onto the board
-				//And accepted by stockfish
 
-				System.out.println("Entered File Name: " + fileName.getText());
-
-				//Run the chessboard
-				ConsoleGraphics chessboard = new ConsoleGraphics();
-
-				//Make load frame not visible after user clicks new game
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(enter.getParent());
-				frame.dispose();
-
+				//Code for load button panel layout
+				//Get the file name based on what button was clicked
+				fileName = e.getActionCommand();
+				
+				fileNamePath = "/" + fileName;
+				
+				System.out.println("FileName of button clicked: " + fileName);
+				
 				//Try to see if the board is open/visible
 				try {
 					checkChessboardVisible = ConsoleGraphics.frame.isShowing();
@@ -172,36 +141,20 @@ public class LoadPanel extends JPanel {
 				//If so then the user is trying to load a game from the chessboard layout
 				if(checkChessboardVisible == true) {
 					System.out.println("Board is visible!");
-
-					//Get current fen of the board
+		
+					//Get current fen from the board
 					String currFen = BoardPanel.my_storage.getFen();
 
 					//Get fen that was read in from file before save
 					String prevSaveFen = BoardPanel.lastSaveFen;
 
-					//Assume that currFen is the last loaded in fen for testing
-					currFen = BoardPanel.lastSaveFen;
-
-					//Check file extension, see if it's a text file
-					if(checkValidFileExtension() == true)
-					{
-						try {
-							//Check if file exists
-							File file = new File(this.getClass().getResource(fileNamePath).toURI());
-							//Fen strings are different, prompt user if they want to save or not
-							//Click save to save the game, or return or confirm
-							if(currFen.equals(prevSaveFen) == false) {
-								System.out.println("Fen strings are not equal! Prompt for save!");
-								setUpPrompt();
-							}
-							else {
-								loadFile();
-							}
-						} catch(Exception E) {
-							System.out.print("Exception: ");
-							System.out.println(E.getMessage());
-							prompt.setText("<html>ERROR: File doesn't exists!<br>Enter save file name with extention:</html>");
-						}
+					if(currFen.equals(prevSaveFen) == false) {
+						System.out.println("Fen strings are not equal! Prompt for save!");
+						setUpPrompt(); 
+					}
+					else {
+						System.out.println("Loading file: " + fileNamePath);
+						loadFile();
 					}
 				}
 
@@ -215,131 +168,85 @@ public class LoadPanel extends JPanel {
 		};
 		return action;
 	}
-
-	private ActionListener returnBackToStartup() {
-		ActionListener action = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			// Placeholder for when we add functionality
-				//Clear out the text field
-				fileName.setText("");
-				//Try to see if the board is open/visible
-				try {
-					checkChessboardVisible = ConsoleGraphics.frame.isShowing();
-				}
-				catch(NullPointerException ex) {
-					checkChessboardVisible = false;
-				}
-				//Check if the board has been loaded
-				//If not then it must be from the startup menu where the user clicked on return
-				if(checkChessboardVisible == false) {
-					StartUpMenu start = new StartUpMenu();
-					//Make load frame not visible after user clicks load
-					JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(cancel.getParent());
-					frame.dispose();
-				}
-				//If chessboard is visible/open then user is returning from the load inside the game
-				//Return should just remove the load panel and user should be back to chessboard
-				else {
-					//Check if panel was modified to prompt layout
-					if(cancel.getText().equals("Return")) {
-						//Make load frame not visible after user clicks return
-						JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(cancel.getParent());
-						frame.dispose();
-					}
-					//Panel wasn't modified to prompt layout
-					else {
-						//Revert all changes to make prompt back to how it was before
-						//Revert done just by getting rid of the old one and loading in a new one
-						LoadGame loadGamePanel = new LoadGame();
-
-						JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(cancel.getParent());
-						frame.dispose();
-					}
-				}
-			}
-		};
-		return action;
-	}
-
+	
 	//Load the entered file, retrieve it's contents and display it on the board
 	private void loadFile() {
-		//Test prompt back to default settings
-		prompt.setText("Enter save file name with extention:");
-		//Text field is not empty, attempt to load a file
-		if(fileName.getText() != "") {
-			fileContents = new ArrayList<String>();
-			try {
-				//Check if file exists
-				File file = new File(this.getClass().getResource(fileNamePath).toURI());
-				//Try to open contents of the file
-				try {
-					//Read in all contents of the file and store it into an ArrayList
-					BufferedReader readFile = new BufferedReader(new FileReader(file));
-					while((tempLine = readFile.readLine()) != null)
-					{
-						fileContents.add(tempLine);
-					}
-					readFile.close();
-
-					//Get fen from the file
-					//Assume that fen is the first line in the file
-					fen = fileContents.get(0);
-
-					//TEST CODE
-					//Read out the board in the file to make sure its the same
-					//As what is displayed
-					System.out.println("Read in fen from file: \n" + fen);
-					for(int i = 1; i < 9; i++) {
-						System.out.println("Row " + i + " : " + fileContents.get(i));
-					}
-
-					//Remove previous chessboard before creating the new one
-					//If there is some lag when loading the images
-					//Might just call drawpieces on the current board with new fen
-					ConsoleGraphics.frame.dispose();
-
-					//Load chessboard
-					ConsoleGraphics chessboard = new ConsoleGraphics();
-
-					// Set controller to whoever's turn it should be
-					String[] splitFen = fen.split(" ");
-					// Whether it is currently white or black's turn is second string in fen
-					// Fen stores white's turn as 'w', black's turn as 'b' already
-					char currentColor = splitFen[1].charAt(0);
-					// Last line in file stores what color the player is
-					char playersColor = fileContents.get(fileContents.size() - 1).charAt(0);
-					System.out.println("Players color is: " + playersColor);
-					LaboonChess.controller = new TurnController(currentColor, playersColor);
-					LaboonChess.controller.addGraphicalTurn(chessboard);
-
-					//Make load frame not visible after user clicks load game
-					JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(enter.getParent());
-					frame.dispose();
-
-				} catch (Exception eee) {
-					System.out.println("OH NO DISASTER!");
-					System.out.print("Exception: ");
-					System.out.println(eee.getMessage());
-				}
-			} catch(Exception eeeee) {
-				System.out.print("Exception: ");
-				System.out.println(eeeee.getMessage());
-				prompt.setText("<html>ERROR: File doesn't exists!<br>Enter save file name with extention:</html>");
+		System.out.println("Filename in load file method: " + fileName);
+		
+		fileContents = new ArrayList<String>();
+		//Try to open contents of the file
+		try {
+			File file = new File(this.getClass().getResource(fileNamePath).toURI());
+			
+			//Read in all contents of the file and store it into an ArrayList
+			BufferedReader readFile = new BufferedReader(new FileReader(file));
+			while((tempLine = readFile.readLine()) != null)
+			{
+				fileContents.add(tempLine);
 			}
-			//Update last saved fen
-			//Last saved fen as the new fen that was just loaded
-			BoardPanel.lastSaveFen = fen;
+			readFile.close();
+			
+			//Get fen from the file
+			//Assume that fen is the first line in the file
+			fen = fileContents.get(0);
+			
+			//TEST CODE
+			//Read out the board in the file to make sure its the same
+			//As what is displayed
+			System.out.println("Read in fen from file: \n" + fen);
+			for(int i = 1; i < 9; i++) {
+				System.out.println("Row " + i + " : " + fileContents.get(i));
+			}
+			//Try to see if the board is open/visible
+			try {
+				checkChessboardVisible = ConsoleGraphics.frame.isShowing();
+			}
+			catch(NullPointerException ex) {
+				checkChessboardVisible = false;
+			}
+			
+			if(checkChessboardVisible != false) {
+				//Remove previous chessboard before creating the new one
+				//If there is some lag when loading the images
+				//Might just call drawpieces on the current board with new fen
+				ConsoleGraphics.frame.dispose();
+			}
+			
+			//Load chessboard
+			ConsoleGraphics chessboard = new ConsoleGraphics();			
+			
+			// Set controller to whoever's turn it should be
+			String[] splitFen = fen.split(" ");
+			// Whether it is currently white or black's turn is second string in fen
+			// Fen stores white's turn as 'w', black's turn as 'b' already
+			char currentColor = splitFen[1].charAt(0);
+			// Last line in file stores what color the player is
+			char playersColor = fileContents.get(fileContents.size() - 1).charAt(0);
+			System.out.println("Players color is: " + playersColor);
+			LaboonChess.controller = new TurnController(currentColor, playersColor);
+			LaboonChess.controller.addGraphicalTurn(chessboard);
+			
+			//Make load frame not visible after user clicks load game
+			JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this.getParent());
+			frame.dispose();
+			
+		} catch (Exception eee) {
+			System.out.print("Exception: ");
+			System.out.println(eee.getMessage());
 		}
+		
+		//Update last saved fen
+		//Last saved fen as the new fen that was just loaded
+		BoardPanel.lastSaveFen = fen;
 	}
 
-	public void setUpPrompt() {
+	private void setUpPrompt() {
+		//Remove all components in the board
+		this.removeAll();
+		
+		//Add prompt back to panel
 		//Change the label text
 		prompt.setText("<html>Game hasn't been saved!<br>Do you want to save your progress?</html>");
-
-		//Remove the load button
-		this.remove(enter);
-
-		this.cancel.setText("Cancel");
 
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridx = 0;
@@ -348,8 +255,7 @@ public class LoadPanel extends JPanel {
 		gbc.ipady = 15;
 		this.add(prompt, gbc);
 
-		//Replace the load button spot with the save button
-		//Brings up save panel to let user save the game
+		//Add a yes button that causes the save window to pop up
 		save = new JButton("Yes");
 		save.setAlignmentX(Component.CENTER_ALIGNMENT);
 		save.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
@@ -362,8 +268,7 @@ public class LoadPanel extends JPanel {
 		gbc.gridwidth = 1;
 		this.add(save, gbc);
 
-		//Add an additional button, if user doesn't want to save the current playing game then
-		//just load the game they want
+		//Add a no button that will automatically load the file that the user wanted
 		continueLoad = new JButton("No");
 		continueLoad.setAlignmentX(Component.CENTER_ALIGNMENT);
 		continueLoad.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
@@ -376,38 +281,28 @@ public class LoadPanel extends JPanel {
 		gbc.gridwidth = 1;
 		this.add(continueLoad, gbc);
 
-		//Size of the screen changes with the addition of another button so change it accordingly
-		Toolkit t = getToolkit();
-		Dimension screen = t.getScreenSize();
-
-		LoadGame.frame.setSize(750, 250);
-		LoadGame.frame.setLocation(screen.width/2-LoadGame.frame.getWidth()/2,screen.height/2-LoadGame.frame.getHeight()/2);
-
-		//Hide textfield
-		fileName.setVisible(false);
-
-		//Update the panel so changes appear
-		this.validate();
-		this.repaint();
+		//Set up the prompt frame to the default size listed in variable declaration
+		setNewFrameSize(promptWidth, promptHeight);
 	}
 
+	//Method used for yes button in the prompt
+	//If user clicks the no button, then it confirms that the user wants to save the current game
 	private ActionListener confirmSave() {
 		ActionListener action = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//Set textfield back to default value, null
-				fileName = null;
-
+			public void actionPerformed(ActionEvent e) {				
 				//Open save file panel, let user save the game
 				SaveGame saveGame = new SaveGame();
 
 				//Make save frame not visible after user clicks return/cancel
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(save.getParent());
+				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(prompt.getParent());
 				frame.dispose();
 			}
 		};
 		return action;
 	}
 
+	//Method used for the no button in the prompt
+	//If user clicked the no button, then the load would continue
 	private ActionListener confirmLoad() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -415,35 +310,65 @@ public class LoadPanel extends JPanel {
 				loadFile();
 
 				//Make save frame not visible after user clicks return/cancel
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(continueLoad.getParent());
+				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(prompt.getParent());
 				frame.dispose();
 			}
 		};
 		return action;
 	}
 
-	//Check if the user entered a valid, accepted file extension
-	public boolean checkValidFileExtension() {
-		boolean validFileExtension = false;
-
-		fileNamePath = "/" + fileName.getText();
-
-		//Check file extensions before attempting to open the file
-		//Have to do this because user could try to load a png file
-		//Might have to move images into a subfolder in resources
-		String checkExtension = fileNamePath.substring(fileNamePath.lastIndexOf(".") + 1, fileNamePath.length());
-
-		//Only check if it's a text file for now
-		//Change later if we plan to encrypt
-
-		//File extension is accept, proceed to open the file
-		if(checkExtension.equals(acceptedFileExtension)) {
-			validFileExtension = true;
+	//Retrieves all the save files and stores it in a global variable
+	//	Gets all files, removes any files that aren't txt files
+	private void getListOfSaveFiles() {
+		try {
+			//Retrieve all files or directories in the resource folder
+			File resourceFolder = new File(this.getClass().getResource(saveFilePath).toURI());
+			File[] listOfFiles = resourceFolder.listFiles();
+			
+			listOfAllSaveFiles = new ArrayList<String>();
+			
+			//Check all files 
+			for(File f : listOfFiles) {
+				//Check if file is a folder
+				if(f.isFile()) {
+					String saveFileName = f.getName();
+					
+					//Display all files 
+					//System.out.println(saveFileName);
+					
+					//Check the extension to make sure it's a text file
+					//If file is a text file, then most likely it's a save file
+					String checkExtension = saveFileName.substring(saveFileName.lastIndexOf(".") + 1, saveFileName.length());
+					if(checkExtension.equals(acceptedFileExtension)) {
+						listOfAllSaveFiles.add(saveFileName);
+					}
+				}
+			}
+			
+			//Print out what files are saved in the list
+			System.out.println(listOfAllSaveFiles);
+			
+		} catch (Exception ex) {
+			System.out.print("Exception: ");
+			System.out.println(ex.getMessage());
 		}
-		else {
-			prompt.setText("<html>ERROR: Invalid file extension<br>Enter save file name with extention:</html>");
-		}
-
-		return validFileExtension;
+	}
+	
+	//Sets the frame size for the load panel dynamically
+	private void setNewFrameSize(int width, int height) {
+		//Set the new frame width and height
+		LoadGame.screenWidth = width;
+		LoadGame.screenHeight = height;
+		
+		//Modify the size of the frame
+		LoadGame.frame.setSize(LoadGame.screenWidth, LoadGame.screenHeight);
+		
+		//Recenter the frame in the middle of the screen
+		Toolkit t = getToolkit();
+		Dimension screen = t.getScreenSize();
+		LoadGame.frame.setLocation(screen.width/2-LoadGame.frame.getWidth()/2,screen.height/2-LoadGame.frame.getHeight()/2);
+		
+		this.validate();
+		this.repaint();
 	}
 }

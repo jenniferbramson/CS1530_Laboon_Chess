@@ -39,7 +39,8 @@ public class SaveGame extends JPanel {
 		screen = t.getScreenSize();
 		frame.setLocation(screen.width/2-frame.getWidth()/2,screen.height/2-frame.getHeight()/2);
 		
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+		
 		frame.setVisible(true);                    
 	}
 	
