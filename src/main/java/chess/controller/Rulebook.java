@@ -152,55 +152,258 @@ public class Rulebook {
   protected boolean kingDanger(int x, int y, char c) {
     boolean kingWhite = Character.isUpperCase(c);
     boolean danger;
+    char dangerC;
+    int numRows = 8;
+    int numCols = 8;
 
-    // Check east (for rook, queen, king)
-    for(int i = x + 1; i < 7; i++) {
-      danger = eastWestCheck(x, y, kingWhite, i);
-      if (danger) {
+    // Rook and Queen checks ---------------------------------
+    // East
+    for(int i = x + 1; i < numCols; i++) {
+      dangerC = rookQueenCheck(i, y, kingWhite);
+      if (dangerC == 'a') {
         return true;
+      } else if (dangerC == 's') {
+        break; // Break out of loop if the king is safe east
       }
     } // end east check
 
-    // check west (for rook, queen, king)
+    // West
     for(int i = x - 1; i > -1; i--) {
-      danger = eastWestCheck(x, y, kingWhite, i);
-      if (danger) {
+      dangerC = rookQueenCheck(i, y, kingWhite);
+      if (dangerC == 'a') {
         return true;
+      } else if (dangerC == 's') {
+        break; // Break out of loop if the king is safe east
       }
     } // end east check
 
-    // If east and west check out, look at south (for rook, queen, king)
-    for(int i = y + 1; i < 7; i++) {
-      danger = northSouthCheck(x, y, kingWhite, i);
-      if (danger) {
+    // South
+    for(int i = y + 1; i < numRows; i++) {
+      dangerC = rookQueenCheck(x, i, kingWhite);
+      if (dangerC == 'a') {
         return true;
+      } else if (dangerC == 's') {
+        break; // Break out of loop if the king is safe east
       }
     } // end south check
 
-    // check north (for rook, queen, king)
+    // North
     for(int i = y - 1; i > -1; i--) {
-      danger = northSouthCheck(x, y, kingWhite, i);
-      if (danger) {
+      dangerC = rookQueenCheck(x, i, kingWhite);
+      if (dangerC == 'a') {
         return true;
+      } else if (dangerC == 's') {
+        break; // Break out of loop if the king is safe east
       }
     } // end north check
+    //------------------------------------------------------
+
+    // Check for kings
+    danger = kingChecks(x, y, kingWhite);
+    if (danger) {
+      return true;
+    }
 
     // check diagonals
-    // Check for pawn
-    if (kingWhite) {
-      if ()
+    // Check for pawns
+    danger = pawnCheck(x, y, kingWhite);
+    if (danger) {
+      return true;
     }
-    // northeast
-    // (for bishop, queen, king)
+
+    // Bishop and Queen checks -------------------------------
+    // Northeast
+    for(int i = 1; i < numRows; i++) {
+      if ( (x + i) < numCols && (y + i) < numRows) {
+        dangerC = rookQueenCheck(x + i, y + i, kingWhite);
+        if (dangerC == 'a') {
+          return true;
+        } else if (dangerC == 's') {
+          break; // Break out of loop if the king is safe east
+        }
+      } else {
+        break; // Out of bounds
+      }
+    }
+
+    // Northwest
+    for(int i = 1; i < numRows; i++) {
+      if ( (x - i) > -1 && (y + i) < numCols) {
+        dangerC = rookQueenCheck(x - i, y + i, kingWhite);
+        if (dangerC == 'a') {
+          return true;
+        } else if (dangerC == 's') {
+          break; // Break out of loop if the king is safe east
+        }
+      } else {
+        break; // Out of bounds
+      }
+    }
+
+    // Southeast
+    for(int i = 1; i < numCols; i++) {
+      if ( (x + i) < numCols && (y - i) > -1) {
+        dangerC = rookQueenCheck(x + i, y - i, kingWhite);
+        if (dangerC == 'a') {
+          return true;
+        } else if (dangerC == 's') {
+          break; // Break out of loop if the king is safe east
+        }
+      } else {
+        break; // Out of bounds
+      }
+    }
+
+    // Southwest
+    for(int i = 1; i < numRows; i++) {
+      if ( (x - i) > -1 && (y - i) > -1) {
+        dangerC = rookQueenCheck(x - i, y - i, kingWhite);
+        if (dangerC == 'a') {
+          return true;
+        } else if (dangerC == 's') {
+          break; // Break out of loop if the king is safe east
+        }
+      } else {
+        break; // Out of bounds
+      }
+    }
+    //----------------------------------------------------------
 
     // check for knights
+    danger = knightChecks(x, y, kingWhite);
+    if (danger) {
+      return true;
+    }
 
-
+    return false; // No danger found, spot is safe
   } // end KingDanger()
 
-  // Helper method for kingDanger(), checks current space based on input i
-  private boolean diagonalCheck(int x, int y, boolean kingWhite, int i, int j) {
-    char pieceThere = my_storage.getSpaceChar(i, j);
+  // Helper method for kingDanger()
+  // True if there is a valid attacking knight for the space, false if not
+  private boolean knightChecks(int x, int y, boolean kingWhite) {
+    char[] piecesThere = new char[8];
+    char pieceThere;
+    int numCols = 8;
+    int numRows = 8;
+
+    // 8 possible attacking king spots
+    if (x - 2 > -1 && y - 1 > -1)
+      piecesThere[0] = my_storage.getSpaceChar(x - 2, y - 1);
+
+    if (x + 2 < numCols && y - 1 > -1)
+      piecesThere[1] = my_storage.getSpaceChar(x + 2, y - 1);
+
+    if (x - 2 > - 1 && y + 1 < numRows)
+      piecesThere[2] = my_storage.getSpaceChar(x - 2, y + 1);
+
+    if (x + 2 < numCols && y + 1 < numRows)
+      piecesThere[3] = my_storage.getSpaceChar(x + 2, y + 1);
+
+    if (x -1 > -1 && y - 2 > -1)
+      piecesThere[4] = my_storage.getSpaceChar(x - 1, y - 2);
+
+    if (x -1 > -1 && y - 2 > -1)
+      piecesThere[5] = my_storage.getSpaceChar(x + 1, y - 2);
+
+    if (x -1 > -1 && y + 2 < numRows)
+      piecesThere[6] = my_storage.getSpaceChar(x - 1, y + 2);
+
+    if (x +1 < numCols && y + 2 < numRows)
+      piecesThere[7] = my_storage.getSpaceChar(x + 1, y + 2);
+
+    for(int i = 0; i < 8; i++) {
+      pieceThere = piecesThere[i];
+      if (pieceThere == 'n' || pieceThere == 'N') {
+        boolean pieceThereWhite = Character.isUpperCase(pieceThere);
+        if ((pieceThereWhite && !kingWhite) || (!pieceThereWhite && kingWhite)) {
+          // Knight of opposite suit in spots
+          return true;
+        }
+      }
+    }
+
+    return false;
+  }
+
+  // Helper method for kingDanger()
+  // True if there is a valid attacking pawn for the space, false if not
+  private boolean pawnCheck(int x, int y, boolean kingWhite) {
+    char pieceThere;
+
+    // Pawns can only move in one direction, depending on their color
+    if (kingWhite) {
+      // King is white, look for black pawn aka one above
+      pieceThere = my_storage.getSpaceChar(x - 1, y - 1);
+      if (pieceThere == 'p') {
+        return true;
+      }
+      pieceThere = my_storage.getSpaceChar(x + 1, y - 1);
+      if (pieceThere == 'p') {
+        return true;
+      }
+    } else {
+      // King is black, look for white pawn below
+      pieceThere = my_storage.getSpaceChar(x - 1, y + 1);
+      if (pieceThere == 'P') {
+        return true;
+      }
+      pieceThere = my_storage.getSpaceChar(x + 1, y + 1);
+      if (pieceThere == 'P') {
+        return true;
+      }
+    }
+
+    // No dangerous pawns found
+    return false;
+  }
+
+  // Helper method that looks for attacking kings
+  private boolean kingChecks(int x, int y, boolean kingWhite) {
+    boolean danger;
+
+    for (int i = -1; i <= 1; i++) {
+      for (int j = -1; j <= 1; j++) {
+        if (i == 0 && j == 0) {
+          // do nothing, original space
+        } else {
+          danger = kingCheck(x + i, y + j, kingWhite);
+          if (danger) {
+            return true;
+          }
+        }
+      }
+    }
+
+    return false; // no danger founds
+  }
+
+  // Helper method that looks for attacking kings
+  // True if there is a valid attacking king for the space, false if not
+  private boolean kingCheck(int x, int y, boolean kingWhite) {
+    if (x > -1 && y > -1 && x < 8 && y < 8) {
+      char pieceThere = my_storage.getSpaceChar(x, y);
+
+      if (pieceThere != '\u0000') {
+        // Return false if char there is one that can take King
+        boolean pieceThereWhite = Character.isUpperCase(pieceThere);
+
+        if ((pieceThereWhite && !kingWhite) || (!pieceThereWhite && kingWhite)) {
+          if (pieceThere == 'k' || pieceThere == 'K') {
+            return true;
+          }
+        }
+      }
+
+      return false;
+    } else {
+      return false; // out of bounds
+    }
+  }
+
+  // Helper method for kingDanger()
+  // a = attacked, s = safe, one of own pieces present in the space, u = unsure yet
+  private char bishopQueenCheck(int x, int y, boolean kingWhite) {
+    char pieceThere = my_storage.getSpaceChar(x, y);
 
     if (pieceThere != '\u0000') {
       // Return false if char there is one that can take King
@@ -208,22 +411,23 @@ public class Rulebook {
       if ((pieceThereWhite && !kingWhite) || (!pieceThereWhite && kingWhite)) {
         // If of opposite colors
         char pieceThereLower = Character.toLowerCase(pieceThere);
+        // Bishop or queen there, king is being attacked
         if ( (pieceThereLower == 'b') || (pieceThereLower == 'q') ) {
-          return true;
+          return 'a';
         }
-
-        if ( (abs(i - x) == 1) && (pieceThereLower == 'k') ) {
-          return true;
-        }
+      } else {
+        // Same color, so king must be safe
+        return 's';
       }
     }
 
-    return false; // No danger found
+    return 'u'; // No danger found
   } // end eastWestCheck()
 
-  // Helper method for kingDanger(), checks current space based on input i
-  private boolean eastWestCheck(int x, int y, boolean kingWhite, int i) {
-    char pieceThere = my_storage.getSpaceChar(i, y);
+  // Helper method for kingDanger(), looks for queen and rook north/south
+  // a = attacked, s = safe, one of own pieces present in the space, u = unsure yet
+  private char rookQueenCheck(int x, int y, boolean kingWhite) {
+    char pieceThere = my_storage.getSpaceChar(x, y);
 
     if (pieceThere != '\u0000') {
       // Return false if char there is one that can take King
@@ -231,41 +435,21 @@ public class Rulebook {
       if ((pieceThereWhite && !kingWhite) || (!pieceThereWhite && kingWhite)) {
         // If of opposite colors
         char pieceThereLower = Character.toLowerCase(pieceThere);
+        // Rook or queen in space, king is being attacked
         if ( (pieceThereLower == 'r') || (pieceThereLower == 'q') ) {
-          return true;
+          return 'a';
         }
-
-        if ( (abs(i - x) == 1) && (pieceThereLower == 'k') ) {
-          return true;
-        }
+      } else {
+        // The same color, so the king must be safe
+        return 's';
       }
     }
 
-    return false; // No danger found
-  } // end eastWestCheck()
-
-  // Helper method for kingDanger(), checks current space based on input i
-  private boolean northSouthCheck(int x, int y, boolean kingWhite, int i) {
-    char pieceThere = my_storage.getSpaceChar(x, i);
-
-    if (pieceThere != '\u0000') {
-      // Return false if char there is one that can take King
-      boolean pieceThereWhite = Character.isUpperCase(pieceThere);
-      if ((pieceThereWhite && !kingWhite) || (!pieceThereWhite && kingWhite)) {
-        // If of opposite colors
-        char pieceThereLower = Character.toLowerCase(pieceThere);
-        if ( (pieceThereLower == 'r') || (pieceThereLower == 'q') ) {
-          return true;
-        }
-
-        if ( (abs(i - y) == 1) && (pieceThereLower == 'k') ) {
-          return true;
-        }
-      }
-    }
-
-    return false; // No danger found
+    return 'u'; // No danger found
   } // end northSouthCheck()
+
+ // ----------------------------------------------------------------------------
+
 
   // Helper function for checkMove(), looks at the legal moves for a bishop
   private boolean bishopCheck(int x_1, int y_1, int x_2, int y_2) {
