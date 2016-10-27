@@ -163,12 +163,8 @@ public class SavePanel extends JPanel {
 			currFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 		}
 		else {
-			currFen = BoardPanel.lastSaveFen;
+			currFen = BoardPanel.my_storage.getFen();
 		}
-
-		//This statement doesn't really do anything at the moment
-		//Update the last saved fen to this one since it's now the most recent save
-		BoardPanel.lastSaveFen = currFen;
 
 		//Holds file information, can add more information later
 		StringBuilder fileInfo = new StringBuilder("");
