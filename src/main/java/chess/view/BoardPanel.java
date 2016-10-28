@@ -326,10 +326,10 @@ public class BoardPanel extends JPanel {
 						// Beginning or end of row, add column number
 						JLabel label = new JLabel("" + (8 - i));
 						label.setHorizontalAlignment(SwingConstants.CENTER);
-						addComponent(j,9-i,1,1,label);
+						addComponent(9-j,9-i,1,1,label);
 					} else {
 						// Add chess squares
-						addComponent(j,9-i,1,1,checkers[i-1][j-1]);
+						addComponent(9-j,9-i,1,1,checkers[i-1][j-1]);
 					}
 				}
 			}
