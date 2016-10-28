@@ -13,7 +13,17 @@ public class ConsoleGraphics extends JFrame {
   protected JButton whiteTurn;
   protected JButton blackTurn;
   protected static JFrame frame;
-
+	protected JButton blackColorButton;
+	protected JButton whiteColorButton;
+	protected BoardPanel board;
+	protected ButtonsPanel buttons;
+	protected TimerPanel timer;
+	protected Container content;
+	private GridBagLayout gbl;
+	private GridBagConstraints gbc;
+	String[] colors = {"Default", "Red", "Orange", "Yellow", "Green" ,"Blue" , "Purple"};
+	Color TURQUOISE = new Color(64,224,208);
+	
   // The stockfish process will be used as the NPC and also to generate fen strings
   protected static final Stockfish stockfish = new Stockfish();
 
@@ -24,14 +34,14 @@ public class ConsoleGraphics extends JFrame {
     stockfish.startEngine();
 
     frame = new JFrame("Laboon Chess");
-    Container content = frame.getContentPane();   // Get reference to content pane
+    content = frame.getContentPane();   // Get reference to content pane
 		content.setBackground(Color.WHITE); 	//make it white
 
     // Left side of the board has the timer, chess board, and buttons (load and
     // save) stacked vertically
-    TimerPanel timer = new TimerPanel();           // Get the timer panel
-    BoardPanel board = new BoardPanel();           // Get the square board
-    ButtonsPanel buttons = new ButtonsPanel();     // Get the buttons panel
+		timer = new TimerPanel();           // Get the timer panel
+    board = new BoardPanel();           // Get the square board
+    buttons = new ButtonsPanel();     // Get the buttons panel
 
     JPanel left = new JPanel();                    // Stack the three panels above
     left.setLayout(new BorderLayout());
@@ -42,47 +52,42 @@ public class ConsoleGraphics extends JFrame {
     // Middle part of board has the turn signals
     whiteTurn = playerTurnButton("White");
     blackTurn = playerTurnButton("Black");
+		
+		
+		//drop list for black side pieces
+		JComboBox blackColorList = new JComboBox(colors);
+		blackColorList.setSelectedIndex(0);
+		blackColorList.addActionListener(updateBlackList());
+		//drop list for white side pieces
+		JComboBox whiteColorList = new JComboBox(colors);
+		whiteColorList.setSelectedIndex(0);
+		whiteColorList.addActionListener(updateWhiteList());
+		//labels for the lists
+		JLabel whiteColorLabel = new JLabel("White Piece color: ");
+		JLabel blackColorLabel = new JLabel("Black Piece color: ");
+		JLabel spacing = new JLabel("");
+		spacing.setPreferredSize(new Dimension(100,140));	//spacing for making sure the buttons are centered
 
     // Right side of the board has the the taken black and white pieces stacked
     // vertically
     TakenPanel takenBlack = new TakenPanel("Taken Black Pieces");
     TakenPanel takenWhite = new TakenPanel("Taken White Pieces");
 
-    // Entire screen has both the leftand right sides of the board put together
-    // in a horizontal fashion
-    content.setLayout(new GridBagLayout());
-    GridBagConstraints c = new GridBagConstraints();
-    c.insets = new Insets(10, 10, 10, 10);
-    c.gridx = 0;              // specifies which column
-    c.gridy = 0;              // specifies which row
-    c.gridheight = 12;        // gridheight = number of rows it takes up
-    c.ipadx = 50;            // ipad = size in pixels
-    c.ipady = 50;
-    content.add(left, c);
-    c.gridheight = 2;
-    c.gridx = 1;
-    c.gridy = 5;
-    c.ipadx = 0;
-    c.ipady = 0;
-    content.add(blackTurn, c);
-    c.gridx = 1;
-    c.gridy = 10;
-    c.ipadx = 0;
-    c.ipady = 0;
-    content.add(whiteTurn, c);
-    c.gridx = 2;
-    c.gridy = 0;
-    c.gridheight = 6;
-    c.ipadx = 200;
-    c.ipady = 200;
-    content.add(takenBlack, c);
-    c.gridx = 2;
-    c.gridy = 6;
-    c.gridheight = 6;
-    c.ipadx = 200;
-    c.ipady = 200;
-    content.add(takenWhite, c);
-
+    // Setting up layout stuff
+		gbl = new GridBagLayout();
+		gbc = new GridBagConstraints();
+		content.setLayout(gbl);
+		
+		//NOTE: addComponent parameters are: x,y, width, height, ipadx, ipady, component
+		addComponent(0,0, 12, 12, 0, 0, left);
+		addComponent(13,1,1,1,0,0, spacing);
+		addComponent(13,5,1,1, 0, 0, blackTurn);		
+		addComponent(13,6,1,1, 0, 0, blackColorLabel);
+		addComponent(13,7,1,1,0, 0,blackColorList);
+		addComponent(13,8,1,1,0,0,whiteColorLabel);
+		addComponent(13,9,1,1,0,0,whiteColorList);
+		addComponent(13,10,1,1,0, 0,whiteTurn);
+		
 		frame.pack();
 
     //Get size of computer screen
@@ -105,8 +110,8 @@ public class ConsoleGraphics extends JFrame {
   }
 
 
-  // Creates a multi-line button. The multi line part of this code is from
-  // http://www.javaworld.com/article/2077368/learn-java/a-multiline-button-is-possible.html
+  // method that builds the "player turn" button
+	// If there is an issue reading the image, creates a multi-line button. 
   private JButton playerTurnButton(String s) {
     JButton b = new JButton();
 		try{
@@ -136,16 +141,101 @@ public class ConsoleGraphics extends JFrame {
 		}
     return b;
   }
-
+	//helper method for playerTurnButton
   public void setWhite() {
     blackTurn.setBackground(Color.WHITE);
-    whiteTurn.setBackground(Color.YELLOW);
+    whiteTurn.setBackground(TURQUOISE);
   }
-
+	//helper method for playerTurnButton
   public void setBlack() {
     whiteTurn.setBackground(Color.WHITE);
-    blackTurn.setBackground(Color.YELLOW);
+    blackTurn.setBackground(TURQUOISE);
   }
+	
+	private ActionListener updateWhiteList() {
+		ActionListener action = new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				JComboBox cb = (JComboBox)e.getSource();
+        String colorName = (String)cb.getSelectedItem();
+				setWhiteColor(colorName);
+			}
+		};
+		return action;
+	}
+	
+	private ActionListener updateBlackList() {
+		ActionListener action = new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				JComboBox cb = (JComboBox)e.getSource();
+        String colorName = (String)cb.getSelectedItem();
+				setBlackColor(colorName);
+			}
+		};
+		return action;
+	}
+	
+	private void setWhiteColor(String color){
+		if(color.equals("Red")){
+			board.colorizeWhite(true, 150, 0, 0);
+		}
+		else if(color.equals("Orange")){
+			board.colorizeWhite(true, 150, 75, 0);
+		}
+		else if(color.equals("Yellow")){
+			board.colorizeWhite(true, 150, 150, 0);
+		}
+		else if(color.equals("Green")){
+			board.colorizeWhite(true, 0, 150, 50);
+		}
+		else if(color.equals("Blue")){
+			board.colorizeWhite(true, 0, 0, 150);
+		}
+		else if(color.equals("Purple")){
+			board.colorizeWhite(true, 75, 0, 150);
+		}
+		else{
+			board.colorizeWhite(false, 0, 0, 0);
+		}
+	}
+	
+	//function that colorizes the black side pieces
+	private void setBlackColor(String color){
+		if(color.equals("Red")){
+			board.colorizeBlack(true, 150, 0, 0);
+		}
+		else if(color.equals("Orange")){
+			board.colorizeBlack(true, 150, 75, 0);
+		}
+		else if(color.equals("Yellow")){
+			board.colorizeBlack(true, 150, 150, 0);
+		}
+		else if(color.equals("Green")){
+			board.colorizeBlack(true, 0, 150, 50);
+		}
+		else if(color.equals("Blue")){
+			board.colorizeBlack(true, 0, 0, 150);
+		}
+		else if(color.equals("Purple")){
+			board.colorizeBlack(true, 75, 0, 150);
+		}
+		else{
+			board.colorizeBlack(false, 0, 0, 0);
+		}
+	}
+	
+	//helper function for adding components into the  frame
+	public void addComponent(int x, int y, int w, int h, int padx, int pady, Component aComponent) {
+		Insets inset = new Insets(10, 10, 10, 10);
+		gbc.insets = inset;
+		gbc.gridx=x;
+		gbc.gridy=y;
+		gbc.gridwidth = w;
+		gbc.gridheight = h;
+		gbc.ipadx = padx;
+		gbc.ipady = pady;
+		gbl.setConstraints(aComponent,gbc);
+		content.add(aComponent);
+	}
 
   public static void main(String[] args) {
     ConsoleGraphics chessBoard = new ConsoleGraphics();

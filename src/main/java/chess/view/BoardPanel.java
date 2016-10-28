@@ -3,6 +3,7 @@ import javax.swing.*;
 import java.awt.*;
 import javax.swing.border.*;
 import java.awt.event.*;  // awt.* does not import Action or Event Listeners
+import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 import static java.lang.Math.abs;
@@ -10,10 +11,9 @@ import static java.lang.Math.abs;
 import chess.Stockfish;
 
 public class BoardPanel extends JPanel {
-
-  // These are buttons we will need to use listeners on
 	GridBagLayout gbl;
 	GridBagConstraints gbc;
+  // These are buttons we will need to use listeners on
   protected JButton[][] checkers;
 	protected static Storage my_storage;
   private Rulebook my_rulebook;
@@ -21,9 +21,21 @@ public class BoardPanel extends JPanel {
 	private String old_spot = "";
 	private int old_x = 0;
 	private int old_y = 0;
-
+	//size of chess piece images
 	private int imageWidth = 64;
 	private int imageHeight = 64;
+	//Stuff for colorizing
+	private boolean colorizeBlack = false;
+	private boolean colorizeWhite = false;
+	private int blackR = 0;
+	private int blackG = 0;
+	private int blackB = 0;
+	private int whiteR = 0;
+	private int whiteG = 0;
+	private int whiteB = 0;
+	//COLORS
+	Color SEAGREEN = new Color(180,238,180);
+	Color DARKSEAGREEN = new Color(155,205,155);
 
 
 	//Keep track of the last saved fen
@@ -133,66 +145,81 @@ public class BoardPanel extends JPanel {
 				checkers[i][j].setIcon(null);			//clear it before you draw (if something was there previously)
 				char c = my_storage.getSpace(i,j, true);
 				try{
+					Image src;
 					Image img;
+					ImageFilter blackCF = new HueFilter(blackR,blackG,blackB);
+					ImageFilter whiteCF = new HueFilter(whiteR,whiteG,whiteB);
 					switch(c){
 						case 'p':
 							img = ImageIO.read(getClass().getResource("/BlackPawn.png"));
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));																
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'b':
 							img = ImageIO.read(getClass().getResource("/BlackBishop.png"));
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'r':
 							img = ImageIO.read(getClass().getResource("/BlackRook.png"));
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'k':
 							img = ImageIO.read(getClass().getResource("/BlackKing.png"));
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'q':
 							img = ImageIO.read(getClass().getResource("/BlackQueen.png"));
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'n':
 							img = ImageIO.read(getClass().getResource("/BlackKnight.png"));
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 
 						case 'P':
 							img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'B':
 							img = ImageIO.read(getClass().getResource("/WhiteBishop.png"));
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'R':
 							img = ImageIO.read(getClass().getResource("/WhiteRook.png"));
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'K':
 							img = ImageIO.read(getClass().getResource("/WhiteKing.png"));
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'Q':
 							img = ImageIO.read(getClass().getResource("/WhiteQueen.png"));
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'N':
 							img = ImageIO.read(getClass().getResource("/WhiteKnight.png"));
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
@@ -309,7 +336,12 @@ public class BoardPanel extends JPanel {
             }
 
             if (validColor) {               // Continue if right color piece clicked
-    					checkers[y][x].setBackground(Color.GREEN);
+							if((x+y)%2 == 0){
+								checkers[y][x].setBackground(SEAGREEN);
+							}
+							else{
+								checkers[y][x].setBackground(DARKSEAGREEN);
+							}
     					System.out.println("First click");
     					old_spot = current_spot;
     					old_x = x;
@@ -339,5 +371,21 @@ public class BoardPanel extends JPanel {
 		gbc.gridheight=h;
 		gbl.setConstraints(aComponent,gbc);
 		this.add(aComponent);
+	}
+	
+	public void colorizeBlack(boolean colorize, int red, int green, int blue){
+		colorizeBlack = colorize;
+		blackR = red;
+		blackG = green;
+		blackB = blue;
+		setPieces();
+	}
+	
+	public void colorizeWhite(boolean colorize, int red, int green, int blue){
+		colorizeWhite = colorize;
+		whiteR = red;
+		whiteG = green;
+		whiteB = blue;
+		setPieces();
 	}
 }
