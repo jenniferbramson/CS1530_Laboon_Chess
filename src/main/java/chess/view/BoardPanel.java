@@ -245,38 +245,6 @@ public class BoardPanel extends JPanel {
 							boolean castle = false;
 							System.out.println(oldPiece);
 
-							// If is, set for future castling
-							switch(oldPiece) {
-								case 'k':
-									my_rulebook.blackMovedKing();
-									// Check to see if a castle
-									if (abs(old_x - x) == 2) {
-										castle = true;
-									}
-									break;
-								case 'K':
-									my_rulebook.whiteMovedKing();
-									// Check to see if a castle
-									if (abs(old_x - x) == 2) {
-										castle = true;
-									}
-									break;
-								case 'r':
-									if (old_y == 0 && old_x == 0) {
-										my_rulebook.blackMovedLeftRook();
-									} else if (old_y == 0 && old_x == 7) {
-										my_rulebook.blackMovedRightRook();
-									}
-									break;
-								case 'R':
-									if (old_y == 7 && old_x == 0) {
-										my_rulebook.whiteMovedLeftRook();
-									} else if (old_y == 7 && old_x == 7) {
-										my_rulebook.whiteMovedRightRook();
-									}
-									break;
-							}
-
 							System.out.println("Moving " + old_spot + " to " + current_spot);
 							if ( (old_x+old_y) % 2== 0) {
 								checkers[old_y][old_x].setBackground(Color.WHITE);
@@ -289,7 +257,7 @@ public class BoardPanel extends JPanel {
 							System.out.println("Fen before move " + fen);
 
 							// Move castle if castle, otherwise normally
-							if (castle) {
+							if (abs(old_x - x) == 2) {
 								// castling
             		my_storage.movePiece(old_y, old_x, y, x);
 								System.out.println("Old spot: " + old_x + " " + old_y);

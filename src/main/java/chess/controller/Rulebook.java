@@ -4,43 +4,9 @@ import static java.lang.Math.abs;
 public class Rulebook {
 
   private Storage my_storage;
-  private boolean whiteCanCastleRight;  // True as long as king and right rook HAS NOT MOVED YET
-  private boolean blackCanCastleRight;  // True as long as king and right rook HAS NOT MOVED YET
-  private boolean whiteCanCastleLeft;   // True as long as king and left rook HAS NOT MOVED YET
-  private boolean blackCanCastleLeft;   // True as long as king and left rook HAS NOT MOVED YET
 
   public Rulebook(Storage my_storage) {
     this.my_storage = my_storage;
-    whiteCanCastleRight = true;
-    blackCanCastleRight = true;
-    whiteCanCastleLeft = true;
-    blackCanCastleLeft = true;
-  }
-
-  public void blackMovedKing() {
-    blackCanCastleRight = false;
-    blackCanCastleLeft = false;
-  }
-
-  public void whiteMovedKing() {
-    whiteCanCastleRight = false;
-    whiteCanCastleLeft = false;
-  }
-
-  public void whiteMovedLeftRook() {
-    whiteCanCastleLeft = false;
-  }
-
-  public void whiteMovedRightRook() {
-    whiteCanCastleRight = false;
-  }
-
-  public void blackMovedLeftRook() {
-    blackCanCastleLeft = false;
-  }
-
-  public void blackMovedRightRook() {
-    blackCanCastleRight = false;
   }
 
   // Checks if moves are legal. It does not check the case of no movement since
@@ -186,16 +152,32 @@ public class Rulebook {
     } // end switch statement
 
     return false; // If reached this point, false
-  } // end checkMove
+  } // end checkMove ----------------------------------------------------------
 
   // Helper function for checkMove, checks for Queenside castling
   // Assumes user is trying to queenside castle, returns true if they can
   private boolean queensideCastle(int x, int y, char piece) {
     boolean danger;
     char space;
+    String fen = my_storage.getFen();
+    String[] fenParts = fen.split(" ");
+    String castleList = fenParts[2];
+    boolean whiteCanCastle = false;
+    boolean blackCanCastle = false;
+
+    for (int i = 0; i < castleList.length(); i++) {
+      char c = castleList.charAt(i);
+      if (c == 'Q') {
+        whiteCanCastle = true;
+      } else if (c == 'q') {
+        blackCanCastle = true;
+      }
+      // Otherwise either kingside or '-'
+      // If '-', means no castling allowed and this method only checks for queenside
+    }
 
     // Queenside
-    if ((piece == 'K' && whiteCanCastleLeft) || (piece == 'k' && blackCanCastleLeft)) {
+    if ((piece == 'K' && whiteCanCastle) || (piece == 'k' && blackCanCastle)) {
       space = my_storage.getSpaceChar(x - 1, y);
       if (space == '\u0000') {
         danger = kingDanger(x - 1, y, piece);
@@ -227,9 +209,25 @@ public class Rulebook {
   private boolean kingsideCastle(int x, int y, char piece) {
     boolean danger;
     char space;
+    String fen = my_storage.getFen();
+    String[] fenParts = fen.split(" ");
+    String castleList = fenParts[2];
+    boolean whiteCanCastle = false;
+    boolean blackCanCastle = false;
+
+    for (int i = 0; i < castleList.length(); i++) {
+      char c = castleList.charAt(i);
+      if (c == 'K') {
+        whiteCanCastle = true;
+      } else if (c == 'k') {
+        blackCanCastle = true;
+      }
+      // Otherwise either queenside or '-'
+      // If '-', means no castling allowed and this method only checks for kingside
+    }
 
     // Kingside
-    if ((piece == 'K' && whiteCanCastleRight) || (piece == 'k' && blackCanCastleRight)) {
+    if ((piece == 'K' && whiteCanCastle) || (piece == 'k' && blackCanCastle)) {
       space = my_storage.getSpaceChar(x + 1, y);
       if (space == '\u0000') {
         danger = kingDanger(x + 1, y, piece);
@@ -327,7 +325,7 @@ public class Rulebook {
     // Northeast
     for(int i = 1; i < numRows; i++) {
       if ( (x + i) < numCols && (y + i) < numRows) {
-        dangerC = rookQueenCheck(x + i, y + i, kingWhite);
+        dangerC = bishopQueenCheck(x + i, y + i, kingWhite);
         if (dangerC == 'a') {
           return true;
         } else if (dangerC == 's') {
@@ -341,7 +339,7 @@ public class Rulebook {
     // Northwest
     for(int i = 1; i < numRows; i++) {
       if ( (x - i) > -1 && (y + i) < numCols) {
-        dangerC = rookQueenCheck(x - i, y + i, kingWhite);
+        dangerC = bishopQueenCheck(x - i, y + i, kingWhite);
         if (dangerC == 'a') {
           return true;
         } else if (dangerC == 's') {
@@ -355,7 +353,7 @@ public class Rulebook {
     // Southeast
     for(int i = 1; i < numCols; i++) {
       if ( (x + i) < numCols && (y - i) > -1) {
-        dangerC = rookQueenCheck(x + i, y - i, kingWhite);
+        dangerC = bishopQueenCheck(x + i, y - i, kingWhite);
         if (dangerC == 'a') {
           return true;
         } else if (dangerC == 's') {
@@ -369,7 +367,7 @@ public class Rulebook {
     // Southwest
     for(int i = 1; i < numRows; i++) {
       if ( (x - i) > -1 && (y - i) > -1) {
-        dangerC = rookQueenCheck(x - i, y - i, kingWhite);
+        dangerC = bishopQueenCheck(x - i, y - i, kingWhite);
         if (dangerC == 'a') {
           return true;
         } else if (dangerC == 's') {
@@ -388,7 +386,7 @@ public class Rulebook {
     }
 
     return false; // No danger found, spot is safe
-  } // end KingDanger()
+  } // end KingDanger() ------------------------------------------------------
 
   // Helper method for kingDanger()
   // True if there is a valid attacking knight for the space, false if not
