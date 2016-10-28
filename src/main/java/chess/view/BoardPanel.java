@@ -11,12 +11,13 @@ import static java.lang.Math.abs;
 import chess.Stockfish;
 
 public class BoardPanel extends JPanel {
-	GridBagLayout gbl;
-	GridBagConstraints gbc;
-  // These are buttons we will need to use listeners on
-  protected JButton[][] checkers;
 	protected static Storage my_storage;
   private Rulebook my_rulebook;
+	protected GridBagLayout gbl;
+	protected GridBagConstraints gbc;
+  // These are buttons we will need to use listeners on
+  protected JButton[][] checkers;
+	// values for keeping track of when to send moves to controller
 	boolean second_click = false;
 	private String old_spot = "";
 	private int old_x = 0;
@@ -25,6 +26,8 @@ public class BoardPanel extends JPanel {
 	private int imageWidth = 64;
 	private int imageHeight = 64;
 	//Stuff for colorizing
+	private boolean blackPartyTime = false;
+	private boolean whitePartyTime = false;
 	private boolean colorizeBlack = false;
 	private boolean colorizeWhite = false;
 	private int blackR = 0;
@@ -34,8 +37,10 @@ public class BoardPanel extends JPanel {
 	private int whiteG = 0;
 	private int whiteB = 0;
 	//COLORS
-	Color SEAGREEN = new Color(180,238,180);
-	Color DARKSEAGREEN = new Color(155,205,155);
+	private final Color SEAGREEN = new Color(180,238,180);
+	private final Color DARKSEAGREEN = new Color(155,205,155);
+	//for flipping the board
+	private boolean flipped = false;
 
 
 	//Keep track of the last saved fen
@@ -100,41 +105,8 @@ public class BoardPanel extends JPanel {
         checkers[i][j] = b;
       }
     }
-		setPieces();				//call method to draw the pieces
-
-
-    // Create Labels for a through h for the first rows
-    addComponent(0,0,1,1,new JLabel(""));  // Corners are empty
-    for (int i = 0; i < 8; i++) {
-      JLabel label = new JLabel("" + (char)(97 + i));
-      label.setHorizontalAlignment(SwingConstants.CENTER);
-			addComponent(i+1,0,1,1,label);
-    }
-    addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
-
-    // Fill out the center of the panel
-    for (int i = 0; i < 8; i++) {       // columns
-      for (int j = 0; j < 10; j++) {    // rows
-        if (j == 0 || j == 9) {
-          // Beginning or end of row, add column number
-          JLabel label = new JLabel("" + (8 - i));
-          label.setHorizontalAlignment(SwingConstants.CENTER);
-          addComponent(j,i+1,1,1,label);
-        } else {
-          // Add chess squares
-          addComponent(j,i+1,1,1,checkers[i][j-1]);
-        }
-      }
-    }
-
-    // Fill out the last row of letters a through h
-    addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
-    for (int i = 0; i < 8; i++) {
-      JLabel label = new JLabel("" + (char)(97 + i));
-      label.setHorizontalAlignment(SwingConstants.CENTER);
-			addComponent(i+1,9,1,1, label);
-    }
-		addComponent(9,9,1,1,new JLabel(""));
+		setPieces();				//call method to SET the pieces as what they should be
+		drawBoard();			//call the method to draw the newly set pieces to the board
   }
 
 	/*-----------------------------------------------------------------------------------*/
@@ -151,73 +123,154 @@ public class BoardPanel extends JPanel {
 					ImageFilter whiteCF = new HueFilter(whiteR,whiteG,whiteB);
 					switch(c){
 						case 'p':
+							if(blackPartyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/aussieparrot.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+								break;
+							}
 							img = ImageIO.read(getClass().getResource("/BlackPawn.png"));
-							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));																
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'b':
+							if(blackPartyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/aussiecongaparrot.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+								break;
+							}
 							img = ImageIO.read(getClass().getResource("/BlackBishop.png"));
 							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
+							
 						case 'r':
+							if(blackPartyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/aussiereversecongaparrot.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+								break;
+							}
 							img = ImageIO.read(getClass().getResource("/BlackRook.png"));
 							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
+							
 						case 'k':
+							if(blackPartyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/parrotcop.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+								break;
+							}
 							img = ImageIO.read(getClass().getResource("/BlackKing.png"));
 							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'q':
+							if(blackPartyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/fastparrot.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+								break;
+							}
 							img = ImageIO.read(getClass().getResource("/BlackQueen.png"));
 							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
+							
 						case 'n':
+							if(blackPartyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/partyparrot.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+								break;
+							}
 							img = ImageIO.read(getClass().getResource("/BlackKnight.png"));
 							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
-
+							
+							
 						case 'P':
+							if(whitePartyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/parrot.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+								break;
+							}
 							img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
-							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));		
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
+
 							break;
 						case 'B':
+							if(whitePartyTime){
+									ImageIcon icon = new ImageIcon(getClass().getResource("/parrotwave3.gif"));
+									checkers[i][j].setIcon(icon);
+									icon.setImageObserver(checkers[i][j]);
+									break;
+							}
 							img = ImageIO.read(getClass().getResource("/WhiteBishop.png"));
 							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'R':
+							if(whitePartyTime){
+									ImageIcon icon = new ImageIcon(getClass().getResource("/parrotwave1.gif"));
+									checkers[i][j].setIcon(icon);
+									icon.setImageObserver(checkers[i][j]);
+									break;
+							}
 							img = ImageIO.read(getClass().getResource("/WhiteRook.png"));
 							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
+							
 						case 'K':
+							if(whitePartyTime){
+									ImageIcon icon = new ImageIcon(getClass().getResource("/fiestaparrot.gif"));
+									checkers[i][j].setIcon(icon);
+									icon.setImageObserver(checkers[i][j]);
+									break;
+							}
+							
 							img = ImageIO.read(getClass().getResource("/WhiteKing.png"));
 							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
+							
 						case 'Q':
+							if(whitePartyTime){
+									ImageIcon icon = new ImageIcon(getClass().getResource("/sassyparrot.gif"));
+									checkers[i][j].setIcon(icon);
+									icon.setImageObserver(checkers[i][j]);
+									break;
+							}
 							img = ImageIO.read(getClass().getResource("/WhiteQueen.png"));
 							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
+							
 						case 'N':
+							if(whitePartyTime){
+									ImageIcon icon = new ImageIcon(getClass().getResource("/parrotwave2.gif"));
+									checkers[i][j].setIcon(icon);
+									icon.setImageObserver(checkers[i][j]);
+									break;
+							}
 							img = ImageIO.read(getClass().getResource("/WhiteKnight.png"));
 							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
@@ -227,7 +280,8 @@ public class BoardPanel extends JPanel {
 							break;
 					}
 				} catch(IOException e){
-					//error :(
+						System.out.println("Error loading pieces!");
+						System.exit(0);
 				}
 
 			}
@@ -235,6 +289,115 @@ public class BoardPanel extends JPanel {
 
 	}
 	/*--------------------------------------------------------------------------------------------------------*/
+	//draws the labels and pieces on the board
+	public void drawBoard(){
+		// Create Labels for a through h for the first rows
+		addComponent(0,0,1,1,new JLabel(""));  // Corners are empty
+		for (int i = 0; i < 8; i++) {
+			JLabel label = new JLabel("" + (char)(97 + i));
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			addComponent(i+1,0,1,1,label);
+		}
+		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
+
+		
+		// Fill out the center of the panel
+		//if not flipped, print them out in normal order
+		if(!flipped){
+			for (int i = 0; i < 8; i++) {       // rows
+				for (int j = 0; j < 10; j++) {    // columns
+					if (j == 0 || j == 9) {
+						// Beginning or end of row, add column number
+						JLabel label = new JLabel("" + (8 - i));
+						label.setHorizontalAlignment(SwingConstants.CENTER);
+						addComponent(j,i+1,1,1,label);
+					} else {
+						// Add chess squares
+						addComponent(j,i+1,1,1,checkers[i][j-1]);
+					}
+				}
+			}
+		}
+		//print out the rows in REVERSE order
+		else {
+			for (int i = 8; i >= 1; i--) {       // rows
+				for (int j = 9; j >= 0; j--) {    // columns
+					if (j == 0 || j == 9) {
+						// Beginning or end of row, add column number
+						JLabel label = new JLabel("" + (8 - i));
+						label.setHorizontalAlignment(SwingConstants.CENTER);
+						addComponent(9-j,9-i,1,1,label);
+					} else {
+						// Add chess squares
+						addComponent(9-j,9-i,1,1,checkers[i-1][j-1]);
+					}
+				}
+			}
+		}	//end of drawBoard
+		
+			
+		// Fill out the last row of letters a through h
+		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
+		for (int i = 0; i < 8; i++) {
+			JLabel label = new JLabel("" + (char)(97 + i));
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			addComponent(i+1,9,1,1, label);
+		}
+		addComponent(9,9,1,1,new JLabel(""));
+	}
+	
+	//completely wipes the board
+	public void clearBoard(){
+		this.removeAll();
+	}
+	
+	
+	//helper method to add Components to a Container using GridBagLayout
+	public void addComponent(int x, int y, int w, int h, Component aComponent) {
+		gbc.gridx=x;
+		gbc.gridy=y;
+		gbc.gridwidth=w;
+		gbc.gridheight=h;
+		gbl.setConstraints(aComponent,gbc);
+		this.add(aComponent);
+	}
+	
+	//method that hues the black pieces to a certain hue
+		//Note: no hue if boolean is false
+	public void colorizeBlack(boolean colorize, int red, int green, int blue){
+		colorizeBlack = colorize;
+		blackR = red;
+		blackG = green;
+		blackB = blue;
+		setPieces();
+	}
+	//method that hues the white pieces to a certain hue
+		//Note: no hue if boolean is false
+	public void colorizeWhite(boolean colorize, int red, int green, int blue){
+		colorizeWhite = colorize;
+		whiteR = red;
+		whiteG = green;
+		whiteB = blue;
+		setPieces();
+	}
+	public void setParty(boolean party, boolean white){
+		if(white){
+			whitePartyTime = party;
+		}
+		else{
+			blackPartyTime = party;
+		}
+		setPieces();
+	}
+	
+	//method that flips the board
+	public void setFlip(boolean flip){
+		flipped = flip;		//set the boolean value so drawBoard knows what order to draw in
+		clearBoard();		//clear the board so we can draw a new one
+		drawBoard();		//re-draw the board
+	}
+	
+	/*----------------------------------------------------------------------------------------------------------*/
   private ActionListener getSquareAction() {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -362,30 +525,7 @@ public class BoardPanel extends JPanel {
     };
     return action;
   }
+	
+}//end of BoardPanel class
 
-	//helper method to add Components to a Container using GridBagLayout
-	public void addComponent(int x, int y, int w, int h, Component aComponent) {
-		gbc.gridx=x;
-		gbc.gridy=y;
-		gbc.gridwidth=w;
-		gbc.gridheight=h;
-		gbl.setConstraints(aComponent,gbc);
-		this.add(aComponent);
-	}
-	
-	public void colorizeBlack(boolean colorize, int red, int green, int blue){
-		colorizeBlack = colorize;
-		blackR = red;
-		blackG = green;
-		blackB = blue;
-		setPieces();
-	}
-	
-	public void colorizeWhite(boolean colorize, int red, int green, int blue){
-		colorizeWhite = colorize;
-		whiteR = red;
-		whiteG = green;
-		whiteB = blue;
-		setPieces();
-	}
-}
+
