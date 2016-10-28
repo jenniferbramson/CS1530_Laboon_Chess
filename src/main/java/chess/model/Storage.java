@@ -106,6 +106,18 @@ public class Storage {
 
   }
 
+	// Returns the number of rows (aka the length of the x-coordinate in the
+	// board array)
+	public int getNumRows() {
+		return board.length;
+	}
+
+	// Returns the number of columns (aka the length of the y-coordinate in the
+	// board array)
+	public int getNumCols() {
+		return board[0].length;
+	}
+
   public void setFen(String fen) {
     this.fen = fen;
   }

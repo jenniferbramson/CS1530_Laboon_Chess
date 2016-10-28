@@ -80,6 +80,21 @@ public class RulebookTest {
   }
 
   @Test
+  public void testBlackIllegalCastleRook() {
+    // Moves through rook check on the same x axis as the King
+    Storage temp = new Storage("r3k2R/pppqp3/2np1pp1/5b2/2P1P3/3P4/PP2NPP1/RNBQKB2 b Qq - 23 12");
+    Rulebook r = new Rulebook(temp);
+    assertEquals(temp.getSpaceChar(4, 0), 'k');
+    assertEquals(temp.getSpaceChar(0, 0), 'r');
+    if (r.checkMove(0, 4, 0, 2)) {
+      temp.movePiece(0, 4, 0, 2);
+      temp.movePiece(0, 0, 0, 3);
+    }
+    assertNotEquals(temp.getSpaceChar(2, 0), 'k');
+    assertNotEquals(temp.getSpaceChar(3, 0), 'r');
+  }
+
+  @Test
   public void testBlacklegalCastle() {
     // Moves through bishop check
     Storage temp = new Storage("r3kbnr/1qppppp1/Qp2n3/1N5p/8/1PP1PPP1/P6P/R1B1KBNR b kq - 27 14");
