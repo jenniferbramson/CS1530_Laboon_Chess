@@ -19,7 +19,7 @@ public class Storage {
 	public Storage(){
 		history = new ArrayList<String>();
 		//initialize the board
-		String firstrow = "rnbkqbnr";
+		String firstrow = "rnbqkbnr";
 		for(int i=0; i<firstrow.length();i++){
 			board[0][i] = firstrow.charAt(i);
 		}
@@ -30,7 +30,7 @@ public class Storage {
 		for(int i=0; i<firstrow.length();i++){
 			board[6][i] = 'P';
 		}
-		String lastrow = "RNBKQBNR";
+		String lastrow = "RNBQKBNR";
 		for(int i=0; i<firstrow.length();i++){
 			board[7][i] = lastrow.charAt(i);
 		}
