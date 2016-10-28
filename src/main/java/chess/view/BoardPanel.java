@@ -11,12 +11,13 @@ import static java.lang.Math.abs;
 import chess.Stockfish;
 
 public class BoardPanel extends JPanel {
-	GridBagLayout gbl;
-	GridBagConstraints gbc;
-  // These are buttons we will need to use listeners on
-  protected JButton[][] checkers;
 	protected static Storage my_storage;
   private Rulebook my_rulebook;
+	protected GridBagLayout gbl;
+	protected GridBagConstraints gbc;
+  // These are buttons we will need to use listeners on
+  protected JButton[][] checkers;
+	// values for keeping track of when to send moves to controller
 	boolean second_click = false;
 	private String old_spot = "";
 	private int old_x = 0;
@@ -34,8 +35,8 @@ public class BoardPanel extends JPanel {
 	private int whiteG = 0;
 	private int whiteB = 0;
 	//COLORS
-	Color SEAGREEN = new Color(180,238,180);
-	Color DARKSEAGREEN = new Color(155,205,155);
+	private final Color SEAGREEN = new Color(180,238,180);
+	private final Color DARKSEAGREEN = new Color(155,205,155);
 	//for flipping the board
 	private boolean flipped = false;
 
@@ -102,9 +103,8 @@ public class BoardPanel extends JPanel {
         checkers[i][j] = b;
       }
     }
-		setPieces();				//call method to draw the pieces
-
-		drawBoard();
+		setPieces();				//call method to SET the pieces as what they should be
+		drawBoard();			//call the method to draw the newly set pieces to the board
   }
 
 	/*-----------------------------------------------------------------------------------*/
@@ -197,7 +197,8 @@ public class BoardPanel extends JPanel {
 							break;
 					}
 				} catch(IOException e){
-					//error :(
+						System.out.println("Error loading pieces!");
+						System.exit(0);
 				}
 
 			}
@@ -216,20 +217,41 @@ public class BoardPanel extends JPanel {
 		}
 		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
 
+		
 		// Fill out the center of the panel
-		for (int i = 0; i < 8; i++) {       // rows
-			for (int j = 0; j < 10; j++) {    // columns
-				if (j == 0 || j == 9) {
-					// Beginning or end of row, add column number
-					JLabel label = new JLabel("" + (8 - i));
-					label.setHorizontalAlignment(SwingConstants.CENTER);
-					addComponent(j,i+1,1,1,label);
-				} else {
-					// Add chess squares
-					addComponent(j,i+1,1,1,checkers[i][j-1]);
+		//if not flipped, print them out in normal order
+		if(!flipped){
+			for (int i = 0; i < 8; i++) {       // rows
+				for (int j = 0; j < 10; j++) {    // columns
+					if (j == 0 || j == 9) {
+						// Beginning or end of row, add column number
+						JLabel label = new JLabel("" + (8 - i));
+						label.setHorizontalAlignment(SwingConstants.CENTER);
+						addComponent(j,i+1,1,1,label);
+					} else {
+						// Add chess squares
+						addComponent(j,i+1,1,1,checkers[i][j-1]);
+					}
 				}
 			}
 		}
+		//print out the rows in REVERSE order
+		else {
+			for (int i = 8; i >= 1; i--) {       // rows
+				for (int j = 0; j < 10; j++) {    // columns
+					if (j == 0 || j == 9) {
+						// Beginning or end of row, add column number
+						JLabel label = new JLabel("" + (8 - i));
+						label.setHorizontalAlignment(SwingConstants.CENTER);
+						addComponent(j,9-i,1,1,label);
+					} else {
+						// Add chess squares
+						addComponent(j,9-i,1,1,checkers[i-1][j-1]);
+					}
+				}
+			}
+		}	//end of drawBoard
+		
 			
 		// Fill out the last row of letters a through h
 		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
@@ -241,6 +263,47 @@ public class BoardPanel extends JPanel {
 		addComponent(9,9,1,1,new JLabel(""));
 	}
 	
+	//completely wipes the board
+	public void clearBoard(){
+		this.removeAll();
+	}
+	
+	
+	//helper method to add Components to a Container using GridBagLayout
+	public void addComponent(int x, int y, int w, int h, Component aComponent) {
+		gbc.gridx=x;
+		gbc.gridy=y;
+		gbc.gridwidth=w;
+		gbc.gridheight=h;
+		gbl.setConstraints(aComponent,gbc);
+		this.add(aComponent);
+	}
+	
+	//method that hues the black pieces to a certain hue
+		//Note: no hue if boolean is false
+	public void colorizeBlack(boolean colorize, int red, int green, int blue){
+		colorizeBlack = colorize;
+		blackR = red;
+		blackG = green;
+		blackB = blue;
+		setPieces();
+	}
+	//method that hues the white pieces to a certain hue
+		//Note: no hue if boolean is false
+	public void colorizeWhite(boolean colorize, int red, int green, int blue){
+		colorizeWhite = colorize;
+		whiteR = red;
+		whiteG = green;
+		whiteB = blue;
+		setPieces();
+	}
+	
+	//method that flips the board
+	public void setFlip(boolean flip){
+		flipped = flip;		//set the boolean value so drawBoard knows what order to draw in
+		clearBoard();		//clear the board so we can draw a new one
+		drawBoard();		//re-draw the board
+	}
 	
 	/*----------------------------------------------------------------------------------------------------------*/
   private ActionListener getSquareAction() {
@@ -370,38 +433,7 @@ public class BoardPanel extends JPanel {
     };
     return action;
   }
+	
+}//end of BoardPanel class
 
-	//helper method to add Components to a Container using GridBagLayout
-	public void addComponent(int x, int y, int w, int h, Component aComponent) {
-		gbc.gridx=x;
-		gbc.gridy=y;
-		gbc.gridwidth=w;
-		gbc.gridheight=h;
-		gbl.setConstraints(aComponent,gbc);
-		this.add(aComponent);
-	}
-	
-	//method that hues the black pieces to a certain hue
-		//Note: no hue if boolean is false
-	public void colorizeBlack(boolean colorize, int red, int green, int blue){
-		colorizeBlack = colorize;
-		blackR = red;
-		blackG = green;
-		blackB = blue;
-		setPieces();
-	}
-	//method that hues the white pieces to a certain hue
-		//Note: no hue if boolean is false
-	public void colorizeWhite(boolean colorize, int red, int green, int blue){
-		colorizeWhite = colorize;
-		whiteR = red;
-		whiteG = green;
-		whiteB = blue;
-		setPieces();
-	}
-	
-	public void setFlip(boolean flip){
-		flipped = flip;
-		//drawBoard();
-	}
-}
+
