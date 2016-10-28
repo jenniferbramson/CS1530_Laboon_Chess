@@ -252,7 +252,7 @@ public class BoardPanel extends JPanel {
 		//print out the rows in REVERSE order
 		else {
 			for (int i = 8; i >= 1; i--) {       // rows
-				for (int j = 0; j < 10; j++) {    // columns
+				for (int j = 9; j >= 0; j--) {    // columns
 					if (j == 0 || j == 9) {
 						// Beginning or end of row, add column number
 						JLabel label = new JLabel("" + (8 - i));
