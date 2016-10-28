@@ -26,7 +26,8 @@ public class BoardPanel extends JPanel {
 	private int imageWidth = 64;
 	private int imageHeight = 64;
 	//Stuff for colorizing
-	private boolean partyTime = false;
+	private boolean blackPartyTime = false;
+	private boolean whitePartyTime = false;
 	private boolean colorizeBlack = false;
 	private boolean colorizeWhite = false;
 	private int blackR = 0;
@@ -122,86 +123,154 @@ public class BoardPanel extends JPanel {
 					ImageFilter whiteCF = new HueFilter(whiteR,whiteG,whiteB);
 					switch(c){
 						case 'p':
-							if(partyTime){
+							if(blackPartyTime){
 								ImageIcon icon = new ImageIcon(getClass().getResource("/aussieparrot.gif"));
 								checkers[i][j].setIcon(icon);
 								icon.setImageObserver(checkers[i][j]);
+								break;
 							}
-							else{
-								img = ImageIO.read(getClass().getResource("/BlackPawn.png"));
-								if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
-								img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
-								checkers[i][j].setIcon(new ImageIcon(img));
-							}
+							img = ImageIO.read(getClass().getResource("/BlackPawn.png"));
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));	
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'b':
+							if(blackPartyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/aussiecongaparrot.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+								break;
+							}
 							img = ImageIO.read(getClass().getResource("/BlackBishop.png"));
 							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
+							
 						case 'r':
+							if(blackPartyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/aussiereversecongaparrot.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+								break;
+							}
 							img = ImageIO.read(getClass().getResource("/BlackRook.png"));
 							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
+							
 						case 'k':
+							if(blackPartyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/parrotcop.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+								break;
+							}
 							img = ImageIO.read(getClass().getResource("/BlackKing.png"));
 							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'q':
+							if(blackPartyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/fastparrot.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+								break;
+							}
 							img = ImageIO.read(getClass().getResource("/BlackQueen.png"));
 							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
+							
 						case 'n':
+							if(blackPartyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/partyparrot.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+								break;
+							}
 							img = ImageIO.read(getClass().getResource("/BlackKnight.png"));
 							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
+							
+							
 						case 'P':
-							if(partyTime){
+							if(whitePartyTime){
 								ImageIcon icon = new ImageIcon(getClass().getResource("/parrot.gif"));
 								checkers[i][j].setIcon(icon);
 								icon.setImageObserver(checkers[i][j]);
+								break;
 							}
-							else{
-								img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
-								if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
-								img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
-								checkers[i][j].setIcon(new ImageIcon(img));
-							}
+							img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
+							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+							checkers[i][j].setIcon(new ImageIcon(img));
+
 							break;
 						case 'B':
+							if(whitePartyTime){
+									ImageIcon icon = new ImageIcon(getClass().getResource("/parrotwave3.gif"));
+									checkers[i][j].setIcon(icon);
+									icon.setImageObserver(checkers[i][j]);
+									break;
+							}
 							img = ImageIO.read(getClass().getResource("/WhiteBishop.png"));
 							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
 						case 'R':
+							if(whitePartyTime){
+									ImageIcon icon = new ImageIcon(getClass().getResource("/parrotwave1.gif"));
+									checkers[i][j].setIcon(icon);
+									icon.setImageObserver(checkers[i][j]);
+									break;
+							}
 							img = ImageIO.read(getClass().getResource("/WhiteRook.png"));
 							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
+							
 						case 'K':
+							if(whitePartyTime){
+									ImageIcon icon = new ImageIcon(getClass().getResource("/fiestaparrot.gif"));
+									checkers[i][j].setIcon(icon);
+									icon.setImageObserver(checkers[i][j]);
+									break;
+							}
+							
 							img = ImageIO.read(getClass().getResource("/WhiteKing.png"));
 							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
+							
 						case 'Q':
+							if(whitePartyTime){
+									ImageIcon icon = new ImageIcon(getClass().getResource("/sassyparrot.gif"));
+									checkers[i][j].setIcon(icon);
+									icon.setImageObserver(checkers[i][j]);
+									break;
+							}
 							img = ImageIO.read(getClass().getResource("/WhiteQueen.png"));
 							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
+							
 						case 'N':
+							if(whitePartyTime){
+									ImageIcon icon = new ImageIcon(getClass().getResource("/parrotwave2.gif"));
+									checkers[i][j].setIcon(icon);
+									icon.setImageObserver(checkers[i][j]);
+									break;
+							}
 							img = ImageIO.read(getClass().getResource("/WhiteKnight.png"));
 							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
@@ -311,8 +380,13 @@ public class BoardPanel extends JPanel {
 		whiteB = blue;
 		setPieces();
 	}
-	public void setParty(boolean party){
-		partyTime = party;
+	public void setParty(boolean party, boolean white){
+		if(white){
+			whitePartyTime = party;
+		}
+		else{
+			blackPartyTime = party;
+		}
 		setPieces();
 	}
 	

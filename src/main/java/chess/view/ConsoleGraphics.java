@@ -185,27 +185,35 @@ public class ConsoleGraphics extends JFrame {
 	
 	private void setWhiteColor(String color){
 		if(color.equals("Red")){
+			board.setParty(false, true);								//false for no party, true for white
 			board.colorizeWhite(true, 150, 0, 0);
 		}
 		else if(color.equals("Orange")){
+			board.setParty(false, true);
 			board.colorizeWhite(true, 150, 75, 0);
 		}
 		else if(color.equals("Yellow")){
+			board.setParty(false, true);
 			board.colorizeWhite(true, 150, 150, 0);
 		}
 		else if(color.equals("Green")){
+			board.setParty(false, true);
 			board.colorizeWhite(true, 0, 150, 50);
 		}
 		else if(color.equals("Blue")){
+			board.setParty(false, true);
 			board.colorizeWhite(true, 0, 0, 150);
 		}
 		else if(color.equals("Purple")){
+			board.setParty(false, true);
 			board.colorizeWhite(true, 75, 0, 150);
 		}
 		else if(color.equals("PARTYTIME")){
-			board.setParty(true);
+			board.colorizeWhite(false,0,0,0);		//unhue any pieces
+			board.setParty(true, true);		//true for party, true for white
 		}
 		else{
+			board.setParty(false, true);
 			board.colorizeWhite(false, 0, 0, 0);
 		}
 	}
@@ -213,27 +221,36 @@ public class ConsoleGraphics extends JFrame {
 	//function that colorizes the black side pieces
 	private void setBlackColor(String color){
 		if(color.equals("Red")){
+			board.setParty(false, false);							//false for no party, false for black
 			board.colorizeBlack(true, 150, 0, 0);
 		}
 		else if(color.equals("Orange")){
+			board.setParty(false, false);
 			board.colorizeBlack(true, 150, 75, 0);
 		}
 		else if(color.equals("Yellow")){
+			board.setParty(false, false);
 			board.colorizeBlack(true, 150, 150, 0);
 		}
 		else if(color.equals("Green")){
+			board.setParty(false, false);
 			board.colorizeBlack(true, 0, 150, 50);
 		}
 		else if(color.equals("Blue")){
+			board.setParty(false, false);
 			board.colorizeBlack(true, 0, 0, 150);
 		}
 		else if(color.equals("Purple")){
+			board.setParty(false, false);
 			board.colorizeBlack(true, 75, 0, 150);
 		}
 		else if(color.equals("PARTYTIME")){
-			board.setParty(true);
+			board.setParty(false, false);
+			board.colorizeBlack(false,0,0,0); //unhue any pieces
+			board.setParty(true, false);		//true for party, false for black
 		}
 		else{
+			board.setParty(false, false);
 			board.colorizeBlack(false, 0, 0, 0);
 		}
 	}
