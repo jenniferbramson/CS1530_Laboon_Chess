@@ -19,7 +19,7 @@ public class Storage {
 	public Storage(){
 		history = new ArrayList<String>();
 		//initialize the board
-		String firstrow = "rnbkqbnr";
+		String firstrow = "rnbqkbnr";
 		for(int i=0; i<firstrow.length();i++){
 			board[0][i] = firstrow.charAt(i);
 		}
@@ -30,7 +30,7 @@ public class Storage {
 		for(int i=0; i<firstrow.length();i++){
 			board[6][i] = 'P';
 		}
-		String lastrow = "RNBKQBNR";
+		String lastrow = "RNBQKBNR";
 		for(int i=0; i<firstrow.length();i++){
 			board[7][i] = lastrow.charAt(i);
 		}
@@ -49,7 +49,6 @@ public class Storage {
 			for(int j=0; j<row.length();j++){
 				if (index > 7) break;
 				if(Character.isDigit(row.charAt(j))){		//if its a number, we need to fill in some spaces
-					//index += (int)Character.getNumericValue(j) ;				//<- this won't work for some reason
 					index += Integer.parseInt(Character.toString(row.charAt(j))) -1;
 				}
 				else{
@@ -68,7 +67,7 @@ public class Storage {
 			white_turn = false;
 		}
 		else{
-			//System.out.println("error: test point 1");
+			System.out.println("error: not white or black's turn");
 		}
 	}
 
@@ -102,7 +101,7 @@ public class Storage {
       white_turn = false;
     }
     else{
-      //System.out.println("error: test point 1");
+      System.out.println("error: not white or black's turn");
     }
 
   }
@@ -115,42 +114,38 @@ public class Storage {
     return fen;
   }
 
-
 	//returns whether it is white's turn or not
-		public boolean isWhiteTurn(){
-			return white_turn;
-		}
+	public boolean isWhiteTurn(){
+		return white_turn;
+	}
 
-		public void deletePiece(int x, int y){
-			board[x][y] = '\u0000';
-		}
+	public void deletePiece(int x, int y){
+		board[x][y] = '\u0000';
+	}
 
-		public String getSpace(int x, int y){
-			if(board[x][y] == '\u0000') return "";
-			else return String.valueOf(board[x][y]);
-		}
+	public String getSpace(int x, int y){
+		if(board[x][y] == '\u0000') return "";
+		else return String.valueOf(board[x][y]);
+	}
 
-		public char getSpaceChar(int y, int x){
-			return board[x][y];
-		}
+	public char getSpaceChar(int y, int x){
+		return board[x][y];
+	}
 
-		public char getSpace(int x, int y, boolean filler){
-			return board[x][y];
-		}
+	public char getSpace(int x, int y, boolean filler){
+		return board[x][y];
+	}
 
-		public void movePiece(int x_1, int y_1, int x_2, int y_2){
-			if(board[x_1][y_1] == '\u0000') return;			//if the original is a null space, don't bother doing anything
-			//if they are the same case, then don't take out your own pieces!
-			// This part is redundent now with legality checks
-			//if(Character.isUpperCase(board[x_1][y_1]) && Character.isUpperCase(board[x_2][y_2])) return;
-			//if(Character.isLowerCase(board[x_1][y_1]) && Character.isLowerCase(board[x_2][y_2])) return;
-			board[x_2][y_2] = board[x_1][y_1];
+	// Assumes you are attempting a valid move, i.e. by using Rulebook to check
+	// that the move was valid
+	public void movePiece(int x_1, int y_1, int x_2, int y_2){
+		board[x_2][y_2] = board[x_1][y_1];	// set new space to old piece
 
-			if(x_2!=x_1 || y_2!=y_1)board[x_1][y_1] = '\u0000';
-		}
+		if(x_2!=x_1 || y_2!=y_1)board[x_1][y_1] = '\u0000';	// set old space to null
+	}
 
-		//should pass in "moves" and update history
-		public void storeHistory(){
+	//should pass in "moves" and update history
+	public void storeHistory(){
 		//TO-DO Implement later
 		history.add(" ");
 	}
