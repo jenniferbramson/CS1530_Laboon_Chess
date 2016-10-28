@@ -5,6 +5,7 @@ import javax.swing.border.*;
 import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 import java.io.*;
 import javax.imageio.*;
+import static java.lang.Math.abs;
 
 import chess.Stockfish;
 
@@ -239,28 +240,49 @@ public class BoardPanel extends JPanel {
             boolean legal = my_rulebook.checkMove(old_y, old_x, y, x);
             System.out.println(legal);
             if (legal) {
-    					System.out.println("Moving " + old_spot + " to " + current_spot);
-    					if ( (old_x+old_y) % 2== 0) {
-                checkers[old_y][old_x].setBackground(Color.WHITE);
-              } else {
-                checkers[old_y][old_x].setBackground(Color.GRAY);
-              }
-    					second_click = false;
+							// Check to see if moving King or Rook
+							char oldPiece = my_storage.getSpaceChar(old_x, old_y);
+							boolean castle = false;
+							System.out.println(oldPiece);
 
-              String fen = my_storage.getFen();
-              my_storage.movePiece(old_y, old_x, y, x);
+							System.out.println("Moving " + old_spot + " to " + current_spot);
+							if ( (old_x+old_y) % 2== 0) {
+								checkers[old_y][old_x].setBackground(Color.WHITE);
+							} else {
+								checkers[old_y][old_x].setBackground(Color.GRAY);
+							}
+							second_click = false;
+							String fen = my_storage.getFen();
+							// Play move on stockfish's internal board
+							System.out.println("Fen before move " + fen);
 
-              // Play move on stockfish's internal board
-              System.out.println("Fen before move " + fen);
-              String move = old_spot + current_spot;
-              System.out.println("move is " + move);
-              ConsoleGraphics.stockfish.movePiece(move, my_storage.getFen());
+							// Move castle if castle, otherwise normally
+							if (abs(old_x - x) == 2) {
+								// castling
+            		my_storage.movePiece(old_y, old_x, y, x);
+								System.out.println("Old spot: " + old_x + " " + old_y);
+								System.out.println("New spot: " + x + " " + y);
+
+								if (old_x - x == 2) {
+									// left, move appropriate rook
+									my_storage.movePiece(old_y, 0, old_y, 3);
+								} else {
+									// right, move appropriate rook
+									my_storage.movePiece(old_y, 7, old_y, 5);
+								}
+							} else {
+	              my_storage.movePiece(old_y, old_x, y, x);
+							}
+
+							String move = old_spot + current_spot;
+							System.out.println("move is " + move);
+							ConsoleGraphics.stockfish.movePiece(move, my_storage.getFen());
               fen = ConsoleGraphics.stockfish.getFen();
               System.out.println("New fen " + fen);
               ConsoleGraphics.stockfish.drawBoard();
 
-              //update storage fen with new fen pulled from stockfish output
-              my_storage.setFen(fen);
+	            //update storage fen with new fen pulled from stockfish output
+	            my_storage.setFen(fen);
 
     					//redraw
     					setPieces();
