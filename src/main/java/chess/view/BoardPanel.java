@@ -35,6 +35,8 @@ public class BoardPanel extends JPanel {
 	//COLORS
 	Color SEAGREEN = new Color(180,238,180);
 	Color DARKSEAGREEN = new Color(155,205,155);
+	//for flipping the board
+	private boolean flipped = false;
 
 
 	//Keep track of the last saved fen
@@ -101,39 +103,7 @@ public class BoardPanel extends JPanel {
     }
 		setPieces();				//call method to draw the pieces
 
-
-    // Create Labels for a through h for the first rows
-    addComponent(0,0,1,1,new JLabel(""));  // Corners are empty
-    for (int i = 0; i < 8; i++) {
-      JLabel label = new JLabel("" + (char)(97 + i));
-      label.setHorizontalAlignment(SwingConstants.CENTER);
-			addComponent(i+1,0,1,1,label);
-    }
-    addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
-
-    // Fill out the center of the panel
-    for (int i = 0; i < 8; i++) {       // columns
-      for (int j = 0; j < 10; j++) {    // rows
-        if (j == 0 || j == 9) {
-          // Beginning or end of row, add column number
-          JLabel label = new JLabel("" + (8 - i));
-          label.setHorizontalAlignment(SwingConstants.CENTER);
-          addComponent(j,i+1,1,1,label);
-        } else {
-          // Add chess squares
-          addComponent(j,i+1,1,1,checkers[i][j-1]);
-        }
-      }
-    }
-
-    // Fill out the last row of letters a through h
-    addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
-    for (int i = 0; i < 8; i++) {
-      JLabel label = new JLabel("" + (char)(97 + i));
-      label.setHorizontalAlignment(SwingConstants.CENTER);
-			addComponent(i+1,9,1,1, label);
-    }
-		addComponent(9,9,1,1,new JLabel(""));
+		drawBoard();
   }
 
 	/*-----------------------------------------------------------------------------------*/
@@ -234,6 +204,44 @@ public class BoardPanel extends JPanel {
 
 	}
 	/*--------------------------------------------------------------------------------------------------------*/
+	//draws the labels and pieces on the board
+	public void drawBoard(){
+		// Create Labels for a through h for the first rows
+		addComponent(0,0,1,1,new JLabel(""));  // Corners are empty
+		for (int i = 0; i < 8; i++) {
+			JLabel label = new JLabel("" + (char)(97 + i));
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			addComponent(i+1,0,1,1,label);
+		}
+		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
+
+		// Fill out the center of the panel
+		for (int i = 0; i < 8; i++) {       // rows
+			for (int j = 0; j < 10; j++) {    // columns
+				if (j == 0 || j == 9) {
+					// Beginning or end of row, add column number
+					JLabel label = new JLabel("" + (8 - i));
+					label.setHorizontalAlignment(SwingConstants.CENTER);
+					addComponent(j,i+1,1,1,label);
+				} else {
+					// Add chess squares
+					addComponent(j,i+1,1,1,checkers[i][j-1]);
+				}
+			}
+		}
+			
+		// Fill out the last row of letters a through h
+		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
+		for (int i = 0; i < 8; i++) {
+			JLabel label = new JLabel("" + (char)(97 + i));
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			addComponent(i+1,9,1,1, label);
+		}
+		addComponent(9,9,1,1,new JLabel(""));
+	}
+	
+	
+	/*----------------------------------------------------------------------------------------------------------*/
   private ActionListener getSquareAction() {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
@@ -351,6 +359,8 @@ public class BoardPanel extends JPanel {
 		this.add(aComponent);
 	}
 	
+	//method that hues the black pieces to a certain hue
+		//Note: no hue if boolean is false
 	public void colorizeBlack(boolean colorize, int red, int green, int blue){
 		colorizeBlack = colorize;
 		blackR = red;
@@ -358,12 +368,18 @@ public class BoardPanel extends JPanel {
 		blackB = blue;
 		setPieces();
 	}
-	
+	//method that hues the white pieces to a certain hue
+		//Note: no hue if boolean is false
 	public void colorizeWhite(boolean colorize, int red, int green, int blue){
 		colorizeWhite = colorize;
 		whiteR = red;
 		whiteG = green;
 		whiteB = blue;
 		setPieces();
+	}
+	
+	public void setFlip(boolean flip){
+		flipped = flip;
+		//drawBoard();
 	}
 }
