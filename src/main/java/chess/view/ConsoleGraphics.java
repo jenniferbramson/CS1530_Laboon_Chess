@@ -15,12 +15,14 @@ public class ConsoleGraphics extends JFrame {
   protected static JFrame frame;
 	protected JButton blackColorButton;
 	protected JButton whiteColorButton;
-	boolean whiteColorize = false;
-	boolean blackColorize = false;
-	BoardPanel board;
-	ButtonsPanel buttons;
-	TimerPanel timer;
-
+	protected BoardPanel board;
+	protected ButtonsPanel buttons;
+	protected TimerPanel timer;
+	protected Container content;
+	private GridBagLayout gbl;
+	private GridBagConstraints gbc;
+	String[] colors = {"Default", "Red", "Orange", "Yellow", "Green" ,"Blue" , "Purple"};
+	
   // The stockfish process will be used as the NPC and also to generate fen strings
   protected static final Stockfish stockfish = new Stockfish();
 
@@ -31,7 +33,7 @@ public class ConsoleGraphics extends JFrame {
     stockfish.startEngine();
 
     frame = new JFrame("Laboon Chess");
-    Container content = frame.getContentPane();   // Get reference to content pane
+    content = frame.getContentPane();   // Get reference to content pane
 		content.setBackground(Color.WHITE); 	//make it white
 
     // Left side of the board has the timer, chess board, and buttons (load and
@@ -50,10 +52,18 @@ public class ConsoleGraphics extends JFrame {
     whiteTurn = playerTurnButton("White");
     blackTurn = playerTurnButton("Black");
 		
-		blackColorButton = new JButton("Change Black to Green");
-		blackColorButton.addActionListener(changeBlackColor());
-		whiteColorButton = new JButton("Change White to Red");
-		whiteColorButton.addActionListener(changeWhiteColor());
+		
+		//drop list for black side pieces
+		JComboBox blackColorList = new JComboBox(colors);
+		blackColorList.setSelectedIndex(0);
+		blackColorList.addActionListener(updateBlackList());
+		//drop list for white side pieces
+		JComboBox whiteColorList = new JComboBox(colors);
+		whiteColorList.setSelectedIndex(0);
+		whiteColorList.addActionListener(updateWhiteList());
+		//labels for the lists
+		JLabel whiteColorLabel = new JLabel("White Piece color: ");
+		JLabel blackColorLabel = new JLabel("Black Piece color: ");
 
     // Right side of the board has the the taken black and white pieces stacked
     // vertically
@@ -62,9 +72,23 @@ public class ConsoleGraphics extends JFrame {
 
     // Entire screen has both the leftand right sides of the board put together
     // in a horizontal fashion
-    content.setLayout(new GridBagLayout());
-    GridBagConstraints c = new GridBagConstraints();
-    c.insets = new Insets(10, 10, 10, 10);
+		gbl = new GridBagLayout();
+		gbc = new GridBagConstraints();
+		content.setLayout(gbl);
+    //content.setLayout(new GridBagLayout());
+    //GridBagConstraints c = new GridBagConstraints();
+    //c.insets = new Insets(10, 10, 10, 10);
+		
+		//NOTE: addComponent parameters are: x,y, width, height, ipadx, ipady, component
+		addComponent(0,0, 12, 12, 0, 0, left);
+		addComponent(13,5,1,1, 0, 100, blackTurn);		
+		addComponent(13,6,1,1, 0, 0, blackColorLabel);
+		addComponent(13,7,1,1,0, 0,blackColorList);
+		addComponent(13,8,1,1,0,0,whiteColorLabel);
+		addComponent(13,9,1,1,0,0,whiteColorList);
+		addComponent(13,10,1,1,0,100,whiteTurn);
+
+		/*
     c.gridx = 0;              // specifies which column
     c.gridy = 0;              // specifies which row
     c.gridheight = 12;        // gridheight = number of rows it takes up
@@ -84,10 +108,10 @@ public class ConsoleGraphics extends JFrame {
     content.add(whiteTurn, c);
 		c.gridx = 1;
 		c.gridy = 7;
-		content.add(blackColorButton, c);
+		content.add(blackColorList, c);
 		c.gridx = 1;
 		c.gridy = 9;
-		content.add(whiteColorButton, c);
+		content.add(whiteColorList, c);
     c.gridx = 2;
     c.gridy = 0;
     c.gridheight = 6;
@@ -100,7 +124,8 @@ public class ConsoleGraphics extends JFrame {
     c.ipadx = 200;
     c.ipady = 200;
     content.add(takenWhite, c);
-
+		*/
+		
 		frame.pack();
 
     //Get size of computer screen
@@ -165,24 +190,89 @@ public class ConsoleGraphics extends JFrame {
     blackTurn.setBackground(Color.YELLOW);
   }
 	
-	private ActionListener changeWhiteColor() {
+	private ActionListener updateWhiteList() {
 		ActionListener action = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				board.colorizeWhite(!(whiteColorize), 150, 0, 0);
-				whiteColorize = !whiteColorize;
+			public void actionPerformed(ActionEvent e){
+				JComboBox cb = (JComboBox)e.getSource();
+        String colorName = (String)cb.getSelectedItem();
+				setWhiteColor(colorName);
 			}
 		};
 		return action;
 	}
 	
-	private ActionListener changeBlackColor() {
+	private ActionListener updateBlackList() {
 		ActionListener action = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				board.colorizeBlack(!(blackColorize), 0, 150, 0);
-				blackColorize = !blackColorize;
+			public void actionPerformed(ActionEvent e){
+				JComboBox cb = (JComboBox)e.getSource();
+        String colorName = (String)cb.getSelectedItem();
+				setBlackColor(colorName);
 			}
 		};
 		return action;
+	}
+	
+	private void setWhiteColor(String color){
+		if(color.equals("Red")){
+			board.colorizeWhite(true, 150, 0, 0);
+		}
+		else if(color.equals("Orange")){
+			board.colorizeWhite(true, 150, 75, 0);
+		}
+		else if(color.equals("Yellow")){
+			board.colorizeWhite(true, 150, 150, 0);
+		}
+		else if(color.equals("Green")){
+			board.colorizeWhite(true, 0, 150, 50);
+		}
+		else if(color.equals("Blue")){
+			board.colorizeWhite(true, 0, 0, 150);
+		}
+		else if(color.equals("Purple")){
+			board.colorizeWhite(true, 75, 0, 150);
+		}
+		else{
+			board.colorizeWhite(false, 0, 0, 0);
+		}
+	}
+	
+	//function that colorizes the black side pieces
+	private void setBlackColor(String color){
+		if(color.equals("Red")){
+			board.colorizeBlack(true, 150, 0, 0);
+		}
+		else if(color.equals("Orange")){
+			board.colorizeBlack(true, 150, 75, 0);
+		}
+		else if(color.equals("Yellow")){
+			board.colorizeBlack(true, 150, 150, 0);
+		}
+		else if(color.equals("Green")){
+			board.colorizeBlack(true, 0, 150, 50);
+		}
+		else if(color.equals("Blue")){
+			board.colorizeBlack(true, 0, 0, 150);
+		}
+		else if(color.equals("Purple")){
+			board.colorizeBlack(true, 75, 0, 150);
+		}
+		else{
+			board.colorizeBlack(false, 0, 0, 0);
+		}
+	}
+	
+	//helper function for adding components into the  frame
+	public void addComponent(int x, int y, int w, int h, int padx, int pady, Component aComponent) {
+		Insets inset = new Insets(10, 10, 10, 10);
+		gbc.insets = inset;
+		gbc.gridx=x;
+		gbc.gridy=y;
+		gbc.gridwidth = w;
+		gbc.gridheight = h;
+		gbc.ipadx = padx;
+		gbc.ipady = pady;
+		gbl.setConstraints(aComponent,gbc);
+		content.add(aComponent);
 	}
 
   public static void main(String[] args) {

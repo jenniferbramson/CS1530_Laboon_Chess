@@ -344,7 +344,6 @@ public class BoardPanel extends JPanel {
 	}
 	
 	public void colorizeBlack(boolean colorize, int red, int green, int blue){
-		System.out.println("Hello from colorizeBlack!");
 		colorizeBlack = colorize;
 		blackR = red;
 		blackG = green;
@@ -353,7 +352,6 @@ public class BoardPanel extends JPanel {
 	}
 	
 	public void colorizeWhite(boolean colorize, int red, int green, int blue){
-		System.out.println("Hello from colorizeWhite!");
 		colorizeWhite = colorize;
 		whiteR = red;
 		whiteG = green;
