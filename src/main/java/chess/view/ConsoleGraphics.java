@@ -221,7 +221,7 @@ public class ConsoleGraphics extends JFrame {
 	//function that colorizes the black side pieces
 	private void setBlackColor(String color){
 		if(color.equals("Red")){
-			board.setParty(false, false);							//false for no party, false for black
+			board.setParty(false, false);			
 			board.colorizeBlack(true, 150, 0, 0);
 		}
 		else if(color.equals("Orange")){
