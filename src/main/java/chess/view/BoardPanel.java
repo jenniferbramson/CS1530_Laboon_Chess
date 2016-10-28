@@ -257,7 +257,8 @@ public class BoardPanel extends JPanel {
 							System.out.println("Fen before move " + fen);
 
 							// Move castle if castle, otherwise normally
-							if (abs(old_x - x) == 2) {
+							char piece = my_storage.getSpaceChar(old_x, old_y);
+							if ((piece == 'k' || piece == 'K') && abs(old_x - x) == 2) {
 								// castling
             		my_storage.movePiece(old_y, old_x, y, x);
 								System.out.println("Old spot: " + old_x + " " + old_y);
