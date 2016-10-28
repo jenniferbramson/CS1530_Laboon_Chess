@@ -27,26 +27,23 @@ public class ChooseColorPanel extends JPanel {
 		//Add spacing from top of title and top of window
 		this.add(Box.createRigidArea(new Dimension(0,topSpace)));
 
-		//Add Image/modify title
-		title = new JButton("Choose color to play!");
-		title.setOpaque(true);
-		title.setBackground(Color.WHITE);
-		title.setBorder(null);
-		title.setAlignmentX(Component.CENTER_ALIGNMENT);
-		//Size of title scales with size of font
-		//title.setPreferredSize(new Dimension(500, 300));
-		title.setFont(new Font("Arial", Font.BOLD, titleTextSize));
-
-		/* Add Title image here
+		title = new JButton("");
+		//Add Title image here
 		try {
-			Image img = ImageIO.read(getClass().getResource("/ImageName.what"));
-			//Modify the values to get desired pixel width/height
-			img = img.getScaledInstance(32, 32, Image.SCALE_DEFAULT);
+			Image img = ImageIO.read(getClass().getResource("/ChooseColor.png"));
 			title.setIcon(new ImageIcon(img));
-		} catch (IOException ex) {
-		// Error
+			title.setAlignmentX(Component.CENTER_ALIGNMENT);
+			title.setBorder(null);
+		} catch (Exception ex) {
+			title = new JButton("Choose color to play!");
+			title.setOpaque(true);
+			title.setBackground(Color.WHITE);
+			title.setBorder(null);
+			title.setAlignmentX(Component.CENTER_ALIGNMENT);
+			//Size of title scales with size of font
+			//title.setPreferredSize(new Dimension(500, 300));
+			title.setFont(new Font("Arial", Font.BOLD, titleTextSize));
 		}
-		*/
 
 		title.addActionListener(getFeature());
 		this.add(title);
@@ -55,12 +52,18 @@ public class ChooseColorPanel extends JPanel {
 		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
 
 		//Add white pieces selection button
-		white = new JButton("White");
-		white.setAlignmentX(Component.CENTER_ALIGNMENT);
-		white.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
-
+		white = new JButton("");
+		try{
+			Image img = ImageIO.read(getClass().getResource("/SelectWhite.png"));
+			white.setIcon(new ImageIcon(img));
+			white.setBorder(null);
+		} catch(Exception e){
+			white = new JButton("White");
+			white.setAlignmentX(Component.CENTER_ALIGNMENT);
+			white.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
+		}
 		//Set an icon for white pawn or king
-
+		white.setAlignmentX(Component.CENTER_ALIGNMENT);
 		white.addActionListener(playWhite());
 		this.add(white);
 
@@ -68,11 +71,17 @@ public class ChooseColorPanel extends JPanel {
 		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
 
 		//Add black pieces selection button
-		black = new JButton("Black");
-		black.setAlignmentX(Component.CENTER_ALIGNMENT);
-		black.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
-
+		black = new JButton("");
+		try{
+			Image img = ImageIO.read(getClass().getResource("/SelectBlack.png"));
+			black.setIcon(new ImageIcon(img));
+			black.setBorder(null);
+		} catch(Exception e){
+			black = new JButton("Black");
+			black.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
+		}
 		//Set icon black pawn/king
+		black.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		black.addActionListener(playBlack());
 		this.add(black);
@@ -81,9 +90,16 @@ public class ChooseColorPanel extends JPanel {
 		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
 
 		//Add back to menu button
-		backToMenu = new JButton("Back to Menu");
+		backToMenu = new JButton("");
+		try{
+			Image img = ImageIO.read(getClass().getResource("/BackToMenu.png"));
+			backToMenu.setIcon(new ImageIcon(img));
+			backToMenu.setBorder(null);
+		} catch(Exception e){
+			backToMenu = new JButton("Back to Menu");
+			backToMenu.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
+		}
 		backToMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
-		backToMenu.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
 		backToMenu.addActionListener(returnToStartUp());
 		this.add(backToMenu);
 	}

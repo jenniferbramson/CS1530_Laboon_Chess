@@ -7,12 +7,11 @@ import javax.imageio.*;
 
 public class ConsoleGraphics extends JFrame {
 
-  // These are buttons we will need to use listeners on
+	protected static JFrame frame;
   private Toolkit t;
   private Dimension screen;
   protected JButton whiteTurn;
   protected JButton blackTurn;
-  protected static JFrame frame;
 	protected JButton blackColorButton;
 	protected JButton whiteColorButton;
 	protected BoardPanel board;
@@ -21,8 +20,18 @@ public class ConsoleGraphics extends JFrame {
 	protected Container content;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc;
-	String[] colors = {"Default", "Red", "Orange", "Yellow", "Green" ,"Blue" , "Purple"};
+	String[] colors = {"Default", "Red", "Orange", "Yellow", "Green" ,"Blue" , "Purple", "PARTYTIME"};
 	Color TURQUOISE = new Color(64,224,208);
+	//needed for flipping
+	protected boolean flipped = false;
+	protected JComboBox blackColorList;
+	protected JComboBox whiteColorList;
+	protected JLabel blackColorLabel;
+	protected JLabel whiteColorLabel;
+	
+	
+	
+	
 	
   // The stockfish process will be used as the NPC and also to generate fen strings
   protected static final Stockfish stockfish = new Stockfish();
@@ -39,13 +48,16 @@ public class ConsoleGraphics extends JFrame {
 
     // Left side of the board has the timer, chess board, and buttons (load and
     // save) stacked vertically
-		timer = new TimerPanel();           // Get the timer panel
+		
+		//timer = new TimerPanel();           // Get the timer panel
+		JButton flipButton = new JButton("Flip Board");
+		flipButton.addActionListener(flipBoard());
     board = new BoardPanel();           // Get the square board
     buttons = new ButtonsPanel();     // Get the buttons panel
 
     JPanel left = new JPanel();                    // Stack the three panels above
     left.setLayout(new BorderLayout());
-    left.add(timer, BorderLayout.NORTH);
+    left.add(flipButton, BorderLayout.NORTH);
     left.add(board, BorderLayout.CENTER);
     left.add(buttons, BorderLayout.SOUTH);
 
@@ -55,23 +67,23 @@ public class ConsoleGraphics extends JFrame {
 		
 		
 		//drop list for black side pieces
-		JComboBox blackColorList = new JComboBox(colors);
+		blackColorList = new JComboBox(colors);
 		blackColorList.setSelectedIndex(0);
 		blackColorList.addActionListener(updateBlackList());
 		//drop list for white side pieces
-		JComboBox whiteColorList = new JComboBox(colors);
+		whiteColorList = new JComboBox(colors);
 		whiteColorList.setSelectedIndex(0);
 		whiteColorList.addActionListener(updateWhiteList());
 		//labels for the lists
-		JLabel whiteColorLabel = new JLabel("White Piece color: ");
-		JLabel blackColorLabel = new JLabel("Black Piece color: ");
+		whiteColorLabel = new JLabel("White Piece color: ");
+		blackColorLabel = new JLabel("Black Piece color: ");
 		JLabel spacing = new JLabel("");
 		spacing.setPreferredSize(new Dimension(100,140));	//spacing for making sure the buttons are centered
 
     // Right side of the board has the the taken black and white pieces stacked
     // vertically
-    TakenPanel takenBlack = new TakenPanel("Taken Black Pieces");
-    TakenPanel takenWhite = new TakenPanel("Taken White Pieces");
+    //TakenPanel takenBlack = new TakenPanel("Taken Black Pieces");
+    //TakenPanel takenWhite = new TakenPanel("Taken White Pieces");
 
     // Setting up layout stuff
 		gbl = new GridBagLayout();
@@ -81,12 +93,9 @@ public class ConsoleGraphics extends JFrame {
 		//NOTE: addComponent parameters are: x,y, width, height, ipadx, ipady, component
 		addComponent(0,0, 12, 12, 0, 0, left);
 		addComponent(13,1,1,1,0,0, spacing);
-		addComponent(13,5,1,1, 0, 0, blackTurn);		
-		addComponent(13,6,1,1, 0, 0, blackColorLabel);
-		addComponent(13,7,1,1,0, 0,blackColorList);
-		addComponent(13,8,1,1,0,0,whiteColorLabel);
-		addComponent(13,9,1,1,0,0,whiteColorList);
-		addComponent(13,10,1,1,0, 0,whiteTurn);
+		
+		//add the buttons and lists that appear on the right side
+		addComponentSet();
 		
 		frame.pack();
 
@@ -176,24 +185,35 @@ public class ConsoleGraphics extends JFrame {
 	
 	private void setWhiteColor(String color){
 		if(color.equals("Red")){
+			board.setParty(false, true);								//false for no party, true for white
 			board.colorizeWhite(true, 150, 0, 0);
 		}
 		else if(color.equals("Orange")){
+			board.setParty(false, true);
 			board.colorizeWhite(true, 150, 75, 0);
 		}
 		else if(color.equals("Yellow")){
+			board.setParty(false, true);
 			board.colorizeWhite(true, 150, 150, 0);
 		}
 		else if(color.equals("Green")){
+			board.setParty(false, true);
 			board.colorizeWhite(true, 0, 150, 50);
 		}
 		else if(color.equals("Blue")){
+			board.setParty(false, true);
 			board.colorizeWhite(true, 0, 0, 150);
 		}
 		else if(color.equals("Purple")){
+			board.setParty(false, true);
 			board.colorizeWhite(true, 75, 0, 150);
 		}
+		else if(color.equals("PARTYTIME")){
+			board.colorizeWhite(false,0,0,0);		//unhue any pieces
+			board.setParty(true, true);		//true for party, true for white
+		}
 		else{
+			board.setParty(false, true);
 			board.colorizeWhite(false, 0, 0, 0);
 		}
 	}
@@ -201,24 +221,36 @@ public class ConsoleGraphics extends JFrame {
 	//function that colorizes the black side pieces
 	private void setBlackColor(String color){
 		if(color.equals("Red")){
+			board.setParty(false, false);			
 			board.colorizeBlack(true, 150, 0, 0);
 		}
 		else if(color.equals("Orange")){
+			board.setParty(false, false);
 			board.colorizeBlack(true, 150, 75, 0);
 		}
 		else if(color.equals("Yellow")){
+			board.setParty(false, false);
 			board.colorizeBlack(true, 150, 150, 0);
 		}
 		else if(color.equals("Green")){
+			board.setParty(false, false);
 			board.colorizeBlack(true, 0, 150, 50);
 		}
 		else if(color.equals("Blue")){
+			board.setParty(false, false);
 			board.colorizeBlack(true, 0, 0, 150);
 		}
 		else if(color.equals("Purple")){
+			board.setParty(false, false);
 			board.colorizeBlack(true, 75, 0, 150);
 		}
+		else if(color.equals("PARTYTIME")){
+			board.setParty(false, false);
+			board.colorizeBlack(false,0,0,0); //unhue any pieces
+			board.setParty(true, false);		//true for party, false for black
+		}
 		else{
+			board.setParty(false, false);
 			board.colorizeBlack(false, 0, 0, 0);
 		}
 	}
@@ -236,7 +268,56 @@ public class ConsoleGraphics extends JFrame {
 		gbl.setConstraints(aComponent,gbc);
 		content.add(aComponent);
 	}
+	
+	//method that flips the arrangement of buttons and flips board
+	private ActionListener flipBoard() {
+		ActionListener action = new ActionListener() {
+			public void actionPerformed(ActionEvent e){
+				//switch the flip
+				flipped = !flipped;
+				//clear so they'll appear later
+				clearComponentSet();
+				//re-set the images (addComponentSet already knows the order)
+				addComponentSet();
+				//call the boardpanel to flip itself
+				board.setFlip(flipped);
+				//redraw
+				content.revalidate();
+				content.repaint();
+			}
+		};
+		return action;
+	}
+	
+	private void addComponentSet(){
+			if(!flipped){
+				addComponent(13,5,1,1, 0, 0, blackTurn);		
+				addComponent(13,6,1,1, 0, 0, blackColorLabel);
+				addComponent(13,7,1,1,0, 0, blackColorList);
+				addComponent(13,8,1,1,0,0, whiteColorLabel);
+				addComponent(13,9,1,1,0,0, whiteColorList);
+				addComponent(13,10,1,1,0, 0, whiteTurn);
+			}
+			else{
+				addComponent(13,5,1,1, 0, 0, whiteTurn);		
+				addComponent(13,6,1,1, 0, 0, whiteColorLabel);
+				addComponent(13,7,1,1,0, 0, whiteColorList);
+				addComponent(13,8,1,1,0,0, blackColorLabel);
+				addComponent(13,9,1,1,0,0, blackColorList);
+				addComponent(13,10,1,1,0, 0, blackTurn);
+			}
+			
+	}
 
+	private void clearComponentSet(){
+		content.remove(blackTurn);
+		content.remove(blackColorLabel);
+		content.remove(blackColorList);
+		content.remove(whiteColorLabel);
+		content.remove(whiteColorList);
+		content.remove(whiteTurn);
+	}
+	
   public static void main(String[] args) {
     ConsoleGraphics chessBoard = new ConsoleGraphics();
   }
