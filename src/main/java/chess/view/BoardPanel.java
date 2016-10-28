@@ -5,6 +5,7 @@ import javax.swing.border.*;
 import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 import java.io.*;
 import javax.imageio.*;
+import static java.lang.Math.abs;
 
 import chess.Stockfish;
 
@@ -239,28 +240,80 @@ public class BoardPanel extends JPanel {
             boolean legal = my_rulebook.checkMove(old_y, old_x, y, x);
             System.out.println(legal);
             if (legal) {
-    					System.out.println("Moving " + old_spot + " to " + current_spot);
-    					if ( (old_x+old_y) % 2== 0) {
-                checkers[old_y][old_x].setBackground(Color.WHITE);
-              } else {
-                checkers[old_y][old_x].setBackground(Color.GRAY);
-              }
-    					second_click = false;
+							// Check to see if moving King or Rook
+							char oldPiece = my_storage.getSpaceChar(old_x, old_y);
+							boolean castle = false;
+							// If is, set for future castling
+							switch(oldPiece) {
+								case 'k':
+									my_rulebook.blackMovedKing();
+									// Check to see if a castle
+									if (abs(old_x - x) == 2) {
+										castle = true;
+									}
+									break;
+								case 'K':
+									my_rulebook.whiteMovedKing();
+									// Check to see if a castle
+									if (abs(old_x - x) == 2) {
+										castle = true;
+									}
+									break;
+								case 'r':
+									if (old_y == 0 && old_x == 0) {
+										my_rulebook.blackMovedLeftRook();
+									} else if (old_y == 0 && old_x == 7) {
+										my_rulebook.blackMovedRightRook();
+									}
+									break;
+								case 'R':
+									if (old_y == 7 && old_x == 0) {
+										my_rulebook.whiteMovedLeftRook();
+									} else if (old_y == 7 && old_x == 7) {
+										my_rulebook.whiteMovedRightRook();
+									}
+									break;
+							}
 
-              String fen = my_storage.getFen();
-              my_storage.movePiece(old_y, old_x, y, x);
+							System.out.println("Moving " + old_spot + " to " + current_spot);
+							if ( (old_x+old_y) % 2== 0) {
+								checkers[old_y][old_x].setBackground(Color.WHITE);
+							} else {
+								checkers[old_y][old_x].setBackground(Color.GRAY);
+							}
+							second_click = false;
+							String fen = my_storage.getFen();
+							// Play move on stockfish's internal board
+							System.out.println("Fen before move " + fen);
+							String move;
 
-              // Play move on stockfish's internal board
-              System.out.println("Fen before move " + fen);
-              String move = old_spot + current_spot;
-              System.out.println("move is " + move);
-              ConsoleGraphics.stockfish.movePiece(move, my_storage.getFen());
+							// Move castle if castle, otherwise normally
+							if (castle) {
+								// castling
+            		my_storage.movePiece(old_y, old_x, y, x);
+
+								if (old_x - x == 2) {
+									// left
+									my_storage.movePiece(old_y, 0, old_y, 3);
+									move = "O-O-O";
+								} else {
+									// right
+									my_storage.movePiece(old_y, 7, old_y, 5);
+									move = "O-O";
+								}
+							} else {
+	              my_storage.movePiece(old_y, old_x, y, x);
+								move = old_spot + current_spot;
+							}
+
+							System.out.println("move is " + move);
+							ConsoleGraphics.stockfish.movePiece(move, my_storage.getFen());
               fen = ConsoleGraphics.stockfish.getFen();
               System.out.println("New fen " + fen);
               ConsoleGraphics.stockfish.drawBoard();
 
-              //update storage fen with new fen pulled from stockfish output
-              my_storage.setFen(fen);
+	            //update storage fen with new fen pulled from stockfish output
+	            my_storage.setFen(fen);
 
     					//redraw
     					setPieces();

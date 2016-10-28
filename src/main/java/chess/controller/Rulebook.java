@@ -4,13 +4,48 @@ import static java.lang.Math.abs;
 public class Rulebook {
 
   private Storage my_storage;
+  private boolean whiteCanCastleRight;  // True as long as king and right rook HAS NOT MOVED YET
+  private boolean blackCanCastleRight;  // True as long as king and right rook HAS NOT MOVED YET
+  private boolean whiteCanCastleLeft;  // True as long as king and left rook HAS NOT MOVED YET
+  private boolean blackCanCastleLeft;  // True as long as king and left rook HAS NOT MOVED YET
 
   public Rulebook(Storage my_storage) {
     this.my_storage = my_storage;
+    whiteCanCastleRight = true;
+    blackCanCastleRight = true;
+    whiteCanCastleLeft = true;
+    blackCanCastleLeft = true;
+  }
+
+  public void blackMovedKing() {
+    blackCanCastleRight = false;
+    blackCanCastleLeft = false;
+  }
+
+  public void whiteMovedKing() {
+    whiteCanCastleRight = false;
+    whiteCanCastleLeft = false;
+  }
+
+  public void whiteMovedLeftRook() {
+    whiteCanCastleLeft = false;
+  }
+
+  public void whiteMovedRightRook() {
+    whiteCanCastleRight = false;
+  }
+
+  public void blackMovedLeftRook() {
+    blackCanCastleLeft = false;
+  }
+
+  public void blackMovedRightRook() {
+    blackCanCastleRight = false;
   }
 
   // Checks if moves are legal. It does not check the case of no movement since
   // the board checks that
+  // Returns true if the move is legal, false if not
   public boolean checkMove(int y_1, int x_1, int y_2, int x_2) {
     char piece = my_storage.getSpaceChar(x_1, y_1);
     char space = my_storage.getSpaceChar(x_2, y_2);
@@ -84,11 +119,21 @@ public class Rulebook {
         break;
       case 'k':
       case 'K':
-        // Can only move one square in any direction
-        int xDiff = abs((x_1 - x_2));
-        int yDiff = abs((y_1 - y_2));
-        if ((xDiff == 1 && yDiff == 1) || (xDiff == 1 && yDiff == 0) || (xDiff == 0 && yDiff == 1)) {
-          return true;
+        // Check to see if attempting castling, otherwise do regular check
+        if (x_1 - x_2 == 2 && y_1 - y_2 == 0) {
+          // Queenside
+          return queensideCastle(x_1, y_1, piece);
+        } else if (x_1 - x_2 == -2 && y_1 - y_2 == 0) {
+          // Kingside
+          return kingsideCastle(x_1, y_1, piece);
+        } else {
+          // Check for regular move because doesn't look like castling
+          // Can only move one square in any direction
+          int xDiff = abs((x_1 - x_2));
+          int yDiff = abs((y_1 - y_2));
+          if ((xDiff == 1 && yDiff == 1) || (xDiff == 1 && yDiff == 0) || (xDiff == 0 && yDiff == 1)) {
+            return true;
+          }
         }
         break;
       case 'q':
@@ -143,6 +188,73 @@ public class Rulebook {
     return false; // If reached this point, false
   } // end checkMove
 
+  // Helper function for checkMove, checks for Queenside castling
+  // Assumes user is trying to queenside castle, returns true if they can
+  private boolean queensideCastle(int x, int y, char piece) {
+    boolean danger;
+    char space;
+
+    // Queenside
+    if ((piece == 'K' && whiteCanCastleLeft) || (piece == 'k' && blackCanCastleLeft)) {
+      space = my_storage.getSpaceChar(x - 1, y);
+      if (space == '\u0000') {
+        danger = kingDanger(x - 1, y, piece);
+        if (danger) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+      space = my_storage.getSpaceChar(x - 2, y);
+      if (space == '\u0000') {
+        danger = kingDanger(x - 2, y, piece);
+        if (danger) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+
+      return true;
+    } else {
+      // Already moved king or rook, so can't castle
+      return false;
+    }
+  } // end queensideCastle
+
+  // Helper function for checkMove, checks for Kingside castling
+  // Assumes user is trying to kingside castle, returns true if they can
+  private boolean kingsideCastle(int x, int y, char piece) {
+    boolean danger;
+    char space;
+
+    // Kingside
+    if ((piece == 'K' && whiteCanCastleRight) || (piece == 'k' && blackCanCastleRight)) {
+      space = my_storage.getSpaceChar(x + 1, y);
+      if (space == '\u0000') {
+        danger = kingDanger(x + 1, y, piece);
+        if (danger) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+      space = my_storage.getSpaceChar(x + 2, y);
+      if (space == '\u0000') {
+        danger = kingDanger(x + 2, y, piece);
+        if (danger) {
+          return false;
+        }
+      } else {
+        return false;
+      }
+
+      return true;
+    } else {
+      // Already moved king or rook, so can't castle
+      return false;
+    }
+  }
 
   // Method that checks if an input King at x, y of c color is or would
   // be checked. Color is indicated by the original king piece's letter case.
