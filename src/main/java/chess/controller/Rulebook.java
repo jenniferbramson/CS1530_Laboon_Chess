@@ -197,6 +197,12 @@ public class Rulebook {
         return false;
       }
 
+      space = my_storage.getSpaceChar(x - 3, y); // Make sure no piece in the way
+                                                 // (where knight normally is)
+      if (space != '\u0000') {
+        return false;
+      }
+
       return true;
     } else {
       // Already moved king or rook, so can't castle
