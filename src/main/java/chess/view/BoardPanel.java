@@ -32,6 +32,9 @@ public class BoardPanel extends JPanel {
 	private int whiteR = 0;
 	private int whiteG = 0;
 	private int whiteB = 0;
+	//COLORS
+	Color SEAGREEN = new Color(180,238,180);
+	Color DARKSEAGREEN = new Color(155,205,155);
 
 
 	//Keep track of the last saved fen
@@ -311,7 +314,12 @@ public class BoardPanel extends JPanel {
             }
 
             if (validColor) {               // Continue if right color piece clicked
-    					checkers[y][x].setBackground(Color.GREEN);
+							if((x+y)%2 == 0){
+								checkers[y][x].setBackground(SEAGREEN);
+							}
+							else{
+								checkers[y][x].setBackground(DARKSEAGREEN);
+							}
     					System.out.println("First click");
     					old_spot = current_spot;
     					old_x = x;
