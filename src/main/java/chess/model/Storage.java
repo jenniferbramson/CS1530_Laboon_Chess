@@ -1,6 +1,7 @@
 package chess;
 import java.util.*;
 import chess.Stockfish;
+import static java.lang.Math.abs;
 
 public class Storage {
 
@@ -150,10 +151,32 @@ public class Storage {
 
 	// Assumes you are attempting a valid move, i.e. by using Rulebook to check
 	// that the move was valid
-	public void movePiece(int x_1, int y_1, int x_2, int y_2){
-		board[x_2][y_2] = board[x_1][y_1];	// set new space to old piece
+	public void movePiece(int y_1, int x_1, int y_2, int x_2){
+		// Move castle if castle, otherwise normally
+		char piece = this.getSpaceChar(x_1, y_1);
+		if ((piece == 'k' || piece == 'K') && abs(x_1 - x_2) == 2) {
+		  // Castling
+		  board[y_2][x_2] = board[y_1][x_1];	// set new space to old piece
+			board[y_1][x_1] = '\u0000';	// set old space to null
 
-		if(x_2!=x_1 || y_2!=y_1)board[x_1][y_1] = '\u0000';	// set old space to null
+		  if (x_1 - x_2 == 2) {
+		    // left, move appropriate rook
+		    board[y_2][3] = board[y_1][0];	// set new space to old piece
+		    board[y_1][0] = '\u0000';				// set old space to null
+		    System.out.println("Old spot: " + 0 + " " + y_1);
+		    System.out.println("New spot: " + 3 + " " + y_1);
+		  } else {
+		    // right, move appropriate rook
+		    board[y_2][5] = board[y_1][7];	// set new space to old piece
+		    board[y_1][7] = '\u0000';				// set old space to null
+		    System.out.println("Old spot: " + 7 + " " + y_1);
+		    System.out.println("New spot: " + 5 + " " + y_1);
+		  }
+		} else {
+			// Not castling, move normally
+			board[y_2][x_2] = board[y_1][x_1];	// set new space to old piece
+			board[y_1][x_1] = '\u0000';	// set old space to null
+		}
 	}
 
 	//should pass in "moves" and update history
