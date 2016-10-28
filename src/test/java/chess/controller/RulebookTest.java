@@ -14,6 +14,7 @@ public class RulebookTest {
     assertEquals(temp.getSpaceChar(7, 7), 'R');
     if (r.checkMove(7, 4, 7, 6)) {
       temp.movePiece(7, 4, 7, 6);
+      temp.movePiece(7, 7, 7, 5);
     }
     assertEquals(temp.getSpaceChar(6, 7), 'K');
     assertEquals(temp.getSpaceChar(5, 7), 'R');
@@ -27,6 +28,7 @@ public class RulebookTest {
     assertEquals(temp.getSpaceChar(0, 7), 'R');
     if (r.checkMove(7, 4, 7, 2)) {
       temp.movePiece(7, 4, 7, 2);
+      temp.movePiece(7, 0, 7, 3);
     }
     assertEquals(temp.getSpaceChar(2, 7), 'K');
     assertEquals(temp.getSpaceChar(3, 7), 'R');
@@ -41,6 +43,7 @@ public class RulebookTest {
     assertEquals(temp.getSpaceChar(0, 7), 'R');
     if (r.checkMove(7, 4, 7, 2)) {
       temp.movePiece(7, 4, 7, 2);
+      temp.movePiece(7, 0, 7, 3);
     }
     assertNotEquals(temp.getSpaceChar(2, 7), 'K');
     assertNotEquals(temp.getSpaceChar(3, 7), 'R');
@@ -55,6 +58,7 @@ public class RulebookTest {
     assertEquals(temp.getSpaceChar(7, 7), 'R');
     if (r.checkMove(7, 4, 7, 6)) {
       temp.movePiece(7, 4, 7, 6);
+      temp.movePiece(7, 7, 7, 5);
     }
     assertNotEquals(temp.getSpaceChar(6, 7), 'K');
     assertNotEquals(temp.getSpaceChar(5, 7), 'R');
@@ -69,6 +73,7 @@ public class RulebookTest {
     assertEquals(temp.getSpaceChar(7, 7), 'R');
     if (r.checkMove(7, 4, 7, 6)) {
       temp.movePiece(7, 4, 7, 6);
+      temp.movePiece(7, 7, 7, 5);
     }
     assertNotEquals(temp.getSpaceChar(6, 7), 'K');
     assertNotEquals(temp.getSpaceChar(5, 7), 'R');
@@ -83,6 +88,7 @@ public class RulebookTest {
     assertEquals(temp.getSpaceChar(7, 7), 'R');
     if (r.checkMove(7, 4, 7, 6)) {
       temp.movePiece(7, 4, 7, 6);
+      temp.movePiece(7, 7, 7, 5);
     }
     assertNotEquals(temp.getSpaceChar(6, 7), 'K');
     assertNotEquals(temp.getSpaceChar(5, 7), 'R');
@@ -97,6 +103,7 @@ public class RulebookTest {
     assertEquals(temp.getSpaceChar(7, 7), 'R');
     if (r.checkMove(7, 4, 7, 6)) {
       temp.movePiece(7, 4, 7, 6);
+      temp.movePiece(7, 7, 7, 5);
     }
     assertNotEquals(temp.getSpaceChar(6, 7), 'K');
     assertNotEquals(temp.getSpaceChar(5, 7), 'R');

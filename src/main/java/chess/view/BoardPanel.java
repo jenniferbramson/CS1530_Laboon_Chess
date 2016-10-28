@@ -243,6 +243,8 @@ public class BoardPanel extends JPanel {
 							// Check to see if moving King or Rook
 							char oldPiece = my_storage.getSpaceChar(old_x, old_y);
 							boolean castle = false;
+							System.out.println(oldPiece);
+
 							// If is, set for future castling
 							switch(oldPiece) {
 								case 'k':
@@ -285,27 +287,26 @@ public class BoardPanel extends JPanel {
 							String fen = my_storage.getFen();
 							// Play move on stockfish's internal board
 							System.out.println("Fen before move " + fen);
-							String move;
 
 							// Move castle if castle, otherwise normally
 							if (castle) {
 								// castling
             		my_storage.movePiece(old_y, old_x, y, x);
+								System.out.println("Old spot: " + old_x + " " + old_y);
+								System.out.println("New spot: " + x + " " + y);
 
 								if (old_x - x == 2) {
-									// left
+									// left, move appropriate rook
 									my_storage.movePiece(old_y, 0, old_y, 3);
-									move = "O-O-O";
 								} else {
-									// right
+									// right, move appropriate rook
 									my_storage.movePiece(old_y, 7, old_y, 5);
-									move = "O-O";
 								}
 							} else {
 	              my_storage.movePiece(old_y, old_x, y, x);
-								move = old_spot + current_spot;
 							}
 
+							String move = old_spot + current_spot;
 							System.out.println("move is " + move);
 							ConsoleGraphics.stockfish.movePiece(move, my_storage.getFen());
               fen = ConsoleGraphics.stockfish.getFen();

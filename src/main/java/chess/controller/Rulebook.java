@@ -6,8 +6,8 @@ public class Rulebook {
   private Storage my_storage;
   private boolean whiteCanCastleRight;  // True as long as king and right rook HAS NOT MOVED YET
   private boolean blackCanCastleRight;  // True as long as king and right rook HAS NOT MOVED YET
-  private boolean whiteCanCastleLeft;  // True as long as king and left rook HAS NOT MOVED YET
-  private boolean blackCanCastleLeft;  // True as long as king and left rook HAS NOT MOVED YET
+  private boolean whiteCanCastleLeft;   // True as long as king and left rook HAS NOT MOVED YET
+  private boolean blackCanCastleLeft;   // True as long as king and left rook HAS NOT MOVED YET
 
   public Rulebook(Storage my_storage) {
     this.my_storage = my_storage;
