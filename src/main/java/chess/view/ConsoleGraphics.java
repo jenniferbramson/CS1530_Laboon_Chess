@@ -20,7 +20,7 @@ public class ConsoleGraphics extends JFrame {
 	protected Container content;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc;
-	String[] colors = {"Default", "Red", "Orange", "Yellow", "Green" ,"Blue" , "Purple"};
+	String[] colors = {"Default", "Red", "Orange", "Yellow", "Green" ,"Blue" , "Purple", "PARTYTIME"};
 	Color TURQUOISE = new Color(64,224,208);
 	//needed for flipping
 	protected boolean flipped = false;
@@ -202,6 +202,9 @@ public class ConsoleGraphics extends JFrame {
 		else if(color.equals("Purple")){
 			board.colorizeWhite(true, 75, 0, 150);
 		}
+		else if(color.equals("PARTYTIME")){
+			board.setParty(true);
+		}
 		else{
 			board.colorizeWhite(false, 0, 0, 0);
 		}
@@ -226,6 +229,9 @@ public class ConsoleGraphics extends JFrame {
 		}
 		else if(color.equals("Purple")){
 			board.colorizeBlack(true, 75, 0, 150);
+		}
+		else if(color.equals("PARTYTIME")){
+			board.setParty(true);
 		}
 		else{
 			board.colorizeBlack(false, 0, 0, 0);

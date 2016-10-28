@@ -26,6 +26,7 @@ public class BoardPanel extends JPanel {
 	private int imageWidth = 64;
 	private int imageHeight = 64;
 	//Stuff for colorizing
+	private boolean partyTime = false;
 	private boolean colorizeBlack = false;
 	private boolean colorizeWhite = false;
 	private int blackR = 0;
@@ -121,10 +122,17 @@ public class BoardPanel extends JPanel {
 					ImageFilter whiteCF = new HueFilter(whiteR,whiteG,whiteB);
 					switch(c){
 						case 'p':
-							img = ImageIO.read(getClass().getResource("/BlackPawn.png"));
-							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));																
-							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
-							checkers[i][j].setIcon(new ImageIcon(img));
+							if(partyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/aussieparrot.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+							}
+							else{
+								img = ImageIO.read(getClass().getResource("/BlackPawn.png"));
+								if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
+								img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+								checkers[i][j].setIcon(new ImageIcon(img));
+							}
 							break;
 						case 'b':
 							img = ImageIO.read(getClass().getResource("/BlackBishop.png"));
@@ -156,12 +164,18 @@ public class BoardPanel extends JPanel {
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
-
 						case 'P':
-							img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
-							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));		
-							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
-							checkers[i][j].setIcon(new ImageIcon(img));
+							if(partyTime){
+								ImageIcon icon = new ImageIcon(getClass().getResource("/parrot.gif"));
+								checkers[i][j].setIcon(icon);
+								icon.setImageObserver(checkers[i][j]);
+							}
+							else{
+								img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
+								if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
+								img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
+								checkers[i][j].setIcon(new ImageIcon(img));
+							}
 							break;
 						case 'B':
 							img = ImageIO.read(getClass().getResource("/WhiteBishop.png"));
@@ -295,6 +309,10 @@ public class BoardPanel extends JPanel {
 		whiteR = red;
 		whiteG = green;
 		whiteB = blue;
+		setPieces();
+	}
+	public void setParty(boolean party){
+		partyTime = party;
 		setPieces();
 	}
 	
