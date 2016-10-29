@@ -293,11 +293,21 @@ public class BoardPanel extends JPanel {
 	public void drawBoard(){
 		// Create Labels for a through h for the first rows
 		addComponent(0,0,1,1,new JLabel(""));  // Corners are empty
-		for (int i = 0; i < 8; i++) {
+		if(!flipped){
+			for (int i = 0; i < 8; i++) {
 			JLabel label = new JLabel("" + (char)(97 + i));
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			addComponent(i+1,0,1,1,label);
+			}
 		}
+		else{
+			for (int i = 7; i >= 0; i--) {
+			JLabel label = new JLabel("" + (char)(97 + i));
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			addComponent(8-i,0,1,1,label);
+			}
+		}
+		
 		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
 
 
@@ -324,7 +334,7 @@ public class BoardPanel extends JPanel {
 				for (int j = 9; j >= 0; j--) {    // columns
 					if (j == 0 || j == 9) {
 						// Beginning or end of row, add column number
-						JLabel label = new JLabel("" + (8 - i));
+						JLabel label = new JLabel("" + (9 - i));
 						label.setHorizontalAlignment(SwingConstants.CENTER);
 						addComponent(9-j,9-i,1,1,label);
 					} else {
@@ -338,10 +348,19 @@ public class BoardPanel extends JPanel {
 
 		// Fill out the last row of letters a through h
 		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
-		for (int i = 0; i < 8; i++) {
+		if(!flipped){
+			for (int i = 0; i < 8; i++) {
 			JLabel label = new JLabel("" + (char)(97 + i));
 			label.setHorizontalAlignment(SwingConstants.CENTER);
-			addComponent(i+1,9,1,1, label);
+			addComponent(i+1,9,1,1,label);
+			}
+		}
+		else{
+			for (int i = 7; i >= 0; i--) {
+			JLabel label = new JLabel("" + (char)(97 + i));
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			addComponent(8-i,9,1,1,label);
+			}
 		}
 		addComponent(9,9,1,1,new JLabel(""));
 	}
