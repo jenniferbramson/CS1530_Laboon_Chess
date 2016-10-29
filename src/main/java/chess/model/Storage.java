@@ -152,12 +152,13 @@ public class Storage {
 	// Assumes you are attempting a valid move, i.e. by using Rulebook to check
 	// that the move was valid
 	public void movePiece(int y_1, int x_1, int y_2, int x_2){
-		// Move castle if castle, otherwise normally
+		// Move castle if castling, en passant if en passant, otherwise normally
 		char piece = this.getSpaceChar(x_1, y_1);
+		char space = this.getSpaceChar(x_2, y_2);
 		if ((piece == 'k' || piece == 'K') && abs(x_1 - x_2) == 2) {
 		  // Castling
 		  board[y_2][x_2] = board[y_1][x_1];	// set new space to old piece
-			board[y_1][x_1] = '\u0000';	// set old space to null
+			board[y_1][x_1] = '\u0000';					// set old space to null
 
 		  if (x_1 - x_2 == 2) {
 		    // left, move appropriate rook
@@ -172,6 +173,11 @@ public class Storage {
 		    System.out.println("Old spot: " + 7 + " " + y_1);
 		    System.out.println("New spot: " + 5 + " " + y_1);
 		  }
+		} else if ((piece == 'p' || piece == 'P') && space == '\u0000' && abs(x_1 - x_2) == 1) {
+			// En passant
+			board[y_2][x_2] = board[y_1][x_1];	// set new space to old piece
+			board[y_1][x_1] = '\u0000';					// set old space to null
+			board[y_1][x_2] = '\u0000';					// set taken pawn space to null
 		} else {
 			// Not castling, move normally
 			board[y_2][x_2] = board[y_1][x_1];	// set new space to old piece

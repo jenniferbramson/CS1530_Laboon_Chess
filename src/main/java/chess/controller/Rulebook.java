@@ -15,6 +15,11 @@ public class Rulebook {
   public boolean checkMove(int y_1, int x_1, int y_2, int x_2) {
     char piece = my_storage.getSpaceChar(x_1, y_1);
     char space = my_storage.getSpaceChar(x_2, y_2);
+    String fen = my_storage.getFen();
+    String[] fenParts;
+    String enPass;
+    int a = (int)'a';
+    String move;
 
     // Can only move to a space that is empty or has the other player's piece on it
     if (Character.isLowerCase(piece)) {
@@ -30,6 +35,9 @@ public class Rulebook {
     // Black is lowercase
     switch (piece) {
       case 'p':
+        fenParts = fen.split(" ");
+        enPass = fenParts[3];
+        move = ("" + (char)(x_2+a)) + (8-y_2);
         // On first move, pawn can move two spaces
         // Otherwise can only move one place - north if space above is empty,
         // diagonally if taking a piece
@@ -45,9 +53,15 @@ public class Rulebook {
                   Character.isUpperCase(space)) {
           // Take piece diagonally ok
           return true;
+        } else if (move.equals(enPass)) {
+          // En passant ok
+          return true;
         }
         break;
       case 'P':
+        fenParts = fen.split(" ");
+        enPass = fenParts[3];
+        move = ("" + (char)(x_2+a)) + (8-y_2);
         // On first move, pawn can move two spaces
         // Otherwise can only move one place - north if space above is empty,
         // diagonally if taking a piece
@@ -62,6 +76,9 @@ public class Rulebook {
         } else if (((x_1 + 1 == x_2) || (x_1 - 1 == x_2)) && (y_1 - 1) == y_2 &&
                   Character.isLowerCase(space)) {
           // Take piece diagonally ok
+          return true;
+        } else if (move.equals(enPass)) {
+          // En passant ok
           return true;
         }
         break;

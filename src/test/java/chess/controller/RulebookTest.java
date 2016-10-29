@@ -7,6 +7,22 @@ import chess.Storage;
 public class RulebookTest {
 
   @Test
+  public void testEnPassant() {
+    //testing to see if en passant passes rulebook
+    Storage temp = new Storage("rnbqkbnr/pp1ppp1p/2B5/6p1/2pPP3/8/PPP2PPP/RNBQK1NR b KQkq d3 7 4");
+    Rulebook r = new Rulebook(temp);
+    assertEquals(temp.getSpace(4,2), "p");
+    assertEquals(temp.getSpace(5,3), "");
+    assertEquals(temp.getSpace(4,3), "P");
+    if (r.checkMove(4, 2, 5, 3)) {
+      temp.movePiece(4, 2, 5, 3);
+    }
+    assertEquals(temp.getSpace(5,3), "p");
+    assertEquals(temp.getSpace(4,3), "");
+    assertEquals(temp.getSpace(4,2), "");
+  }
+
+  @Test
   public void testWhiteLegalCastleRight() {
     Storage temp = new Storage("rnbqkbnr/p1p2ppp/8/1p1pp3/4P3/5N2/PPPPBPPP/RNBQK2R w KQkq - 6 4");
     Rulebook r = new Rulebook(temp);
