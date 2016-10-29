@@ -20,6 +20,8 @@ public class Rulebook {
     String enPass;
     int a = (int)'a';
     String move;
+    boolean valid = false; // For checking valid moves for king check
+    TestBoard testBoard;
 
     // Can only move to a space that is empty or has the other player's piece on it
     if (Character.isLowerCase(piece)) {
@@ -44,15 +46,15 @@ public class Rulebook {
         if (x_1 == x_2 && y_1 == 1 && y_2 == 3 && space == '\u0000') {
           if (my_storage.getSpaceChar(x_1, 2) == '\u0000') {
             // First move down 2 ok, nothing in the way
-            return true;
+            valid = true;
           }
         } else if (x_1 == x_2 && (y_1 + 1) == y_2 && space == '\u0000') {
           // Move north ok
-          return true;
+          valid = true;
         } else if (((x_1 + 1 == x_2) || (x_1 - 1 == x_2)) && (y_1 + 1) == y_2 &&
                   Character.isUpperCase(space)) {
           // Take piece diagonally ok
-          return true;
+          valid = true;
         } else if (move.equals(enPass)) {
           // En passant ok
           return true;
@@ -68,15 +70,15 @@ public class Rulebook {
         if (x_1 == x_2 && y_1 == 6 && y_2 == 4 && space == '\u0000') {
           if (my_storage.getSpaceChar(x_1, 5) == '\u0000') {
             // First move down 2 ok, nothing in the way
-            return true;
+            valid = true;
           }
         } else if (x_1 == x_2 && (y_1 - 1) == y_2 && space == '\u0000') {
           // Move north ok
-          return true;
+          valid = true;
         } else if (((x_1 + 1 == x_2) || (x_1 - 1 == x_2)) && (y_1 - 1) == y_2 &&
                   Character.isLowerCase(space)) {
           // Take piece diagonally ok
-          return true;
+          valid = true;
         } else if (move.equals(enPass)) {
           // En passant ok
           return true;
@@ -87,9 +89,9 @@ public class Rulebook {
         // Knights move in an 'L' shape whether or not opponent piece is there
         // Ignore moves where own side's piece is there though
         if (((x_1 + 2 == x_2) || (x_1 - 2 == x_2)) && ((y_1 + 1 == y_2) || (y_1 - 1 == y_2))) {
-          return true;
+          valid = true;
         } else if (((y_1 + 2 == y_2) || (y_1 - 2 == y_2)) && ((x_1 + 1 == x_2) || (x_1 - 1 == x_2))) {
-          return true;
+          valid = true;
         }
         break;
       case 'b':
@@ -97,7 +99,7 @@ public class Rulebook {
         // Bishop can move along the diagonals
         if (abs(x_1 - x_2) == abs(y_1 - y_2)) {
           // space or upper case, diagonal
-          return bishopCheck(x_1, y_1, x_2, y_2);
+          valid = bishopMove(x_1, y_1, x_2, y_2);
         }
         break;
       case 'k':
@@ -115,7 +117,7 @@ public class Rulebook {
           int xDiff = abs((x_1 - x_2));
           int yDiff = abs((y_1 - y_2));
           if ((xDiff == 1 && yDiff == 1) || (xDiff == 1 && yDiff == 0) || (xDiff == 0 && yDiff == 1)) {
-            return true;
+            valid = true;
           }
         }
         break;
@@ -129,46 +131,33 @@ public class Rulebook {
 
         if (abs(x_1 - x_2) == abs(y_1 - y_2)) {
           // Diagonal
-          return bishopCheck(x_1, y_1, x_2, y_2);
+          valid = bishopMove(x_1, y_1, x_2, y_2);
+        } else {
+          valid = rookMove(x_1, y_1, x_2, y_2);
         }
+
+        break;
       case 'r':
       case 'R':
-        // Rooks can move north/south xor east/west
-        // Shoot have to check every single space in between start and end to
-        // make sure no pieces blocking the path
-        if (y_1 != y_2 && x_1 != x_2) {
-          return false;	// Not moving in a legal horizontal, or vertical direction
-        }
-
-        if (x_1 == x_2 && y_1 < y_2) {
-          for (int i = y_1 + 1; i < y_2; i++) {
-            if (my_storage.getSpaceChar(x_1, i) != '\u0000') {
-              return false; // path blocked if not empty
-            }
-          }
-        } else if (x_1 == x_2 && y_1 > y_2) {
-          for (int i = y_1 - 1; i > y_2; i--) {
-            if (my_storage.getSpaceChar(x_1, i) != '\u0000') {
-              return false; // path blocked if not empty
-            }
-          }
-        } else if (y_1 == y_2 && x_1 < x_2) {
-          for (int i = x_1 + 1; i < x_2; i++) {
-            if (my_storage.getSpaceChar(i, y_1) != '\u0000') {
-              return false; // path blocked if not empty
-            }
-          }
-        } else if (y_1 == y_2 && x_1 > x_2) {
-          for (int i = x_1 - 1; i > x_2; i--) {
-            if (my_storage.getSpaceChar(i, y_1) != '\u0000') {
-              return false; // path blocked if not empty
-            }
-          }
-        }
-        return true;
+        valid = rookMove(x_1, y_1, x_2, y_2);
+        break;
     } // end switch statement
 
-    return false; // If reached this point, false
+    // Move is valid, make sure it doesn't cause the player's own king to be in check
+    if (valid) {
+      testBoard = new TestBoard(my_storage, x_1, y_1, x_2, y_2);
+      if (Character.isUpperCase(piece)) {
+        // Return true if the king is not in danger with the new move
+        System.out.println("White king x = " + testBoard.getWhiteKingX() + " y = " + testBoard.getWhiteKingY());
+        return !kingDanger(testBoard.getWhiteKingX(), testBoard.getWhiteKingY(), 'K', testBoard);
+      } else {
+        System.out.println("Black king x = " + testBoard.getBlackKingX() + " y = " + testBoard.getBlackKingY());
+        return !kingDanger(testBoard.getBlackKingX(), testBoard.getBlackKingY(), 'k', testBoard);
+      }
+    } else {
+      return false; // If reached this point, false
+    }
+
   } // end checkMove ----------------------------------------------------------
 
   // Helper function for checkMove, checks for Queenside castling
@@ -573,9 +562,45 @@ public class Rulebook {
 
  // ----------------------------------------------------------------------------
 
+ // Helper function for checkMove(), looks at the legal moves for a rook
+ private boolean rookMove(int x_1, int y_1, int x_2, int y_2) {
+   // Rooks can move north/south xor east/west
+   // Shoot have to check every single space in between start and end to
+   // make sure no pieces blocking the path
+   if (y_1 != y_2 && x_1 != x_2) {
+     return false;	// Not moving in a legal horizontal, or vertical direction
+   }
+
+   if (x_1 == x_2 && y_1 < y_2) {
+     for (int i = y_1 + 1; i < y_2; i++) {
+       if (my_storage.getSpaceChar(x_1, i) != '\u0000') {
+         return false; // path blocked if not empty
+       }
+     }
+   } else if (x_1 == x_2 && y_1 > y_2) {
+     for (int i = y_1 - 1; i > y_2; i--) {
+       if (my_storage.getSpaceChar(x_1, i) != '\u0000') {
+         return false; // path blocked if not empty
+       }
+     }
+   } else if (y_1 == y_2 && x_1 < x_2) {
+     for (int i = x_1 + 1; i < x_2; i++) {
+       if (my_storage.getSpaceChar(i, y_1) != '\u0000') {
+         return false; // path blocked if not empty
+       }
+     }
+   } else if (y_1 == y_2 && x_1 > x_2) {
+     for (int i = x_1 - 1; i > x_2; i--) {
+       if (my_storage.getSpaceChar(i, y_1) != '\u0000') {
+         return false; // path blocked if not empty
+       }
+     }
+   }
+   return true;
+ }
 
   // Helper function for checkMove(), looks at the legal moves for a bishop
-  private boolean bishopCheck(int x_1, int y_1, int x_2, int y_2) {
+  private boolean bishopMove(int x_1, int y_1, int x_2, int y_2) {
     if (x_2 > x_1 && y_2 > y_1) {
       // Moving to upper right
       for (int i = 1; i < (x_2 - x_1); i++) {
