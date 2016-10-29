@@ -130,7 +130,7 @@ public class BoardPanel extends JPanel {
 								break;
 							}
 							img = ImageIO.read(getClass().getResource("/BlackPawn.png"));
-							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));	
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
@@ -142,11 +142,11 @@ public class BoardPanel extends JPanel {
 								break;
 							}
 							img = ImageIO.read(getClass().getResource("/BlackBishop.png"));
-							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
-							
+
 						case 'r':
 							if(blackPartyTime){
 								ImageIcon icon = new ImageIcon(getClass().getResource("/aussiereversecongaparrot.gif"));
@@ -155,11 +155,11 @@ public class BoardPanel extends JPanel {
 								break;
 							}
 							img = ImageIO.read(getClass().getResource("/BlackRook.png"));
-							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
-							
+
 						case 'k':
 							if(blackPartyTime){
 								ImageIcon icon = new ImageIcon(getClass().getResource("/parrotcop.gif"));
@@ -168,7 +168,7 @@ public class BoardPanel extends JPanel {
 								break;
 							}
 							img = ImageIO.read(getClass().getResource("/BlackKing.png"));
-							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
@@ -180,11 +180,11 @@ public class BoardPanel extends JPanel {
 								break;
 							}
 							img = ImageIO.read(getClass().getResource("/BlackQueen.png"));
-							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
-							
+
 						case 'n':
 							if(blackPartyTime){
 								ImageIcon icon = new ImageIcon(getClass().getResource("/partyparrot.gif"));
@@ -193,12 +193,12 @@ public class BoardPanel extends JPanel {
 								break;
 							}
 							img = ImageIO.read(getClass().getResource("/BlackKnight.png"));
-							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));		
+							if(colorizeBlack) 		img = createImage(new FilteredImageSource(img.getSource(), blackCF));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
-							
-							
+
+
 						case 'P':
 							if(whitePartyTime){
 								ImageIcon icon = new ImageIcon(getClass().getResource("/parrot.gif"));
@@ -207,7 +207,7 @@ public class BoardPanel extends JPanel {
 								break;
 							}
 							img = ImageIO.read(getClass().getResource("/WhitePawn.png"));
-							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 
@@ -220,7 +220,7 @@ public class BoardPanel extends JPanel {
 									break;
 							}
 							img = ImageIO.read(getClass().getResource("/WhiteBishop.png"));
-							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
@@ -232,11 +232,11 @@ public class BoardPanel extends JPanel {
 									break;
 							}
 							img = ImageIO.read(getClass().getResource("/WhiteRook.png"));
-							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
-							
+
 						case 'K':
 							if(whitePartyTime){
 									ImageIcon icon = new ImageIcon(getClass().getResource("/fiestaparrot.gif"));
@@ -244,13 +244,13 @@ public class BoardPanel extends JPanel {
 									icon.setImageObserver(checkers[i][j]);
 									break;
 							}
-							
+
 							img = ImageIO.read(getClass().getResource("/WhiteKing.png"));
-							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
-							
+
 						case 'Q':
 							if(whitePartyTime){
 									ImageIcon icon = new ImageIcon(getClass().getResource("/sassyparrot.gif"));
@@ -259,11 +259,11 @@ public class BoardPanel extends JPanel {
 									break;
 							}
 							img = ImageIO.read(getClass().getResource("/WhiteQueen.png"));
-							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
-							
+
 						case 'N':
 							if(whitePartyTime){
 									ImageIcon icon = new ImageIcon(getClass().getResource("/parrotwave2.gif"));
@@ -272,7 +272,7 @@ public class BoardPanel extends JPanel {
 									break;
 							}
 							img = ImageIO.read(getClass().getResource("/WhiteKnight.png"));
-							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));	
+							if(colorizeWhite) 		img = createImage(new FilteredImageSource(img.getSource(), whiteCF));
 							img = img.getScaledInstance(imageWidth, imageHeight, Image.SCALE_DEFAULT);
 							checkers[i][j].setIcon(new ImageIcon(img));
 							break;
@@ -293,14 +293,24 @@ public class BoardPanel extends JPanel {
 	public void drawBoard(){
 		// Create Labels for a through h for the first rows
 		addComponent(0,0,1,1,new JLabel(""));  // Corners are empty
-		for (int i = 0; i < 8; i++) {
+		if(!flipped){
+			for (int i = 0; i < 8; i++) {
 			JLabel label = new JLabel("" + (char)(97 + i));
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			addComponent(i+1,0,1,1,label);
+			}
 		}
+		else{
+			for (int i = 7; i >= 0; i--) {
+			JLabel label = new JLabel("" + (char)(97 + i));
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			addComponent(8-i,0,1,1,label);
+			}
+		}
+		
 		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
 
-		
+
 		// Fill out the center of the panel
 		//if not flipped, print them out in normal order
 		if(!flipped){
@@ -324,7 +334,7 @@ public class BoardPanel extends JPanel {
 				for (int j = 9; j >= 0; j--) {    // columns
 					if (j == 0 || j == 9) {
 						// Beginning or end of row, add column number
-						JLabel label = new JLabel("" + (8 - i));
+						JLabel label = new JLabel("" + (9 - i));
 						label.setHorizontalAlignment(SwingConstants.CENTER);
 						addComponent(9-j,9-i,1,1,label);
 					} else {
@@ -334,24 +344,33 @@ public class BoardPanel extends JPanel {
 				}
 			}
 		}	//end of drawBoard
-		
-			
+
+
 		// Fill out the last row of letters a through h
 		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
-		for (int i = 0; i < 8; i++) {
+		if(!flipped){
+			for (int i = 0; i < 8; i++) {
 			JLabel label = new JLabel("" + (char)(97 + i));
 			label.setHorizontalAlignment(SwingConstants.CENTER);
-			addComponent(i+1,9,1,1, label);
+			addComponent(i+1,9,1,1,label);
+			}
+		}
+		else{
+			for (int i = 7; i >= 0; i--) {
+			JLabel label = new JLabel("" + (char)(97 + i));
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			addComponent(8-i,9,1,1,label);
+			}
 		}
 		addComponent(9,9,1,1,new JLabel(""));
 	}
-	
+
 	//completely wipes the board
 	public void clearBoard(){
 		this.removeAll();
 	}
-	
-	
+
+
 	//helper method to add Components to a Container using GridBagLayout
 	public void addComponent(int x, int y, int w, int h, Component aComponent) {
 		gbc.gridx=x;
@@ -361,7 +380,7 @@ public class BoardPanel extends JPanel {
 		gbl.setConstraints(aComponent,gbc);
 		this.add(aComponent);
 	}
-	
+
 	//method that hues the black pieces to a certain hue
 		//Note: no hue if boolean is false
 	public void colorizeBlack(boolean colorize, int red, int green, int blue){
@@ -389,14 +408,14 @@ public class BoardPanel extends JPanel {
 		}
 		setPieces();
 	}
-	
+
 	//method that flips the board
 	public void setFlip(boolean flip){
 		flipped = flip;		//set the boolean value so drawBoard knows what order to draw in
 		clearBoard();		//clear the board so we can draw a new one
 		drawBoard();		//re-draw the board
 	}
-	
+
 	/*----------------------------------------------------------------------------------------------------------*/
   private ActionListener getSquareAction() {
     ActionListener action = new ActionListener() {
@@ -442,28 +461,16 @@ public class BoardPanel extends JPanel {
 								checkers[old_y][old_x].setBackground(Color.GRAY);
 							}
 							second_click = false;
+
 							String fen = my_storage.getFen();
+
+							// Play move on our board
+							System.out.println("Old spot: " + old_x + " " + old_y);
+							System.out.println("New spot: " + x + " " + y);
+	            my_storage.movePiece(old_y, old_x, y, x);
+
 							// Play move on stockfish's internal board
 							System.out.println("Fen before move " + fen);
-
-							// Move castle if castle, otherwise normally
-							if (abs(old_x - x) == 2) {
-								// castling
-            		my_storage.movePiece(old_y, old_x, y, x);
-								System.out.println("Old spot: " + old_x + " " + old_y);
-								System.out.println("New spot: " + x + " " + y);
-
-								if (old_x - x == 2) {
-									// left, move appropriate rook
-									my_storage.movePiece(old_y, 0, old_y, 3);
-								} else {
-									// right, move appropriate rook
-									my_storage.movePiece(old_y, 7, old_y, 5);
-								}
-							} else {
-	              my_storage.movePiece(old_y, old_x, y, x);
-							}
-
 							String move = old_spot + current_spot;
 							System.out.println("move is " + move);
 							ConsoleGraphics.stockfish.movePiece(move, my_storage.getFen());
@@ -525,7 +532,5 @@ public class BoardPanel extends JPanel {
     };
     return action;
   }
-	
+
 }//end of BoardPanel class
-
-
