@@ -57,7 +57,7 @@ public class Rulebook {
           valid = true;
         } else if (move.equals(enPass)) {
           // En passant ok
-          return true;
+          valid = true;
         }
         break;
       case 'P':
@@ -81,7 +81,7 @@ public class Rulebook {
           valid = true;
         } else if (move.equals(enPass)) {
           // En passant ok
-          return true;
+          valid = true;
         }
         break;
       case 'n':
@@ -148,10 +148,8 @@ public class Rulebook {
       testBoard = new TestBoard(my_storage, x_1, y_1, x_2, y_2);
       if (Character.isUpperCase(piece)) {
         // Return true if the king is not in danger with the new move
-        System.out.println("White king x = " + testBoard.getWhiteKingX() + " y = " + testBoard.getWhiteKingY());
         return !kingDanger(testBoard.getWhiteKingX(), testBoard.getWhiteKingY(), 'K', testBoard);
       } else {
-        System.out.println("Black king x = " + testBoard.getBlackKingX() + " y = " + testBoard.getBlackKingY());
         return !kingDanger(testBoard.getBlackKingX(), testBoard.getBlackKingY(), 'k', testBoard);
       }
     } else {
