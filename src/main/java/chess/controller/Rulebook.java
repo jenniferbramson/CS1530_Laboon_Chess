@@ -123,8 +123,7 @@ public class Rulebook {
         break;
       case 'q':
       case 'Q':
-        // Queen is rook plus diagonal ability, so don't break at end and incorporate
-        // rook ability that way
+        // Queen is rook plus diagonal ability
         if (abs(x_1 - x_2) != abs(y_1 - y_2) && y_1 != y_2 && x_1 != x_2) {
           return false;	// Not moving in a legal diagonal, horizontal, or vertical direction
         }
