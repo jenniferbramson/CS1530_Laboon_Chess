@@ -34,13 +34,13 @@ public class ConsoleGraphics extends JFrame {
 	
 	
   // The stockfish process will be used as the NPC and also to generate fen strings
-  protected static final Stockfish stockfish = new Stockfish();
+  // protected static final Stockfish stockfish = new Stockfish();
 
   // Puts all the components together to create the screen
   public ConsoleGraphics() {
 
     // Start stockfish process
-    stockfish.startEngine();
+    // stockfish.startEngine();
 
     frame = new JFrame("Laboon Chess");
     content = frame.getContentPane();   // Get reference to content pane
@@ -110,7 +110,7 @@ public class ConsoleGraphics extends JFrame {
 
     frame.addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
-        stockfish.stopEngine();
+        LaboonChess.stockfish.stopEngine();
       }
     });
 

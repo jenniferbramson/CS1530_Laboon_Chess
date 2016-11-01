@@ -8,7 +8,7 @@ import java.io.*;
 import javax.imageio.*;
 import static java.lang.Math.abs;
 
-import chess.Stockfish;
+// import chess.Stockfish;
 
 public class BoardPanel extends JPanel {
 	protected static Storage my_storage;
@@ -110,7 +110,8 @@ public class BoardPanel extends JPanel {
   }
 
 	/*-----------------------------------------------------------------------------------*/
-	private void setPieces(){
+
+	public void setPieces(){
 		//Added to try and draw letters
 		for(int i=0; i<8;i++){
 			for(int j=0; j<8;j++){
@@ -473,10 +474,10 @@ public class BoardPanel extends JPanel {
 							System.out.println("Fen before move " + fen);
 							String move = old_spot + current_spot;
 							System.out.println("move is " + move);
-							ConsoleGraphics.stockfish.movePiece(move, my_storage.getFen());
-              fen = ConsoleGraphics.stockfish.getFen();
+							LaboonChess.stockfish.movePiece(move, my_storage.getFen());
+              fen = LaboonChess.stockfish.getFen();
               System.out.println("New fen " + fen);
-              ConsoleGraphics.stockfish.drawBoard();
+              LaboonChess.stockfish.drawBoard();
 
 	            //update storage fen with new fen pulled from stockfish output
 	            my_storage.setFen(fen);
@@ -485,6 +486,8 @@ public class BoardPanel extends JPanel {
     					setPieces();
               // Switch whose turn it is
               LaboonChess.changeTurn();
+              setPieces();
+              System.out.println("players turn " + LaboonChess.getPlayersTurn());
             } // end legality move check
 						else{
 							System.out.println("Not a legal move.");
@@ -520,7 +523,15 @@ public class BoardPanel extends JPanel {
             } else {
               // Invalid color piece clicked or empty, so ignore
             } // end if (validColor)
+         
           } // end if (playersTurn())
+          //computer's turn
+          // System.out.println("here?");
+          // if (!(LaboonChess.getPlayersTurn())){
+          //  	System.out.println("Will try to mvoe from sf");
+          //  	playMoveFromStockfish();
+          //  }
+          	
 
 				} // end ActionListener
 
@@ -532,5 +543,27 @@ public class BoardPanel extends JPanel {
     };
     return action;
   }
+
+ //  public void playMoveFromStockfish(){
+
+ //  	String bestMove = ConsoleGraphics.stockfish.getBestMove(my_storage.getFen(), 1000);
+ //  	System.out.println("best mvoe from stockfish " + bestMove);
+ //  	ConsoleGraphics.stockfish.movePiece(bestMove, my_storage.getFen());
+ //    String fen = ConsoleGraphics.stockfish.getFen();
+ //    System.out.println("New fen " + fen);
+ //    my_storage.setFen(fen);
+ //    char old_x_board = bestMove.charAt(0);
+ //    int old_x = (int)old_x_board - 96;
+ //    int old_y = Integer.parseInt(bestMove.substring(1,2));
+ //    char x_board = bestMove.charAt(2);
+ //    int x = (int) x_board - 96;
+ //    int y = Integer.parseInt(bestMove.substring(3,4));
+ //    my_storage.movePiece(old_y, old_x, y, x);
+ //  	ConsoleGraphics.stockfish.drawBoard();
+ //  	setPieces();
+	// // Switch whose turn it is
+	// LaboonChess.changeTurn();
+
+ //  }
 
 }//end of BoardPanel class
