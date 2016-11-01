@@ -14,7 +14,7 @@ public class ConsoleGraphics extends JFrame {
   protected JButton blackTurn;
 	protected JButton blackColorButton;
 	protected JButton whiteColorButton;
-	protected BoardPanel board;
+	protected static BoardPanel board;
 	protected ButtonsPanel buttons;
 	protected TimerPanel timer;
 	protected Container content;
