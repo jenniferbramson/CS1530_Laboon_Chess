@@ -95,22 +95,15 @@ public class TurnController {
     BoardPanel.my_storage.setFen(fen);
     char old_x_board = bestMove.charAt(0);
     int old_x = (int)old_x_board - 97;
-    // old_x = 8-old_x;
     int old_y = Integer.parseInt(bestMove.substring(1,2));
     old_y = 8-old_y;
     char x_board = bestMove.charAt(2);
     int x = (int) x_board - 97;
-    // x = 8/**/x;
     int y = Integer.parseInt(bestMove.substring(3,4));
     y = 8 - y;
-    System.out.println("oldxboard: " + old_x_board + " oldx : " + old_x + " old_y " + old_y);
-    System.out.println("newxboard " + x_board + " newx: " + x + " newy " + y);
     BoardPanel.my_storage.movePiece(old_y, old_x, y, x);
     LaboonChess.stockfish.drawBoard();
-    //BoardPanel.setPiecesEx tern();
-    // BoardPanel.setPieces();
-  // Switch whose turn it is
-  LaboonChess.changeTurn();
+    LaboonChess.changeTurn();
 
   }
 
