@@ -9,13 +9,10 @@ package chess;
 public class TestBoard {
 
 	private char[][] board = new char[8][8];
-  private int[] whiteKingCoords;    // King's x-value at 0, y-value at 1
-  private int[] blackKingCoords;    // King's x-value at 0, y-value at 1
+  private int[] whiteKingCoords = new int[2];    // King's x-value at 0, y-value at 1
+  private int[] blackKingCoords = new int[2];    // King's x-value at 0, y-value at 1
 
   public TestBoard(Storage my_storage, int x_1, int y_1, int x_2, int y_2) {
-		whiteKingCoords = new int[2];
-		blackKingCoords = new int[2];
-
     // Simply copy the board array of the input Storage
     for (int x = 0; x < my_storage.getNumRows(); x++) {
       for (int y = 0; y < my_storage.getNumCols(); y++) {
@@ -32,7 +29,16 @@ public class TestBoard {
     }
 
     this.movePiece(x_1, y_1, x_2, y_2);
-    this.printBoard();
+
+		// Ammend king coords if king was moved
+		if (whiteKingCoords[0] == x_1 && whiteKingCoords[1] == y_1) {
+			whiteKingCoords[0] = x_2;
+			whiteKingCoords[1] = y_2;
+		} else if (blackKingCoords[0] == x_1 && blackKingCoords[1] == y_1) {
+			blackKingCoords[0] = x_2;
+			blackKingCoords[1] = y_2;
+		}
+
    }
 
 	 // Note -- The king coords will be null (\u0000) if a test move is sent in
@@ -72,14 +78,17 @@ public class TestBoard {
   // Helper method for creating the test board with a potential future move
   // Assumes you are attempting a valid move with legal inputs
 	private void movePiece(int x_1, int y_1, int x_2, int y_2){
-    System.out.println("X_1: " + x_1 + " Y_1: " + y_1);
-    System.out.println("X_2: " + x_2 + " Y_2: " + y_2);
-    System.out.println(board[x_1][y_1]);
-		board[y_2][x_2] = board[y_1][x_1];	// set new space to old piece
-
-		if(x_2!=x_1 || y_2!=y_1) {
+		char piece = this.getSpaceChar(x_1, y_1);
+		char space = this.getSpaceChar(x_2, y_2);
+		if ((piece == 'p' || piece == 'P') && space == '\u0000' && Math.abs(x_1 - x_2) == 1) {
+			// En passant
+			board[y_2][x_2] = board[y_1][x_1];	// set new space to old piece
+			board[y_1][x_1] = '\u0000';					// set old space to null
+			board[y_1][x_2] = '\u0000';					// set taken pawn space to null
+		} else {
+			board[y_2][x_2] = board[y_1][x_1];	// set new space to old piece
       board[y_1][x_1] = '\u0000';	// set old space to null
-    }
+		}
 	}
 
   public char getSpaceChar(int y, int x){

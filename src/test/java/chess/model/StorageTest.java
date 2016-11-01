@@ -14,13 +14,25 @@ public class StorageTest {
 
 	@Test
 	public void storageTestMovePiece() {
-		//testing to see if movePiece workds
+		//testing to see if movePiece works
 		Storage temp = new Storage();
 		assertEquals(temp.getSpace(1,2), "p");
 		temp.movePiece(1, 2, 4, 4);
 		assertEquals(temp.getSpace(1,2), "");
 		assertEquals(temp.getSpace(4,4), "p");
 	}
+
+  @Test
+  public void storageEnPassant() {
+    //testing to see if en passant works
+    Storage temp = new Storage("rnbqkbnr/pp1ppp1p/2B5/6p1/2pPP3/8/PPP2PPP/RNBQK1NR b KQkq d3 7 4");
+    assertEquals(temp.getSpace(4,2), "p");
+    assertEquals(temp.getSpace(5,3), "");
+    assertEquals(temp.getSpace(4,3), "P");
+    temp.movePiece(4, 2, 5, 3);
+    assertEquals(temp.getSpace(5,3), "p");
+    assertEquals(temp.getSpace(4,3), "");
+  }
 
 	@Test
 	public void storageTestLoadFen() {

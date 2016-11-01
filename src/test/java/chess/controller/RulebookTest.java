@@ -7,6 +7,54 @@ import chess.Storage;
 public class RulebookTest {
 
   @Test
+  public void testEnPassant() {
+    //testing to see if en passant passes rulebook
+    Storage temp = new Storage("rnbqkbnr/pp1ppp1p/2B5/6p1/2pPP3/8/PPP2PPP/RNBQK1NR b KQkq d3 7 4");
+    Rulebook r = new Rulebook(temp);
+    assertEquals(temp.getSpace(4,2), "p");
+    assertEquals(temp.getSpace(5,3), "");
+    assertEquals(temp.getSpace(4,3), "P");
+    if (r.checkMove(4, 2, 5, 3)) {
+      temp.movePiece(4, 2, 5, 3);
+    }
+    assertEquals(temp.getSpace(5,3), "p");
+    assertEquals(temp.getSpace(4,3), "");
+    assertEquals(temp.getSpace(4,2), "");
+  }
+
+  @Test
+  public void testIllegalEnPassant1() {
+    // En Passant causes king to be in check
+    Storage temp = new Storage("rnbqkbnr/1pp2ppp/8/3Pp3/p7/8/PPP1PPPP/RNBK1BNR w - e6 12 7");
+    Rulebook r = new Rulebook(temp);
+    assertEquals(temp.getSpace(3,3), "P");
+    assertEquals(temp.getSpace(3,4), "p");
+    assertEquals(temp.getSpace(2,4), "");
+    if (r.checkMove(3, 3, 2, 4)) {
+      temp.movePiece(3, 3, 2, 4);
+    }
+    assertNotEquals(temp.getSpace(2,4), "P");
+    assertEquals(temp.getSpace(3,3), "P");
+    assertEquals(temp.getSpace(3,4), "p");
+  }
+
+  @Test
+  public void testIllegalEnPassant2() {
+    // En Passant causes king to be in check
+    Storage temp = new Storage("rnb1kbnr/1p1p1ppp/8/1K1Ppq2/2p4P/p7/PPP1PPP1/RNBQ1BNR w kq e6 20 11");
+    Rulebook r = new Rulebook(temp);
+    assertEquals(temp.getSpace(3,3), "P");
+    assertEquals(temp.getSpace(3,4), "p");
+    assertEquals(temp.getSpace(2,4), "");
+    if (r.checkMove(3, 3, 2, 4)) {
+      temp.movePiece(3, 3, 2, 4);
+    }
+    assertNotEquals(temp.getSpace(2,4), "P");
+    assertEquals(temp.getSpace(3,3), "P");
+    assertEquals(temp.getSpace(3,4), "p");
+  }
+
+  @Test
   public void testWhiteLegalCastleRight() {
     Storage temp = new Storage("rnbqkbnr/p1p2ppp/8/1p1pp3/4P3/5N2/PPPPBPPP/RNBQK2R w KQkq - 6 4");
     Rulebook r = new Rulebook(temp);
