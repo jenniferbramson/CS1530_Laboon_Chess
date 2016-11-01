@@ -14,6 +14,10 @@ public class Storage {
 	ArrayList<String> history;
   private String fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
+	//When history of moves is implemented use that instead but 
+	//store the values in storage temporarily
+	protected static int lastMovePiecePositionX = 0;
+	protected static int lastMovePiecePositionY = 0;
 
 	//constructor
 	public Storage(){
@@ -147,6 +151,11 @@ public class Storage {
 	public char getSpace(int x, int y, boolean filler){
 		return board[x][y];
 	}
+	
+	//Set the intended spot on the board with a different piece
+	public void setSpace(int x, int y, char piece) {
+		board[x][y] = piece;
+	}
 
 	// Assumes you are attempting a valid move, i.e. by using Rulebook to check
 	// that the move was valid
@@ -181,6 +190,11 @@ public class Storage {
 			// Not castling or en passant, move normally
 			board[y_2][x_2] = board[y_1][x_1];	// set new space to old piece
 			board[y_1][x_1] = '\u0000';	// set old space to null
+			
+			lastMovePiecePositionY = x_2;
+			lastMovePiecePositionX = y_2;
+			//Check if pawn can be promoted
+			checkPromotion(y_2, piece);
 		}
 	}
 
@@ -189,5 +203,22 @@ public class Storage {
 		//TO-DO Implement later
 		history.add(" ");
 	}
-
+	
+	//Method checks if the last moved pawn has reached to the other side of the board
+	//Test if the piece that just moved is a pawn
+	//	if so then test if it has reached the end of the board
+	//		if it has then let the user select what to promote the pawn to
+	//	else do nothing
+	public void checkPromotion(int y, char piece) {
+		//Check if the piece is a pawn
+		if(piece == 'p' || piece == 'P') {
+			//Check if piece has gotten to the end of the board
+			//Tests for both sides of the board, doesn't matter how board is flipped,
+			//Since pawns can't move backwards, should be okay to test if the pawn has
+			//reached either side
+			if(y == 0 || y == 7) {
+				PawnPromotion promote = new PawnPromotion();
+			}
+		}
+	}
 }
