@@ -135,7 +135,9 @@ public class PawnPromotionPanel extends JPanel {
 		bishop.addActionListener(pickBishop());
 		this.add(bishop);
 	}
-
+	
+	//TODO - Modify fen/send stockfish move of pawn promotion
+	
 	private ActionListener pickQueen() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
