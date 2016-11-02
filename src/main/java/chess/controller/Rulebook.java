@@ -630,4 +630,23 @@ public class Rulebook {
     return true;
   }
 
+  public boolean testCheckmate(String fen) {
+	boolean checkmate = false;
+	
+	Stockfish player = new Stockfish();
+    player.startEngine();
+    // Tell the engine to switch to UCI mode
+    player.send("uci");
+	
+	String bestMove = player.getBestMove(fen, 100);
+	System.out.println("Best Move: " + bestMove);
+	
+	if(bestMove.equals("(non")) {
+		checkmate = true;
+	}
+	
+	player.stopEngine();
+	
+	return checkmate;
+  }
 }
