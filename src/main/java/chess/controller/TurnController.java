@@ -6,7 +6,7 @@ package chess;
 public class TurnController {
 
   private boolean playersTurn = true;  // Default: start off with player's turn
-  private char playersColor;
+  protected static char playersColor;
   private char turn;
   private ConsoleGraphics graphics;
   private boolean graphicsExist = false;
