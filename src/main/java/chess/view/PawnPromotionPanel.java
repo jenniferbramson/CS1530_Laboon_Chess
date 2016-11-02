@@ -14,8 +14,8 @@ public class PawnPromotionPanel extends JPanel {
 	
 	private JButton title;
 	
-	protected static boolean PawnPromoted = false;
-
+	protected static String pawnPromotionSelection = "";
+	
 	//Variables to change the spacing of buttons and title
 	private int topSpace = 50;
 	private int buttonSpace = 10;
@@ -142,36 +142,38 @@ public class PawnPromotionPanel extends JPanel {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Get the position of the last moved pawn
-				int x = BoardPanel.my_storage.lastMovePiecePositionX;
-				int y = BoardPanel.my_storage.lastMovePiecePositionY;
+				int x = BoardPanel.lastMovePiecePositionX;
+				int y = BoardPanel.lastMovePiecePositionY;
 				
 				//Get current color's turn
 				char turn = LaboonChess.getTurn();
 				
 				//If it was white who just promoted their pawn, then replace pawn with white queen
-				//Checks for if its black turn to change white pawn to higher ranking white piece
-				//	After the pawn moves, the turn changes to black
-				//	Therefore we have to check who's turn it is now to see
-				//	who just moved the last pawn
-				if(turn == 'b') {
+				if(turn == 'w') {
 					//Change the piece from pawn to queen
 					BoardPanel.my_storage.setSpace(x, y, 'Q');
 					BoardPanel tempBoardPanel = ConsoleGraphics.board;
 					tempBoardPanel.setPieces();
 					ConsoleGraphics.board = tempBoardPanel;
+					
+					pawnPromotionSelection = "Q";
+					System.out.println("Pawn Promoted to: White Queen");
 				}
 				//Else it was black, replace pawn with black queen
-				else if(turn == 'w') {
+				else if(turn == 'b') {
 					//Change the piece from pawn to queen
 					BoardPanel.my_storage.setSpace(x, y, 'q');
 					BoardPanel tempBoardPanel = ConsoleGraphics.board;
 					tempBoardPanel.setPieces();
 					ConsoleGraphics.board = tempBoardPanel;
+					
+					pawnPromotionSelection = "q";
+					System.out.println("Pawn Promoted to: Black Queen");
 				}
 				
 				//Dispose pawn promotion frame after user picks piece
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(queen.getParent());
-				frame.dispose();
+				JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(queen.getParent());
+				dialog.dispose();
 			}
 		};
 		return action;
@@ -181,36 +183,38 @@ public class PawnPromotionPanel extends JPanel {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Get the position of the last moved pawn
-				int x = BoardPanel.my_storage.lastMovePiecePositionX;
-				int y = BoardPanel.my_storage.lastMovePiecePositionY;
+				int x = BoardPanel.lastMovePiecePositionX;
+				int y = BoardPanel.lastMovePiecePositionY;
 				
 				//Get current color's turn
 				char turn = LaboonChess.getTurn();
 				
-				//If it was white who just promoted their pawn, then replace pawn with white queen
-				//Checks for if its black turn to change white pawn to higher ranking white piece
-				//	After the pawn moves, the turn changes to black
-				//	Therefore we have to check who's turn it is now to see
-				//	who just moved the last pawn
-				if(turn == 'b') {
-					//Change the piece from pawn to queen
+				//If it was white who just promoted their pawn, then replace pawn with white rook
+				if(turn == 'w') {
+					//Change the piece from pawn to rook
 					BoardPanel.my_storage.setSpace(x, y, 'R');
 					BoardPanel tempBoardPanel = ConsoleGraphics.board;
 					tempBoardPanel.setPieces();
 					ConsoleGraphics.board = tempBoardPanel;
+					
+					pawnPromotionSelection = "R";
+					System.out.println("Pawn Promoted to: White Rook");
 				}
-				//Else it was black, replace pawn with black queen
-				else if(turn == 'w') {
-					//Change the piece from pawn to queen
+				//Else it was black, replace pawn with black rook
+				else if(turn == 'b') {
+					//Change the piece from pawn to rook
 					BoardPanel.my_storage.setSpace(x, y, 'r');
 					BoardPanel tempBoardPanel = ConsoleGraphics.board;
 					tempBoardPanel.setPieces();
 					ConsoleGraphics.board = tempBoardPanel;
+					
+					pawnPromotionSelection = "r";
+					System.out.println("Pawn Promoted to: Black Rook");
 				}
 
 				//Dispose pawn promotion frame after user picks piece
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(rook.getParent());
-				frame.dispose();
+				JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(rook.getParent());
+				dialog.dispose();
 			}
 		};
 		return action;
@@ -220,36 +224,38 @@ public class PawnPromotionPanel extends JPanel {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Get the position of the last moved pawn
-				int x = BoardPanel.my_storage.lastMovePiecePositionX;
-				int y = BoardPanel.my_storage.lastMovePiecePositionY;
+				int x = BoardPanel.lastMovePiecePositionX;
+				int y = BoardPanel.lastMovePiecePositionY;
 				
 				//Get current color's turn
 				char turn = LaboonChess.getTurn();
 				
-				//If it was white who just promoted their pawn, then replace pawn with white queen
-				//Checks for if its black turn to change white pawn to higher ranking white piece
-				//	After the pawn moves, the turn changes to black
-				//	Therefore we have to check who's turn it is now to see
-				//	who just moved the last pawn
-				if(turn == 'b') {
-					//Change the piece from pawn to queen
+				//If it was white who just promoted their pawn, then replace pawn with white knight
+				if(turn == 'w') {
+					//Change the piece from pawn to knight
 					BoardPanel.my_storage.setSpace(x, y, 'N');
 					BoardPanel tempBoardPanel = ConsoleGraphics.board;
 					tempBoardPanel.setPieces();
 					ConsoleGraphics.board = tempBoardPanel;
+					
+					pawnPromotionSelection = "N";
+					System.out.println("Pawn Promoted to: White Knight");
 				}
-				//Else it was black, replace pawn with black queen
-				else if(turn == 'w') {
-					//Change the piece from pawn to queen
+				//Else it was black, replace pawn with black knight
+				else if(turn == 'b') {
+					//Change the piece from pawn to knight
 					BoardPanel.my_storage.setSpace(x, y, 'n');
 					BoardPanel tempBoardPanel = ConsoleGraphics.board;
 					tempBoardPanel.setPieces();
 					ConsoleGraphics.board = tempBoardPanel;
+					
+					pawnPromotionSelection = "n";
+					System.out.println("Pawn Promoted to: Black Knight");
 				}
 
 				//Dispose pawn promotion frame after user picks piece
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(knight.getParent());
-				frame.dispose();
+				JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(knight.getParent());
+				dialog.dispose();
 			}
 		};
 		return action;
@@ -259,36 +265,38 @@ public class PawnPromotionPanel extends JPanel {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//Get the position of the last moved pawn
-				int x = BoardPanel.my_storage.lastMovePiecePositionX;
-				int y = BoardPanel.my_storage.lastMovePiecePositionY;
+				int x = BoardPanel.lastMovePiecePositionX;
+				int y = BoardPanel.lastMovePiecePositionY;
 				
 				//Get current color's turn
 				char turn = LaboonChess.getTurn();
 				
-				//If it was white who just promoted their pawn, then replace pawn with white queen
-				//Checks for if its black turn to change white pawn to higher ranking white piece
-				//	After the pawn moves, the turn changes to black
-				//	Therefore we have to check who's turn it is now to see
-				//	who just moved the last pawn
-				if(turn == 'b') {
-					//Change the piece from pawn to queen
+				//If it was white who just promoted their pawn, then replace pawn with white bishop
+				if(turn == 'w') {
+					//Change the piece from pawn to bishop
 					BoardPanel.my_storage.setSpace(x, y, 'B');
 					BoardPanel tempBoardPanel = ConsoleGraphics.board;
 					tempBoardPanel.setPieces();
 					ConsoleGraphics.board = tempBoardPanel;
+					
+					pawnPromotionSelection = "B";
+					System.out.println("Pawn Promoted to: White Bishop");
 				}
-				//Else it was black, replace pawn with black queen
-				else if(turn == 'w') {
-					//Change the piece from pawn to queen
+				//Else it was black, replace pawn with black bishop
+				else if(turn == 'b') {
+					//Change the piece from pawn to bishop
 					BoardPanel.my_storage.setSpace(x, y, 'b');
 					BoardPanel tempBoardPanel = ConsoleGraphics.board;
 					tempBoardPanel.setPieces();
 					ConsoleGraphics.board = tempBoardPanel;
+					
+					pawnPromotionSelection = "b";
+					System.out.println("Pawn Promoted to: Black Bishop");
 				}
 
 				//Dispose pawn promotion frame after user picks piece
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(bishop.getParent());
-				frame.dispose();
+				JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(bishop.getParent());
+				dialog.dispose();
 			}
 		};
 		return action;
