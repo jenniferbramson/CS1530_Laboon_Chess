@@ -39,6 +39,19 @@ public class TurnController {
     }
   }
 
+  public TurnController(){
+    turn = 'w';
+  }
+
+  public boolean setPlayersColor(char c) {
+    if (c == 'b' || c == 'w'){
+      playersColor = c;
+      return true;
+    }
+    return false;
+  }
+
+
   // Graphics must contain setBlack() and setWhite() methods.
   public void addGraphicalTurn(ConsoleGraphics graphics) {
     this.graphics = graphics;
@@ -52,6 +65,10 @@ public class TurnController {
 
   public boolean getPlayersTurn() {
     return playersTurn;
+  }
+
+  public void setPlayersTurn(boolean value){
+    playersTurn = value;
   }
 
   public char getPlayersColor() {
@@ -79,6 +96,10 @@ public class TurnController {
     } else {
       playersTurn = true;
     }
+  }
+
+  public void firstStockfishTurn(){
+    playMoveFromStockfish();
   }
 
   public char getTurn() {
