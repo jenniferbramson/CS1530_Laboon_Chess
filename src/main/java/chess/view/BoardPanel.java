@@ -511,6 +511,10 @@ public class BoardPanel extends JPanel {
     					setPieces();
               // Switch whose turn it is
               LaboonChess.changeTurn();
+			  boolean checkmate = my_rulebook.testCheckmate(fen);
+			  if(checkmate == true) {
+				GameResults result = new GameResults();
+			  }
             } // end legality move check
 						else{
 							System.out.println("Not a legal move.");
