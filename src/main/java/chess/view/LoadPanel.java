@@ -50,6 +50,7 @@ public class LoadPanel extends JPanel {
 	
 	private char playersColor;
 	private char currentColor;
+	private String[] splitFen;
 
 	public LoadPanel() {
 
@@ -203,7 +204,7 @@ public class LoadPanel extends JPanel {
 			}
 			
 			// Set controller to whoever's turn it should be
-			String[] splitFen = fen.split(" ");
+			splitFen = fen.split(" ");
 			// Whether it is currently white or black's turn is second string in fen
 			// Fen stores white's turn as 'w', black's turn as 'b' already
 			currentColor = splitFen[1].charAt(0);
@@ -388,6 +389,8 @@ public class LoadPanel extends JPanel {
 		int lengthOfSaveFile = 10;
 		boolean validSaveFile = true;
 		
+		String[] fenSeparatedByRow = splitFen[0].split("/");
+		
 		//Check that number of lines read in matches what was expected
 		//Not going to check anything else since the display of the table in the 
 		//Text file is test code, don't think it's necessary to check if the fen string
@@ -409,7 +412,13 @@ public class LoadPanel extends JPanel {
 			System.out.println("Save file contained an invalid turn color!");
 			validSaveFile = false;
 		}
-		//Check if the fen string is valid
+		//Check if the fen is too short or too long
+		else if(fenSeparatedByRow.length != 8) {
+			prompt.setText(errorPrompt);
+			System.out.println("Save file contained an invalid fen length!");
+			validSaveFile = false;
+		}
+		//Check if the fen string is valid, maybe somehow integrate with stockfish to check
 		else if(fen != fen) {
 			prompt.setText(errorPrompt);
 			System.out.println("Save file contained an invalid fen string!");
