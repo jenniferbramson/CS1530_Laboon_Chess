@@ -41,8 +41,14 @@ public class BoardPanel extends JPanel {
 	private final Color DARKSEAGREEN = new Color(155,205,155);
 	//for flipping the board
 	private boolean flipped = false;
+	
+	//When history of moves is implemented use that instead but 
+	//store the values in storage temporarily
+	protected static int lastMovePiecePositionX = 0;
+	protected static int lastMovePiecePositionY = 0;
 
-
+	private boolean pawnPromoted = false;
+	
 	//Keep track of the last saved fen
 	//Used for testing loss of progress
 	protected static String lastSaveFen = "";		//Used to check if player made moves after load
@@ -449,31 +455,51 @@ public class BoardPanel extends JPanel {
             boolean legal = my_rulebook.checkMove(old_y, old_x, y, x);
             System.out.println(legal);
             if (legal) {
-							// Check to see if moving King or Rook
-							char oldPiece = my_storage.getSpaceChar(old_x, old_y);
-							boolean castle = false;
-							System.out.println(oldPiece);
+				// Check to see if moving King or Rook
+				char oldPiece = my_storage.getSpaceChar(old_x, old_y);
+				boolean castle = false;
+				System.out.println(oldPiece);
 
-							System.out.println("Moving " + old_spot + " to " + current_spot);
-							if ( (old_x+old_y) % 2== 0) {
-								checkers[old_y][old_x].setBackground(Color.WHITE);
-							} else {
-								checkers[old_y][old_x].setBackground(Color.GRAY);
-							}
-							second_click = false;
+				System.out.println("Moving " + old_spot + " to " + current_spot);
+				if ( (old_x+old_y) % 2== 0) {
+					checkers[old_y][old_x].setBackground(Color.WHITE);
+				} else {
+					checkers[old_y][old_x].setBackground(Color.GRAY);
+				}
+				second_click = false;
 
-							String fen = my_storage.getFen();
+				String fen = my_storage.getFen();
 
-							// Play move on our board
-							System.out.println("Old spot: " + old_x + " " + old_y);
-							System.out.println("New spot: " + x + " " + y);
-	            my_storage.movePiece(old_y, old_x, y, x);
-
-							// Play move on stockfish's internal board
-							System.out.println("Fen before move " + fen);
-							String move = old_spot + current_spot;
-							System.out.println("move is " + move);
-							ConsoleGraphics.stockfish.movePiece(move, my_storage.getFen());
+				// Play move on our board
+				System.out.println("Old spot: " + old_x + " " + old_y);
+				System.out.println("New spot: " + x + " " + y);
+				my_storage.movePiece(old_y, old_x, y, x);
+				
+				lastMovePiecePositionY = x;
+				lastMovePiecePositionX = y;
+				
+				//Get the piece that just moved
+				char piece = my_storage.getSpaceChar(x, y);
+				
+				//Check if pawn can be promoted
+				pawnPromoted = checkPromotion(y, piece);
+				
+				// Play move on stockfish's internal board
+				System.out.println("Fen before move " + fen);
+				
+				String move;
+				if(pawnPromoted == true) {
+					System.out.println("Pawn was promoted!");
+					String resultOfPawnPromotion = PawnPromotionPanel.pawnPromotionSelection;
+					System.out.println("Upgrade Pawn to: " + resultOfPawnPromotion);
+					move = old_spot + current_spot + resultOfPawnPromotion;
+				}
+				else {
+					move = old_spot + current_spot;
+				}
+				
+				System.out.println("move is " + move);
+				ConsoleGraphics.stockfish.movePiece(move, my_storage.getFen());
               fen = ConsoleGraphics.stockfish.getFen();
               System.out.println("New fen " + fen);
               ConsoleGraphics.stockfish.drawBoard();
@@ -532,5 +558,28 @@ public class BoardPanel extends JPanel {
     };
     return action;
   }
+  
+	//Method checks if the last moved pawn has reached to the other side of the board
+	//Test if the piece that just moved is a pawn
+	//	if so then test if it has reached the end of the board
+	//		if it has then let the user select what to promote the pawn to
+	//	else do nothing
+	public boolean checkPromotion(int y, char piece) {
+		boolean promoted = false;
+		//Check if the piece is a pawn
+		if(piece == 'p' || piece == 'P') {
+			//Check if piece has gotten to the end of the board
+			//Tests for both sides of the board, doesn't matter how board is flipped,
+			//Since pawns can't move backwards, should be okay to test if the pawn has
+			//reached either side
+			if(y == 0 || y == 7) {
+				System.out.println("BoardPanel: Pawn was promoted!");
+				PawnPromotion promote = new PawnPromotion();
+				promoted = true;
+			}
+		}
+		
+		return promoted;
+	}
 
 }//end of BoardPanel class
