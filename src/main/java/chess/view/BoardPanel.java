@@ -51,7 +51,7 @@ public class BoardPanel extends JPanel {
 
 	private String defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
-	private static boolean firstTurnTaken = false;
+	public static boolean firstTurnTaken = false;
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
@@ -372,20 +372,7 @@ public class BoardPanel extends JPanel {
 		addComponent(9,9,1,1,new JLabel(""));
 
 		// If computer goes first, it will play now
-		try{
-			TimeUnit.SECONDS.wait(3);
-		}
-		catch (Exception e) {
-
-		}
-		
-		if (!(LaboonChess.getPlayersTurn()) & !firstTurnTaken){
-			System.out.println("will try to take first turn");
-  			LaboonChess.firstStockfishTurn();
-  			LaboonChess.setPlayersTurn(true);
-  			firstTurnTaken = true;
-  			setPieces();
-     	}
+	
 	}
 
 	//completely wipes the board
@@ -562,5 +549,17 @@ public class BoardPanel extends JPanel {
     };
     return action;
   }
+
+  public void playFirstTurnWithStockfish(){
+	
+	LaboonChess.firstStockfishTurn();
+	LaboonChess.setPlayersTurn(true);
+	firstTurnTaken = true;
+	setPieces();
+ 	
+
+  }
+  	
+
 
 }//end of BoardPanel class

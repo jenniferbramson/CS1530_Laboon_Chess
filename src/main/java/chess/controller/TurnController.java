@@ -96,6 +96,7 @@ public class TurnController {
 
    public void playMoveFromStockfish(){
 
+
     String bestMove = LaboonChess.stockfish.getBestMove(BoardPanel.my_storage.getFen(), 1000);
     System.out.println("best mvoe from stockfish " + bestMove);
     LaboonChess.stockfish.movePiece(bestMove, BoardPanel.my_storage.getFen());
