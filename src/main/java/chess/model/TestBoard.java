@@ -92,7 +92,15 @@ public class TestBoard {
 	}
 
   public char getSpaceChar(int y, int x){
-		return board[x][y];
+		//Try and see if you can return a piece at the given spot, 
+		//If spot is outside of the bounds of the board, return 
+		//a non used character for the game to indicate that it 
+		//doesn't exist
+		try {
+			return board[x][y];
+		} catch(Exception ee) {
+			return 'z';
+		}
 	}
 
 }
