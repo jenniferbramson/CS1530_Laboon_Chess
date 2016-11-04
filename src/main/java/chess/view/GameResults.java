@@ -5,7 +5,7 @@ import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 import java.io.*;
 import javax.imageio.*;
 
-public class GameResults extends JPanel {
+public class GameResults extends JDialog {
 	
 	private Toolkit t;
 	private Dimension screen;
@@ -16,10 +16,10 @@ public class GameResults extends JPanel {
 	
 	public GameResults() {
 		//Find out whether the game was won, lost, draw
-		//Make frame title based on the results
-		
-		JFrame frame = new JFrame("Results of the Game!");
-		Container content = frame.getContentPane();
+		//Make dialog title based on the results
+		JDialog dialog = new JDialog(this, "Results of the Game!");
+		dialog.setModal(true);
+		Container content = dialog.getContentPane();
 
 		GameResultsPanel resultsPanel = new GameResultsPanel();
 		
@@ -31,46 +31,21 @@ public class GameResults extends JPanel {
 		
 		content.add(mainPanel);
 		
-		frame.pack();
+		dialog.pack();
 		
 		//Set fixed screen size
-		frame.setSize(screenWidth, screenHeight);
+		dialog.setSize(screenWidth, screenHeight);
 		
 		//Get size of computer screen
 		//Set the screen so it appears in the middle
 		t = getToolkit();
 		screen = t.getScreenSize();
-		frame.setLocation(screen.width/2-frame.getWidth()/2,screen.height/2-frame.getHeight()/2);
+		dialog.setLocation(screen.width/2-dialog.getWidth()/2,screen.height/2-dialog.getHeight()/2);
 		
-		frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		//Causes user to have to select one fo the options of the menu
+		dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		
-		//Modify how the x close button works
-		frame.addWindowListener(new WindowAdapter() {
-			@Override
-			public void windowClosing(WindowEvent e) {
-				boolean checkChessboardVisible;
-				//Try to see if the board is open/visible
-				try {
-					checkChessboardVisible = ConsoleGraphics.frame.isShowing();
-				}
-				catch(NullPointerException ex) {
-					checkChessboardVisible = false;
-				}
-				//Check if the board is on screen or not
-				//If not then the user loaded from the start up screen
-				//If they click on the x, it should hide the load and then open up the start up menu
-				if(checkChessboardVisible == false) {
-					StartUpMenu startup = new StartUpMenu();
-					frame.dispose();
-				}
-				//They are loading from the board load button, just close out the load window
-				else {
-					frame.dispose();
-				}
-			}
-		});
-		
-		frame.setVisible(true);                    
+		dialog.setVisible(true);                    
 	}
 	
 	public static void main(String[] args) {
