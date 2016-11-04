@@ -7,6 +7,7 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 import static java.lang.Math.abs;
+import java.util.*;
 
 import chess.Stockfish;
 
@@ -50,6 +51,7 @@ public class BoardPanel extends JPanel {
 	private boolean pawnPromoted = false;
 	
 	protected static String resultsOfGame;
+	protected static LinkedList previousMoves;
 	
 	//Keep track of the last saved fen
 	//Used for testing loss of progress
@@ -61,7 +63,9 @@ public class BoardPanel extends JPanel {
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
-
+		
+		previousMoves = new LinkedList();
+		
 		//Check if fen has been found from file
 		//No fen was loaded from a file
 		if(LoadPanel.fen == "" || LoadPanel.fen == null) {
@@ -513,6 +517,15 @@ public class BoardPanel extends JPanel {
     					setPieces();
               // Switch whose turn it is
               LaboonChess.changeTurn();
+			  
+			  //Keep track of the last 6 moves
+			  if(previousMoves.size() < 6) {
+				previousMoves.add(move);
+			  }
+			  else {
+				previousMoves.add(move);
+				previousMoves.removeFirst();
+			  }
 			  
 			  //Display when testing win/loss/draw condition starts
 			  System.out.println("Starting tests for game results");
