@@ -43,12 +43,6 @@ public class GameResultsPanel extends JPanel {
 		//title.setPreferredSize(new Dimension(500, 300));
 		title.setFont(new Font("Arial", Font.BOLD, titleTextSize));
 		
-		//Indicates which color couldn't make any moves
-		char turn = LaboonChess.getTurn();
-		
-		//Indicates the color that the user selected to play as
-		char playercolor = LaboonChess.controller.playersColor;
-		
 		//Add Title image
 		//Set title as the result of the game
 		//Could do checks if party parrot theme is used to give different look
@@ -57,23 +51,16 @@ public class GameResultsPanel extends JPanel {
 			Image img = ImageIO.read(getClass().getResource("/GameResults.png"));
 			title.setIcon(new ImageIcon(img));
 		} catch (Exception ex) {
-			//If the user played as black and it was whites turn
-			//Indicates that white had no possible moves, therefore player wins
-			if(turn == 'w' && playercolor == 'b') {
+			//Play wins the game
+			if(BoardPanel.resultsOfGame.equals("win")) {
 				title.setText(winMessage);
 			}
-			//Ai had no possible moves, therefore player wins
-			else if(turn == 'b' && playercolor == 'w') {
-				title.setText(winMessage);
-			}
-			//Player has no possible moves, therefore they lost
-			else if(turn == 'b' && playercolor == 'b') {
+			//Player lost the game
+			else if(BoardPanel.resultsOfGame.equals("loss")) {
 				title.setText(lossMessage);
 			}
-			else if(turn == 'w' && playercolor == 'w') {
-				title.setText(lossMessage);
-			}
-			else {
+			//Game ended in a draw
+			else if(BoardPanel.resultsOfGame.equals("draw")) {
 				title.setText(drawMessage);
 			}
 		}
@@ -149,8 +136,8 @@ public class GameResultsPanel extends JPanel {
 				//Run the color selection for chess game
 				ChooseColor choice = new ChooseColor();
 				//Dispose of startup screen so it's not visible
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(newGame.getParent());
-				frame.dispose();
+				JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(newGame.getParent());
+				dialog.dispose();
 				
 				boolean checkChessboardVisible;
 				
@@ -179,8 +166,8 @@ public class GameResultsPanel extends JPanel {
 			// Placeholder for when we add functionality
 				LoadGame loadGame = new LoadGame();
 				//Dispose of startup screen so it's not visible
-				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(load.getParent());
-				frame.dispose();
+				JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(load.getParent());
+				dialog.dispose();
 				
 				boolean checkChessboardVisible;
 				
