@@ -1,5 +1,6 @@
 package chess;
 import static java.lang.Math.abs;
+import java.util.*;
 
 public class Rulebook {
 
@@ -744,6 +745,7 @@ public class Rulebook {
 				//If so then it's a draw
 				if(whitePieces.equals("N") || whitePieces.equals("B")) {
 					result = "draw";
+					System.out.println("Draw by Insufficient Pieces to Win or Lose");
 				}
 			}
 
@@ -753,6 +755,7 @@ public class Rulebook {
 				//If so then it's a draw
 				if(blackPieces.equals("n") || blackPieces.equals("b")) {
 					result = "draw";
+					System.out.println("Draw by Insufficient Pieces to Win or Lose");
 				}
 			}
 		}
@@ -763,19 +766,32 @@ public class Rulebook {
 	//TODO
 	//Test draw condition - Repetition of Position
 	//When a chess position is repeated three times, perpetual checking
-	//	Determine how strictly to enfore this
 	//This code could possibly be more efficient when we implement a history of the moves
 	//Because then we can just check the last three moves that each player made 
 	//and see if it satisfies the condition for drawing
 	
-	//Current implementation looks at the last 6 moves worth of fen strings
-	//If the fen strings for the last three white turns match and same goes for the
+	//Current implementation looks at the last 6 moves
+	//If the moves for the last three white turns match and same goes for the
 	//black turns then it's a draw by repetition
+	
+	//Currently previous moves aren't saved to the save file
+	//So if they are in the middle of the draw condition (i.e. last 2 moves from each player 
+	//were the same) then when the save file is reloaded the user will have to go through the 
+	//three repeated moves again (instead of just one from previously)
 	public String checkRepetition() {
 		String result = "noResult";
 		
+		LinkedList moves = BoardPanel.previousMoves;
 		
-		
+		if(moves.size() == 6) {
+			System.out.println("Last 6 moves: " + moves);
+			
+			//Check if all of the moves made by both players have been the same for the last three turns
+			if((moves.get(0).equals(moves.get(4))) && (moves.get(1).equals(moves.get(5)))) {
+				result = "draw";
+				System.out.println("Draw by Repetition of Position");
+			}
+		}
 		return result;
 	}
 	
@@ -791,6 +807,7 @@ public class Rulebook {
 		int check50MoveRule = Integer.parseInt(fenSections[4]);
 		if(check50MoveRule >= 50) {
 			result = "draw";
+			System.out.println("Draw by 50 Move Rule");
 		}
 	
 		//Test code to display number of moves with nothing being taken
