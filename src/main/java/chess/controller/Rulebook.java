@@ -651,18 +651,34 @@ public class Rulebook {
 		//Indicates the color that the user selected to play as
 		char playercolor = LaboonChess.controller.playersColor;
 		
-		//TODO
+		TestBoard testBoard = new TestBoard(my_storage, 0, 0, 0, 0);
+		
 		//Test if draw condition - stalemate, unable to move any pieces and king is not in check
-		
-		
-		//If it was the player's turn and they have no best possible move
-		//then they lost
-		if(turn == playercolor) {
-			result = "loss";
+		if(turn == 'w') {
+			//If it's white's turn, see if their king is in danger
+			boolean whiteKingDanger = kingDanger(testBoard.getWhiteKingX(), testBoard.getWhiteKingY(), 'K', testBoard);
+			if(whiteKingDanger == false) {
+				result = "draw";
+			}
 		}
-		//Else they won the game
 		else {
-			result = "win";
+			//If it's black's turn, see if their king is in danger
+			boolean blackKingDanger = kingDanger(testBoard.getBlackKingX(), testBoard.getBlackKingY(), 'k', testBoard);
+			if(blackKingDanger == false) {
+				result = "draw";
+			}
+		}
+
+		//If not a draw then it must be that someone won/loss
+		if(result.equals("noResult")) {
+			//If it was the player's turn and they have no best possible move then they lost
+			if(turn == playercolor) {
+				result = "loss";
+			}
+			//Else they won the game
+			else {
+				result = "win";
+			}
 		}
 	}
 	//There are still possible best moves
