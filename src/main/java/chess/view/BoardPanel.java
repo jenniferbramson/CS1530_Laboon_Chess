@@ -49,6 +49,8 @@ public class BoardPanel extends JPanel {
 
 	private boolean pawnPromoted = false;
 	
+	protected static String resultsOfGame;
+	
 	//Keep track of the last saved fen
 	//Used for testing loss of progress
 	protected static String lastSaveFen = "";		//Used to check if player made moves after load
@@ -511,8 +513,11 @@ public class BoardPanel extends JPanel {
     					setPieces();
               // Switch whose turn it is
               LaboonChess.changeTurn();
-			  boolean checkmate = my_rulebook.testCheckmate(fen);
-			  if(checkmate == true) {
+			  
+			  //Display when testing win/loss/draw condition starts
+			  System.out.println("Starting tests for game results");
+			  resultsOfGame = my_rulebook.testGameEnded(fen);
+			  if(!resultsOfGame.equals("noResult")) {
 				GameResults result = new GameResults();
 			  }
             } // end legality move check
