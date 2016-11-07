@@ -412,7 +412,7 @@ public class Rulebook {
     if (x -1 > -1 && y - 2 > -1)
       piecesThere[4] = test.getSpaceChar(x - 1, y - 2);
 
-    if (x -1 > -1 && y - 2 > -1)
+    if (x +1 < numCols && y - 2 > -1)
       piecesThere[5] = test.getSpaceChar(x + 1, y - 2);
 
     if (x -1 > -1 && y + 2 < numRows)
@@ -443,23 +443,35 @@ public class Rulebook {
     // Pawns can only move in one direction, depending on their color
     if (kingWhite) {
       // King is white, look for black pawn aka one above
-      pieceThere = test.getSpaceChar(x - 1, y - 1);
-      if (pieceThere == 'p') {
-        return true;
-      }
-      pieceThere = test.getSpaceChar(x + 1, y - 1);
-      if (pieceThere == 'p') {
-        return true;
+      if (y-1 > -1) {
+        if (x-1 > -1) {
+          pieceThere = test.getSpaceChar(x - 1, y - 1);
+          if (pieceThere == 'p') {
+            return true;
+          }
+        }
+        if (x+1 < 8) {
+          pieceThere = test.getSpaceChar(x + 1, y - 1);
+          if (pieceThere == 'p') {
+            return true;
+          }
+        }
       }
     } else {
       // King is black, look for white pawn below
-      pieceThere = test.getSpaceChar(x - 1, y + 1);
-      if (pieceThere == 'P') {
-        return true;
-      }
-      pieceThere = test.getSpaceChar(x + 1, y + 1);
-      if (pieceThere == 'P') {
-        return true;
+      if (y+1 < 8) {
+        if (x-1 > -1) {
+          pieceThere = test.getSpaceChar(x - 1, y + 1);
+          if (pieceThere == 'P') {
+            return true;
+          }
+        }
+        if (x+1 < 8) {
+          pieceThere = test.getSpaceChar(x + 1, y + 1);
+          if (pieceThere == 'P') {
+            return true;
+          }
+        }
       }
     }
 
@@ -524,6 +536,9 @@ public class Rulebook {
         // Bishop or queen there, king is being attacked
         if ( (pieceThereLower == 'b') || (pieceThereLower == 'q') ) {
           return 'a';
+        } else {
+          // The piece isn't the right type to attack
+          return 's';
         }
       } else {
         // Same color, so king must be safe
@@ -548,6 +563,9 @@ public class Rulebook {
         // Rook or queen in space, king is being attacked
         if ( (pieceThereLower == 'r') || (pieceThereLower == 'q') ) {
           return 'a';
+        } else {
+          // The piece isn't the right type to attack
+          return 's';
         }
       } else {
         // The same color, so the king must be safe

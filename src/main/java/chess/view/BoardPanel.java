@@ -319,7 +319,7 @@ public class BoardPanel extends JPanel {
 			addComponent(8-i,0,1,1,label);
 			}
 		}
-		
+
 		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
 
 
