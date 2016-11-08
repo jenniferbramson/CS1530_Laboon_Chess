@@ -131,10 +131,15 @@ public class TurnController {
     if (bestMove.charAt(4) != ' ') promotion = true;
       
     System.out.println("best move from stockfish " + bestMove);
+    // Play piece on stockfish internal board
     LaboonChess.stockfish.movePiece(bestMove, BoardPanel.my_storage.getFen());
+    // Get new fen
     String fen = LaboonChess.stockfish.getFen();
     System.out.println("New fen " + fen);
+    // update chessboard model
     BoardPanel.my_storage.setFen(fen);
+    
+    // translate move into board coordinates
     char old_x_board = bestMove.charAt(0);
     int old_x = (int)old_x_board - 97;
     int old_y = Integer.parseInt(bestMove.substring(1,2));
@@ -145,11 +150,13 @@ public class TurnController {
     y = 8 - y;
     
     Sleeper sleeper = new Sleeper();
+    // pause before takine stockfish turn
     if (wait) sleeper.doInBackground();
     
     Color o1 =  BoardPanel.checkers[old_y][old_x].getBackground();
     Color o2 = BoardPanel.checkers[y][x].getBackground();
     
+    // this isn't working yet
     BoardPanel.checkers[old_y][old_x].setBackground(BoardPanel.SEAGREEN);
     BoardPanel.checkers[y][x].setBackground(BoardPanel.SEAGREEN);
     // if(wait) sleeper.doInBackground();
@@ -159,6 +166,8 @@ public class TurnController {
   }
 
   
+  // This spawns a new thread to run in the background, which allows for waiting
+  // without freezing the GUI
   class Sleeper extends SwingWorker<String, Object> {
        @Override
        public String doInBackground() {
