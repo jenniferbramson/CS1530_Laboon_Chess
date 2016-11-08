@@ -15,6 +15,7 @@ public class TurnController {
   private ConsoleGraphics graphics;
   private boolean graphicsExist = false;
   boolean promotion = false;
+  char newPiece = ' ';
 
   public TurnController(char playersColor) {
     turn = 'w';
@@ -99,6 +100,7 @@ public class TurnController {
     return turn;
   }
 
+  // update storage with the best move from stockfish
    public void playMoveFromStockfish(int[] move){
 
     int old_y = move[0];
@@ -119,16 +121,30 @@ public class TurnController {
 		}
     
     BoardPanel.my_storage.movePiece(old_y, old_x, y, x);
+    /* Wait until storage has been update from startup branch to un-comment this
+    if (promotion){
+      
+      BoardPanel.my_storage.setPiece(y, x, newPiece)
+      promotion = false;
+      newPiece = ' ';
+    }*/
+    
     LaboonChess.stockfish.drawBoard();
     LaboonChess.changeTurn();
 
   }
   
-  public int[]  getMoveFromStockfish(boolean wait) {
-    
+  /** Ask stockfish process to return best move.
+   *
+   * @param wait - true if you want a 1-second delay before getting move, so that stockfish doesn't move too fast
+   */
+  public int[] getMoveFromStockfish(boolean wait) {
     
     String bestMove = LaboonChess.stockfish.getBestMove(BoardPanel.my_storage.getFen(), 1000);
-    if (bestMove.charAt(4) != ' ') promotion = true;
+    if (bestMove.charAt(4) != ' '){
+      promotion = true;
+      newPiece = bestMove.charAt(4);
+    }
       
     System.out.println("best move from stockfish " + bestMove);
     // Play piece on stockfish internal board
