@@ -113,14 +113,14 @@ public class ConsoleGraphics extends JFrame {
 
     frame.setVisible(true);                     // Do this last
 
-	 if (!(LaboonChess.getPlayersTurn()) & !board.firstTurnTaken){
-		board.playFirstTurnWithStockfish();
-	}
+  	 if (!(LaboonChess.getPlayersTurn()) & !board.firstTurnTaken){
+  		board.playFirstTurnWithStockfish();
+  	}
   }
 
 
   // method that builds the "player turn" button
-	// If there is an issue reading the image, creates a multi-line button. 
+	// If there is an issue reading the image, creates a multi-line button.
   private JButton playerTurnButton(String s) {
     JButton b = new JButton();
 		try{
@@ -221,7 +221,7 @@ public class ConsoleGraphics extends JFrame {
 	//function that colorizes the black side pieces
 	private void setBlackColor(String color){
 		if(color.equals("Red")){
-			board.setParty(false, false);			
+			board.setParty(false, false);
 			board.colorizeBlack(true, 150, 0, 0);
 		}
 		else if(color.equals("Orange")){
@@ -291,7 +291,7 @@ public class ConsoleGraphics extends JFrame {
 	
 	private void addComponentSet(){
 			if(!flipped){
-				addComponent(13,5,1,1, 0, 0, blackTurn);		
+				addComponent(13,5,1,1, 0, 0, blackTurn);
 				addComponent(13,6,1,1, 0, 0, blackColorLabel);
 				addComponent(13,7,1,1,0, 0, blackColorList);
 				addComponent(13,8,1,1,0,0, whiteColorLabel);
@@ -299,7 +299,7 @@ public class ConsoleGraphics extends JFrame {
 				addComponent(13,10,1,1,0, 0, whiteTurn);
 			}
 			else{
-				addComponent(13,5,1,1, 0, 0, whiteTurn);		
+				addComponent(13,5,1,1, 0, 0, whiteTurn);
 				addComponent(13,6,1,1, 0, 0, whiteColorLabel);
 				addComponent(13,7,1,1,0, 0, whiteColorList);
 				addComponent(13,8,1,1,0,0, blackColorLabel);

@@ -17,7 +17,7 @@ public class BoardPanel extends JPanel {
 	protected GridBagLayout gbl;
 	protected GridBagConstraints gbc;
   // These are buttons we will need to use listeners on
-  protected JButton[][] checkers;
+  protected static JButton[][] checkers;
 	// values for keeping track of when to send moves to controller
 	boolean second_click = false;
 	private String old_spot = "";
@@ -38,8 +38,8 @@ public class BoardPanel extends JPanel {
 	private int whiteG = 0;
 	private int whiteB = 0;
 	//COLORS
-	private final Color SEAGREEN = new Color(180,238,180);
-	private final Color DARKSEAGREEN = new Color(155,205,155);
+	public static final Color SEAGREEN = new Color(180,238,180);
+	public static final Color DARKSEAGREEN = new Color(155,205,155);
 	//for flipping the board
 	private boolean flipped = false;
 
@@ -492,12 +492,10 @@ public class BoardPanel extends JPanel {
     					//redraw
     					setPieces();
     					firstTurnTaken = true;
+    					
     					LaboonChess.changeTurn();
-              // Switch whose turn it is
-              // if (!(LaboonChess.getPlayersTurn())){
-              	  // LaboonChess.changeTurn();
-              	setPieces();
-              // }
+              setPieces();
+    					
 
               System.out.println("players turn " + LaboonChess.getPlayersTurn());
             } // end legality move check
@@ -545,6 +543,7 @@ public class BoardPanel extends JPanel {
 				}
       }
     };
+    
     return action;
   }
 
@@ -557,6 +556,8 @@ public class BoardPanel extends JPanel {
  	
 
   }
+  
+  
   	
 
 
