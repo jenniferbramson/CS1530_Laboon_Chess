@@ -459,9 +459,7 @@ public class BoardPanel extends JPanel {
             boolean legal = my_rulebook.checkMove(old_y, old_x, y, x);
             System.out.println(legal);
             if (legal) {
-							// Check to see if moving King or Rook
 							char oldPiece = my_storage.getSpaceChar(old_x, old_y);
-							boolean castle = false;
 							System.out.println(oldPiece);
 
 							System.out.println("Moving " + old_spot + " to " + current_spot);
