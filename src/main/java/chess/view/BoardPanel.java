@@ -487,8 +487,22 @@ public class BoardPanel extends JPanel {
 				//Get the piece that just moved
 				char piece = my_storage.getSpaceChar(x, y);
 				
-				//Check if pawn can be promoted
-				pawnPromoted = checkPromotion(y, piece);
+				//Get whose turn it is right now
+				char turn = LaboonChess.getTurn();
+				
+				//Indicates the color that the user selected to play as
+				char playercolor = LaboonChess.controller.playersColor;
+				
+				//Open up pawn promotion window if it's the user who initiates pawn promotion
+				//Don't need to open the panel for stockfish, more overhead and stockfish handles
+				//pawn promotion automatically
+				if(turn == playercolor) {
+					//Check if pawn can be promoted
+					pawnPromoted = checkPromotion(y, piece);
+				}
+				else {
+					pawnPromoted = false;
+				}
 				
 				// Play move on stockfish's internal board
 				System.out.println("Fen before move " + fen);
