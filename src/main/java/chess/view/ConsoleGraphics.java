@@ -102,6 +102,7 @@ public class ConsoleGraphics extends JFrame {
 		//frame.setSize(screen.width,screen.height);  // For maybe fitting game to screen later
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+    // Listen for the window closing and stop the stockfish process when it closes
     frame.addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
         LaboonChess.stockfish.stopEngine();
@@ -113,7 +114,7 @@ public class ConsoleGraphics extends JFrame {
 
     frame.setVisible(true);                     // Do this last
 
-  	 if (!(LaboonChess.getPlayersTurn()) & !board.firstTurnTaken){
+  	if (!(LaboonChess.getPlayersTurn()) & !board.firstTurnTaken){
   		board.playFirstTurnWithStockfish();
   	}
   }

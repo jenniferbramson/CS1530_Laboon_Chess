@@ -572,8 +572,5 @@ public class BoardPanel extends JPanel {
    	
   }
   
-  
-  	
-
 
 }//end of BoardPanel class

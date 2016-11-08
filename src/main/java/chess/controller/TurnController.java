@@ -14,6 +14,7 @@ public class TurnController {
   private char turn;
   private ConsoleGraphics graphics;
   private boolean graphicsExist = false;
+  boolean promotion = false;
 
   public TurnController(char playersColor) {
     turn = 'w';
@@ -127,6 +128,8 @@ public class TurnController {
     
     
     String bestMove = LaboonChess.stockfish.getBestMove(BoardPanel.my_storage.getFen(), 1000);
+    if (bestMove.charAt(4) != ' ') promotion = true;
+      
     System.out.println("best move from stockfish " + bestMove);
     LaboonChess.stockfish.movePiece(bestMove, BoardPanel.my_storage.getFen());
     String fen = LaboonChess.stockfish.getFen();
@@ -149,7 +152,7 @@ public class TurnController {
     
     BoardPanel.checkers[old_y][old_x].setBackground(BoardPanel.SEAGREEN);
     BoardPanel.checkers[y][x].setBackground(BoardPanel.SEAGREEN);
-    if(wait) sleeper.doInBackground();
+    // if(wait) sleeper.doInBackground();
     int [] move = {old_y, old_x, y, x};
     return move;
     
