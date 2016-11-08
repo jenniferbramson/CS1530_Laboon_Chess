@@ -7,9 +7,7 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 import static java.lang.Math.abs;
-import java.util.concurrent.TimeUnit;
 
-// import chess.Stockfish;
 
 public class BoardPanel extends JPanel {
 	protected static Storage my_storage;
@@ -52,6 +50,7 @@ public class BoardPanel extends JPanel {
 	private String defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 	public static boolean firstTurnTaken = false;
+	public static boolean moved = false;
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
@@ -108,6 +107,10 @@ public class BoardPanel extends JPanel {
         checkers[i][j] = b;
       }
     }
+    
+    
+   
+    
 		setPieces();				//call method to SET the pieces as what they should be
 		drawBoard();			//call the method to draw the newly set pieces to the board
 
@@ -463,6 +466,8 @@ public class BoardPanel extends JPanel {
 							System.out.println(oldPiece);
 
 							System.out.println("Moving " + old_spot + " to " + current_spot);
+							moved = true;
+							
 							if ( (old_x+old_y) % 2== 0) {
 								checkers[old_y][old_x].setBackground(Color.WHITE);
 							} else {
@@ -493,8 +498,8 @@ public class BoardPanel extends JPanel {
     					setPieces();
     					firstTurnTaken = true;
     					
-    					LaboonChess.changeTurn();
-              setPieces();
+    				// 	LaboonChess.changeTurn();
+        //       setPieces();
     					
 
               System.out.println("players turn " + LaboonChess.getPlayersTurn());
@@ -541,6 +546,20 @@ public class BoardPanel extends JPanel {
 				if(x==0 && y==0){
 					System.out.println(my_storage.getFen());
 				}
+				SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            if (moved){
+              int[] move = LaboonChess.controller.getMoveFromStockfish(true);
+              setPieces();
+              LaboonChess.controller.playMoveFromStockfish(move);
+              LaboonChess.changeTurn();
+              
+              setPieces();
+              moved = false;
+            }
+            
+          }
+        });
       }
     };
     
