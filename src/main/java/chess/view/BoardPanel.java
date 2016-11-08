@@ -108,18 +108,14 @@ public class BoardPanel extends JPanel {
       }
     }
     
-    
-   
-    
 		setPieces();				//call method to SET the pieces as what they should be
 		drawBoard();			//call the method to draw the newly set pieces to the board
-
 
   }
 
 	/*-----------------------------------------------------------------------------------*/
 
-	public void setPieces(){
+	protected void setPieces(){
 		//Added to try and draw letters
 		for(int i=0; i<8;i++){
 			for(int j=0; j<8;j++){
@@ -497,10 +493,6 @@ public class BoardPanel extends JPanel {
     					//redraw
     					setPieces();
     					firstTurnTaken = true;
-    					
-    				// 	LaboonChess.changeTurn();
-        //       setPieces();
-    					
 
               System.out.println("players turn " + LaboonChess.getPlayersTurn());
             } // end legality move check
@@ -546,34 +538,38 @@ public class BoardPanel extends JPanel {
 				if(x==0 && y==0){
 					System.out.println(my_storage.getFen());
 				}
+				
+				/* Causes run() to be executed asynchronously on the AWT event dispatching thread. This will happen after all pending AWT events have been processed. */
 				SwingUtilities.invokeLater(new Runnable() {
           public void run() {
+            // Only do something if the player has moved
             if (moved){
               int[] move = LaboonChess.controller.getMoveFromStockfish(true);
               setPieces();
               LaboonChess.controller.playMoveFromStockfish(move);
               LaboonChess.changeTurn();
-              
               setPieces();
               moved = false;
             }
             
           }
         });
+        // end invokeLater
       }
     };
     
     return action;
   }
+  
+  /* If the user starts a new game and chooses to play as black, first stockfish will take its turn.*/
 
   public void playFirstTurnWithStockfish(){
 	
-	LaboonChess.firstStockfishTurn();
-	LaboonChess.setPlayersTurn(true);
-	firstTurnTaken = true;
-	setPieces();
- 	
-
+  	LaboonChess.firstStockfishTurn();
+  	LaboonChess.setPlayersTurn(true);
+  	firstTurnTaken = true;
+  	setPieces();
+   	
   }
   
   
