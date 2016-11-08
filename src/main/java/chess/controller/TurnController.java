@@ -39,6 +39,7 @@ public class TurnController {
     }
   }
 
+
   // Graphics must contain setBlack() and setWhite() methods.
   public void addGraphicalTurn(ConsoleGraphics graphics) {
     this.graphics = graphics;
@@ -52,6 +53,10 @@ public class TurnController {
 
   public boolean getPlayersTurn() {
     return playersTurn;
+  }
+
+  public void setPlayersTurn(boolean value){
+    playersTurn = value;
   }
 
   public char getPlayersColor() {
@@ -72,15 +77,44 @@ public class TurnController {
     }
 
     if (playersTurn) {
-      //playersTurn = false;  // Comment this out and start as white to test black/white
+      playersTurn = false;  // Comment this out and start as white to test black/white
+      playMoveFromStockfish();
+
                             // turn switching
     } else {
       playersTurn = true;
     }
   }
 
+  public void firstStockfishTurn(){
+    playMoveFromStockfish();
+  }
+
   public char getTurn() {
     return turn;
+  }
+
+   public void playMoveFromStockfish(){
+
+
+    String bestMove = LaboonChess.stockfish.getBestMove(BoardPanel.my_storage.getFen(), 1000);
+    System.out.println("best mvoe from stockfish " + bestMove);
+    LaboonChess.stockfish.movePiece(bestMove, BoardPanel.my_storage.getFen());
+    String fen = LaboonChess.stockfish.getFen();
+    System.out.println("New fen " + fen);
+    BoardPanel.my_storage.setFen(fen);
+    char old_x_board = bestMove.charAt(0);
+    int old_x = (int)old_x_board - 97;
+    int old_y = Integer.parseInt(bestMove.substring(1,2));
+    old_y = 8-old_y;
+    char x_board = bestMove.charAt(2);
+    int x = (int) x_board - 97;
+    int y = Integer.parseInt(bestMove.substring(3,4));
+    y = 8 - y;
+    BoardPanel.my_storage.movePiece(old_y, old_x, y, x);
+    LaboonChess.stockfish.drawBoard();
+    LaboonChess.changeTurn();
+
   }
 
 }

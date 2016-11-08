@@ -109,9 +109,8 @@ public class ChooseColorPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 
 				//Run the chessboard
+				LaboonChess.controller = new TurnController('w');
 				ConsoleGraphics chessboard = new ConsoleGraphics();
-
-				LaboonChess.controller = new TurnController('w');   // Player chose white
 				LaboonChess.controller.addGraphicalTurn(chessboard);
 
 				//Dispose color choice frame after user picks color
@@ -126,9 +125,8 @@ public class ChooseColorPanel extends JPanel {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 
+				LaboonChess.controller = new TurnController('b');
 				ConsoleGraphics chessboard = new ConsoleGraphics();
-
-				LaboonChess.controller = new TurnController('b');		// Player chose black
 				LaboonChess.controller.addGraphicalTurn(chessboard);
 
 				//Dispose color choice frame after user picks color
