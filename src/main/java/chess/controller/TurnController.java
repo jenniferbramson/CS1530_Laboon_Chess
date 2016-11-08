@@ -1,5 +1,8 @@
 package chess;
 
+import java.util.concurrent.TimeUnit;
+import javax.swing.SwingWorker;
+
 // Tells whose turn it is. Must call changeTurn() after each turn is made.
 // Tells if it is white or black's turn and if it is the player's or the
 // computer's turn.
@@ -79,6 +82,7 @@ public class TurnController {
     if (playersTurn) {
       playersTurn = false;  // Comment this out and start as white to test black/white
       playMoveFromStockfish();
+      // playersTurn = true;
 
                             // turn switching
     } else {
@@ -98,7 +102,7 @@ public class TurnController {
 
 
     String bestMove = LaboonChess.stockfish.getBestMove(BoardPanel.my_storage.getFen(), 1000);
-    System.out.println("best mvoe from stockfish " + bestMove);
+    System.out.println("best move from stockfish " + bestMove);
     LaboonChess.stockfish.movePiece(bestMove, BoardPanel.my_storage.getFen());
     String fen = LaboonChess.stockfish.getFen();
     System.out.println("New fen " + fen);
@@ -111,10 +115,34 @@ public class TurnController {
     int x = (int) x_board - 97;
     int y = Integer.parseInt(bestMove.substring(3,4));
     y = 8 - y;
+    
+    Sleeper sleeper = new Sleeper();
+    sleeper.doInBackground();
+    
+    BoardPanel.checkers[old_y][old_x].setBackground(BoardPanel.SEAGREEN);
+    // sleeper.doInBackground();
+    BoardPanel.checkers[y][x].setBackground(BoardPanel.SEAGREEN);
+    // sleeper.doInBackground();
     BoardPanel.my_storage.movePiece(old_y, old_x, y, x);
     LaboonChess.stockfish.drawBoard();
-    LaboonChess.changeTurn();
+    // LaboonChess.changeTurn();
 
+  }
+  
+  class Sleeper extends SwingWorker<String, Object> {
+       @Override
+       public String doInBackground() {
+         try{
+           TimeUnit.SECONDS.sleep(2);
+           System.out.println("waited");
+         }
+          catch (Exception e) {
+            System.out.println("failed to wait");
+          }
+          return "complete";
+       }
   }
 
 }
+
+
