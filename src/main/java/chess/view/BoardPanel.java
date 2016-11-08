@@ -8,8 +8,9 @@ import java.io.*;
 import javax.imageio.*;
 import static java.lang.Math.abs;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
-import chess.Stockfish;
+// import chess.Stockfish;
 
 public class BoardPanel extends JPanel {
 	protected static Storage my_storage;
@@ -60,6 +61,7 @@ public class BoardPanel extends JPanel {
 
 	private String defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
+	public static boolean firstTurnTaken = false;
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
@@ -98,9 +100,10 @@ public class BoardPanel extends JPanel {
     Insets margins = new Insets(0, 0, 0, 0);  // For setting button margins
 
     // Initialize squares
+    JButton b = new JButton("");
     for (int i = 0; i < 8; i++) {
       for (int j = 0; j < 8; j++) {
-        JButton b = new JButton("");
+        b = new JButton("");
 				b.setPreferredSize(new Dimension(64, 64));					//set preferred size to 64px by 64px
         b.setMargin(margins);       // Make the button have no margins
         b.setOpaque(true);          // Necessary to see the colors (otherwise white)
@@ -119,6 +122,8 @@ public class BoardPanel extends JPanel {
     }
 		setPieces();				//call method to SET the pieces as what they should be
 		drawBoard();			//call the method to draw the newly set pieces to the board
+
+
   }
 
 	/*-----------------------------------------------------------------------------------*/
@@ -303,6 +308,7 @@ public class BoardPanel extends JPanel {
 	/*--------------------------------------------------------------------------------------------------------*/
 	//draws the labels and pieces on the board
 	public void drawBoard(){
+
 		// Create Labels for a through h for the first rows
 		addComponent(0,0,1,1,new JLabel(""));  // Corners are empty
 		if(!flipped){
@@ -375,6 +381,9 @@ public class BoardPanel extends JPanel {
 			}
 		}
 		addComponent(9,9,1,1,new JLabel(""));
+
+		// If computer goes first, it will play now
+	
 	}
 
 	//completely wipes the board
@@ -432,7 +441,7 @@ public class BoardPanel extends JPanel {
   private ActionListener getSquareAction() {
     ActionListener action = new ActionListener() {
       public void actionPerformed(ActionEvent e) {
-        // Placeholder for when we add functionality
+
 				int x=0, y=0;
 				for(int i=0; i<8; i++){
 					for(int j=0; j<8; j++){
@@ -519,18 +528,21 @@ public class BoardPanel extends JPanel {
 				}
 				
 				System.out.println("move is " + move);
-				ConsoleGraphics.stockfish.movePiece(move, my_storage.getFen());
-              fen = ConsoleGraphics.stockfish.getFen();
+				LaboonChess.stockfish.movePiece(move, my_storage.getFen());
+              fen = LaboonChess.stockfish.getFen();
               System.out.println("New fen " + fen);
-              ConsoleGraphics.stockfish.drawBoard();
+              LaboonChess.stockfish.drawBoard();
 
 	            //update storage fen with new fen pulled from stockfish output
 	            my_storage.setFen(fen);
 
-    					//redraw
-    					setPieces();
-              // Switch whose turn it is
-              LaboonChess.changeTurn();
+			  //redraw
+			  setPieces();
+			  firstTurnTaken = true;
+			  // Switch whose turn it is
+			  LaboonChess.changeTurn();
+			  
+			  System.out.println("players turn " + LaboonChess.getPlayersTurn());
 			  
 			  //Keep track of the last 6 moves
 			  if(previousMoves.size() < 6) {
@@ -582,8 +594,8 @@ public class BoardPanel extends JPanel {
             } else {
               // Invalid color piece clicked or empty, so ignore
             } // end if (validColor)
-          } // end if (playersTurn())
 
+          } // end if (playersTurn())
 				} // end ActionListener
 
 				//for testing ONLY
@@ -617,5 +629,17 @@ public class BoardPanel extends JPanel {
 		
 		return promoted;
 	}
+
+  public void playFirstTurnWithStockfish(){
+	
+	LaboonChess.firstStockfishTurn();
+	LaboonChess.setPlayersTurn(true);
+	firstTurnTaken = true;
+	setPieces();
+ 	
+
+  }
+  	
+
 
 }//end of BoardPanel class

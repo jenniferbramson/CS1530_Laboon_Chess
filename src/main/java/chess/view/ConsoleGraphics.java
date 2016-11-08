@@ -4,6 +4,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 import javax.imageio.*;
+import java.util.concurrent.TimeUnit;
 
 public class ConsoleGraphics extends JFrame {
 
@@ -31,16 +32,9 @@ public class ConsoleGraphics extends JFrame {
 	
 	
 	
-	
-	
-  // The stockfish process will be used as the NPC and also to generate fen strings
-  protected static final Stockfish stockfish = new Stockfish();
 
   // Puts all the components together to create the screen
   public ConsoleGraphics() {
-
-    // Start stockfish process
-    stockfish.startEngine();
 
     frame = new JFrame("Laboon Chess");
     content = frame.getContentPane();   // Get reference to content pane
@@ -110,12 +104,18 @@ public class ConsoleGraphics extends JFrame {
 
     frame.addWindowListener(new WindowAdapter() {
       public void windowClosing(WindowEvent e) {
-        stockfish.stopEngine();
+        LaboonChess.stockfish.stopEngine();
       }
     });
 
+   
+
 
     frame.setVisible(true);                     // Do this last
+
+	 if (!(LaboonChess.getPlayersTurn()) & !board.firstTurnTaken){
+		board.playFirstTurnWithStockfish();
+	}
   }
 
 
@@ -321,5 +321,7 @@ public class ConsoleGraphics extends JFrame {
   public static void main(String[] args) {
     ConsoleGraphics chessBoard = new ConsoleGraphics();
   }
+
+  
 
 }

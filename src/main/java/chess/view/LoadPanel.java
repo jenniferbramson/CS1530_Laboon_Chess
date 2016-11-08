@@ -74,8 +74,8 @@ public class LoadPanel extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy = 0;
 
-		gbc.gridwidth = centerPrompt;           
-		gbc.ipady = 15;		
+		gbc.gridwidth = centerPrompt;
+		gbc.ipady = 15;
 
 		this.add(prompt, gbc);
 		
@@ -93,11 +93,11 @@ public class LoadPanel extends JPanel {
 			loadGame.setPreferredSize(new Dimension(loadGameWidth,loadGameHeight));
 			loadGame.addActionListener(loadChessGame());
 			
-			gbc.ipadx = 25;	
+			gbc.ipadx = 25;
 			
 			gbc.gridx = colNumber;
 			gbc.gridy = rowNumber;
-			gbc.gridwidth = 1;  		
+			gbc.gridwidth = 1;
 			this.add(loadGame, gbc);
 			
 			//If button hasn't filled up the row add another one
@@ -155,7 +155,7 @@ public class LoadPanel extends JPanel {
 
 					if(currFen.equals(prevSaveFen) == false) {
 						System.out.println("Fen strings are not equal! Prompt for save!");
-						setUpPrompt(); 
+						setUpPrompt();
 					}
 					else {
 						System.out.println("Loading file: " + fileNamePath);
@@ -211,7 +211,7 @@ public class LoadPanel extends JPanel {
 			// Last line in file stores what color the player is
 			playersColor = fileContents.get(fileContents.size() - 1).charAt(0);
 			System.out.println("Players color is: " + playersColor);
-			
+
 			//Test the file to see if it's valid
 			boolean testResult = testFile();
 			System.out.println("Test results: " + testResult);
@@ -230,11 +230,12 @@ public class LoadPanel extends JPanel {
 					//Might just call drawpieces on the current board with new fen
 					ConsoleGraphics.frame.dispose();
 				}
+
+				LaboonChess.controller = new TurnController(currentColor, playersColor);
 				
 				//Load chessboard
-				ConsoleGraphics chessboard = new ConsoleGraphics();			
+				ConsoleGraphics chessboard = new ConsoleGraphics();
 				
-				LaboonChess.controller = new TurnController(currentColor, playersColor);
 				LaboonChess.controller.addGraphicalTurn(chessboard);
 				
 				//Make load frame not visible after user clicks load game
@@ -245,10 +246,10 @@ public class LoadPanel extends JPanel {
 				//Last saved fen as the new fen that was just loaded
 				BoardPanel.lastSaveFen = fen;
 			}
-			
 		} catch (Exception eee) {
 			System.out.print("Exception: ");
 			System.out.println(eee.getMessage());
+			//eee.printStackTrace();
 		}
 	}
 
@@ -301,7 +302,7 @@ public class LoadPanel extends JPanel {
 	//If user clicks the no button, then it confirms that the user wants to save the current game
 	private ActionListener confirmSave() {
 		ActionListener action = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {				
+			public void actionPerformed(ActionEvent e) {
 				//Open save file panel, let user save the game
 				SaveGame saveGame = new SaveGame();
 
@@ -339,13 +340,13 @@ public class LoadPanel extends JPanel {
 			
 			listOfAllSaveFiles = new ArrayList<String>();
 			
-			//Check all files 
+			//Check all files
 			for(File f : listOfFiles) {
 				//Check if file is a folder
 				if(f.isFile()) {
 					String saveFileName = f.getName();
 					
-					//Display all files 
+					//Display all files
 					//System.out.println(saveFileName);
 					
 					//Check the extension to make sure it's a text file
