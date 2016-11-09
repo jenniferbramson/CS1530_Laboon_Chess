@@ -107,7 +107,7 @@ public class BoardPanel extends JPanel {
         checkers[i][j] = b;
       }
     }
-    
+
 		setPieces();				//call method to SET the pieces as what they should be
 		drawBoard();			//call the method to draw the newly set pieces to the board
 
@@ -371,7 +371,7 @@ public class BoardPanel extends JPanel {
 		addComponent(9,9,1,1,new JLabel(""));
 
 		// If computer goes first, it will play now
-	
+
 	}
 
 	//completely wipes the board
@@ -463,7 +463,7 @@ public class BoardPanel extends JPanel {
 
 							System.out.println("Moving " + old_spot + " to " + current_spot);
 							moved = true;
-							
+
 							if ( (old_x+old_y) % 2== 0) {
 								checkers[old_y][old_x].setBackground(Color.WHITE);
 							} else {
@@ -479,6 +479,7 @@ public class BoardPanel extends JPanel {
 	            my_storage.movePiece(old_y, old_x, y, x);
 
 							// Play move on stockfish's internal board
+							// TODO: Check if this is a pawn promotion move and if so, append char for piece to move string
 							System.out.println("Fen before move " + fen);
 							String move = old_spot + current_spot;
 							System.out.println("move is " + move);
@@ -538,7 +539,7 @@ public class BoardPanel extends JPanel {
 				if(x==0 && y==0){
 					System.out.println(my_storage.getFen());
 				}
-				
+
 				/* Causes run() to be executed asynchronously on the AWT event dispatching thread. This will happen after all pending AWT events have been processed. */
 				SwingUtilities.invokeLater(new Runnable() {
           public void run() {
@@ -551,26 +552,26 @@ public class BoardPanel extends JPanel {
               setPieces();
               moved = false;
             }
-            
+
           }
         });
         // end invokeLater
       }
     };
-    
+
     return action;
   }
-  
+
   /* If the user starts a new game and chooses to play as black, first stockfish will take its turn.*/
 
   public void playFirstTurnWithStockfish(){
-	
+
   	LaboonChess.firstStockfishTurn();
   	LaboonChess.setPlayersTurn(true);
   	firstTurnTaken = true;
   	setPieces();
-   	
+
   }
-  
+
 
 }//end of BoardPanel class
