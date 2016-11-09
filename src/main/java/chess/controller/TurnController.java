@@ -107,45 +107,45 @@ public class TurnController {
     int old_x = move[1];
     int y = move[2];
     int x = move[3];
-    
+
   	if ( (old_x+old_y) % 2== 0) {
 			BoardPanel.checkers[old_y][old_x].setBackground(Color.WHITE);
 		} else {
 			BoardPanel.checkers[old_y][old_x].setBackground(Color.GRAY);
 		}
-		
+
 		if ( (x+y) % 2== 0) {
 			BoardPanel.checkers[y][x].setBackground(Color.WHITE);
 		} else {
 			BoardPanel.checkers[y][x].setBackground(Color.GRAY);
 		}
-    
+
     BoardPanel.my_storage.movePiece(old_y, old_x, y, x);
-    /* Wait until storage has been update from startup branch to un-comment this
     if (promotion){
-      
-      BoardPanel.my_storage.setPiece(y, x, newPiece)
+      // Set pawn to be new piece
+      BoardPanel.my_storage.setSpace(y, x, newPiece);
+      // Reset
       promotion = false;
       newPiece = ' ';
-    }*/
-    
+    }
+
     LaboonChess.stockfish.drawBoard();
     LaboonChess.changeTurn();
 
   }
-  
+
   /** Ask stockfish process to return best move.
    *
    * @param wait - true if you want a 1-second delay before getting move, so that stockfish doesn't move too fast
    */
   public int[] getMoveFromStockfish(boolean wait) {
-    
+
     String bestMove = LaboonChess.stockfish.getBestMove(BoardPanel.my_storage.getFen(), 1000);
     if (bestMove.charAt(4) != ' '){
       promotion = true;
       newPiece = bestMove.charAt(4);
     }
-      
+
     System.out.println("best move from stockfish " + bestMove);
     // Play piece on stockfish internal board
     LaboonChess.stockfish.movePiece(bestMove, BoardPanel.my_storage.getFen());
@@ -154,7 +154,7 @@ public class TurnController {
     System.out.println("New fen " + fen);
     // update chessboard model
     BoardPanel.my_storage.setFen(fen);
-    
+
     // translate move into board coordinates
     char old_x_board = bestMove.charAt(0);
     int old_x = (int)old_x_board - 97;
@@ -164,24 +164,24 @@ public class TurnController {
     int x = (int) x_board - 97;
     int y = Integer.parseInt(bestMove.substring(3,4));
     y = 8 - y;
-    
+
     Sleeper sleeper = new Sleeper();
     // pause before takine stockfish turn
     if (wait) sleeper.doInBackground();
-    
+
     Color o1 =  BoardPanel.checkers[old_y][old_x].getBackground();
     Color o2 = BoardPanel.checkers[y][x].getBackground();
-    
+
     // this isn't working yet
     BoardPanel.checkers[old_y][old_x].setBackground(BoardPanel.SEAGREEN);
     BoardPanel.checkers[y][x].setBackground(BoardPanel.SEAGREEN);
     // if(wait) sleeper.doInBackground();
     int [] move = {old_y, old_x, y, x};
     return move;
-    
+
   }
 
-  
+
   // This spawns a new thread to run in the background, which allows for waiting
   // without freezing the GUI
   class Sleeper extends SwingWorker<String, Object> {
@@ -199,5 +199,3 @@ public class TurnController {
   }
 
 }
-
-

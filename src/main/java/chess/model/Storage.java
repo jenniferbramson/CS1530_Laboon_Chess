@@ -148,6 +148,12 @@ public class Storage {
 		return board[x][y];
 	}
 
+	//Set the intended spot on the board with a different piece
+	public void setSpace(int x, int y, char piece) {
+		board[x][y] = piece;
+	}
+
+
 	// Assumes you are attempting a valid move, i.e. by using Rulebook to check
 	// that the move was valid
 	public void movePiece(int y_1, int x_1, int y_2, int x_2){
