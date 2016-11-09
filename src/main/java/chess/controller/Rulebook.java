@@ -677,6 +677,7 @@ public class Rulebook {
 			boolean whiteKingDanger = kingDanger(testBoard.getWhiteKingX(), testBoard.getWhiteKingY(), 'K', testBoard);
 			if(whiteKingDanger == false) {
 				result = "draw";
+				System.out.println("Draw by stalemate on white's turn");
 			}
 		}
 		else {
@@ -684,6 +685,7 @@ public class Rulebook {
 			boolean blackKingDanger = kingDanger(testBoard.getBlackKingX(), testBoard.getBlackKingY(), 'k', testBoard);
 			if(blackKingDanger == false) {
 				result = "draw";
+				System.out.println("Draw by stalemate on black's turn");
 			}
 		}
 
