@@ -3,6 +3,7 @@ package chess;
 import java.util.concurrent.TimeUnit;
 import javax.swing.SwingWorker;
 import java.awt.Color;
+import java.util.*;
 
 // Tells whose turn it is. Must call changeTurn() after each turn is made.
 // Tells if it is white or black's turn and if it is the player's or the
@@ -14,14 +15,11 @@ public class TurnController {
   private char turn;
   private ConsoleGraphics graphics;
   private boolean graphicsExist = false;
-<<<<<<< HEAD
   boolean promotion = false;
   char newPiece = ' ';
-=======
   protected static String resultsOfGame = "noResult";
 
   int moveRule50Counter = 0;
->>>>>>> 3b1e44647af9e8b1649dbaf315df67054267a411
 
   public TurnController(char playersColor) {
     turn = 'w';
@@ -134,42 +132,50 @@ public class TurnController {
 
    public void playMoveFromStockfish(int[] move){
 
-    int old_y = move[0];
-    int old_x = move[1];
-    int y = move[2];
-    int x = move[3];
 
-  	if ( (old_x+old_y) % 2== 0) {
-			BoardPanel.checkers[old_y][old_x].setBackground(Color.WHITE);
-		} else {
-			BoardPanel.checkers[old_y][old_x].setBackground(Color.GRAY);
-		}
+     if (move != null){
 
-		if ( (x+y) % 2== 0) {
-			BoardPanel.checkers[y][x].setBackground(Color.WHITE);
-		} else {
-			BoardPanel.checkers[y][x].setBackground(Color.GRAY);
-		}
+       int old_y = move[0];
+       int old_x = move[1];
+       int y = move[2];
+       int x = move[3];
 
-    BoardPanel.my_storage.movePiece(old_y, old_x, y, x);
-    if (promotion){
-      // Set pawn to be new piece
-      BoardPanel.my_storage.setSpace(y, x, newPiece);
-      // Reset
-      promotion = false;
-      newPiece = ' ';
-    }
+       if ( (old_x+old_y) % 2== 0) {
+         BoardPanel.checkers[old_y][old_x].setBackground(Color.WHITE);
+       } else {
+         BoardPanel.checkers[old_y][old_x].setBackground(Color.GRAY);
+       }
 
-    LaboonChess.stockfish.drawBoard();
+       if ( (x+y) % 2== 0) {
+         BoardPanel.checkers[y][x].setBackground(Color.WHITE);
+       } else {
+         BoardPanel.checkers[y][x].setBackground(Color.GRAY);
+       }
 
-    //Display when testing win/loss/draw condition starts
-    System.out.println("Starting tests for game results in playMoveFromStockfish");
-    resultsOfGame = BoardPanel.my_rulebook.testGameEnded(fen);
-    if(!resultsOfGame.equals("noResult")) {
-      GameResults result = new GameResults();
-    }
+       BoardPanel.my_storage.movePiece(old_y, old_x, y, x);
+       if (promotion){
+         // Set pawn to be new piece
+         BoardPanel.my_storage.setSpace(y, x, newPiece);
+         // Reset
+         promotion = false;
+         newPiece = ' ';
+       }
 
-    LaboonChess.changeTurn();
+       LaboonChess.stockfish.drawBoard();
+       LaboonChess.changeTurn();
+     }
+
+     else {
+       //Display when testing win/loss/draw condition starts
+       System.out.println("Starting tests for game results in playMoveFromStockfish");
+       resultsOfGame = BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
+       if(!resultsOfGame.equals("noResult")) {
+         GameResults result = new GameResults();
+       }
+     }
+
+
+
 
   }
 
@@ -183,12 +189,26 @@ public class TurnController {
   	int countPiecesAfter = 0;
 
     String bestMove = LaboonChess.stockfish.getBestMove(BoardPanel.my_storage.getFen(), 1000);
-    if (bestMove.charAt(4) != ' '){
+
+    if (bestMove.equals("(none")) return null;
+
+    char promotionPiece = bestMove.charAt(4);
+    char[] pieces = {'r', 'n', 'b', 'q', 'k', 'p', 'R', 'N', 'B', 'Q', 'K', 'P'};
+    Arrays.sort(pieces);
+    int index = Arrays.binarySearch(pieces, promotionPiece);
+
+
+
+    if (index > -1){
       promotion = true;
       newPiece = bestMove.charAt(4);
+      System.out.println("Will promote stockfish piece to " + newPiece);
     }
 
     System.out.println("best move from stockfish " + bestMove);
+
+    // no best move
+
     // Play piece on stockfish internal board
     LaboonChess.stockfish.movePiece(bestMove, BoardPanel.my_storage.getFen());
     // Get new fen

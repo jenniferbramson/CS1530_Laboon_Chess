@@ -7,11 +7,8 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 import static java.lang.Math.abs;
-<<<<<<< HEAD
-=======
 import java.util.*;
-import java.util.concurrent.TimeUnit;
->>>>>>> 3b1e44647af9e8b1649dbaf315df67054267a411
+
 
 
 public class BoardPanel extends JPanel {
@@ -132,12 +129,8 @@ public class BoardPanel extends JPanel {
   }
 
 	/*-----------------------------------------------------------------------------------*/
-<<<<<<< HEAD
 
 	protected void setPieces(){
-=======
-	public void setPieces(){
->>>>>>> 3b1e44647af9e8b1649dbaf315df67054267a411
 		//Added to try and draw letters
 		for(int i=0; i<8;i++){
 			for(int j=0; j<8;j++){
@@ -501,6 +494,7 @@ public class BoardPanel extends JPanel {
 							System.out.println("New spot: " + x + " " + y);
 							my_storage.movePiece(old_y, old_x, y, x);
 
+
 							lastMovePiecePositionY = x;
 							lastMovePiecePositionX = y;
 
@@ -551,6 +545,7 @@ public class BoardPanel extends JPanel {
   					//redraw
     					setPieces();
     					firstTurnTaken = true;
+							moved = true;
 
               System.out.println("players turn " + LaboonChess.getPlayersTurn());
 

@@ -146,11 +146,6 @@ public class Storage {
 	public char getSpace(int x, int y, boolean filler){
 		return board[x][y];
 	}
-	
-	//Set the intended spot on the board with a different piece
-	public void setSpace(int x, int y, char piece) {
-		board[x][y] = piece;
-	}
 
 	//Set the intended spot on the board with a different piece
 	public void setSpace(int x, int y, char piece) {
