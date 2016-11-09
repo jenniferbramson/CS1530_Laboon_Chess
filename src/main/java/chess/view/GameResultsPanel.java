@@ -6,9 +6,6 @@ import java.io.*;
 import javax.imageio.*;
 
 public class GameResultsPanel extends JPanel {
-	//TODO - Add draw conditions
-	//	Decide on layout and functionality
-	
 	private JButton newGame;
 	private JButton load;
 	private JButton exit;
@@ -51,18 +48,21 @@ public class GameResultsPanel extends JPanel {
 			Image img = ImageIO.read(getClass().getResource("/GameResults.png"));
 			title.setIcon(new ImageIcon(img));
 		} catch (Exception ex) {
-			//Play wins the game
-			if(BoardPanel.resultsOfGame.equals("win")) {
+			String resultsOfGame = TurnController.resultsOfGame;
+			//Player wins the game
+			if(resultsOfGame.equals("win")) {
 				title.setText(winMessage);
 			}
 			//Player lost the game
-			else if(BoardPanel.resultsOfGame.equals("loss")) {
+			else if(resultsOfGame.equals("loss")) {
 				title.setText(lossMessage);
 			}
 			//Game ended in a draw
-			else if(BoardPanel.resultsOfGame.equals("draw")) {
+			else if(resultsOfGame.equals("draw")) {
 				title.setText(drawMessage);
 			}
+			//Set results back to the default value
+			TurnController.resultsOfGame = "noResult";
 		}
 		
 		title.addActionListener(getFeature());
