@@ -132,7 +132,6 @@ public class TurnController {
 
    public void playMoveFromStockfish(int[] move){
 
-
      if (move != null){
 
        int old_y = move[0];
@@ -167,11 +166,19 @@ public class TurnController {
 
      else {
        //Display when testing win/loss/draw condition starts
+       System.out.println("No best move");
+       playersTurn = false;
+       if (turn == 'w')
+         turn = 'b';
+      else
+        turn='w';
+      System.out.println("turn " + turn);
        System.out.println("Starting tests for game results in playMoveFromStockfish");
        resultsOfGame = BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
        if(!resultsOfGame.equals("noResult")) {
          GameResults result = new GameResults();
        }
+
      }
 
 
@@ -197,8 +204,6 @@ public class TurnController {
     Arrays.sort(pieces);
     int index = Arrays.binarySearch(pieces, promotionPiece);
 
-
-
     if (index > -1){
       promotion = true;
       newPiece = bestMove.charAt(4);
@@ -207,7 +212,6 @@ public class TurnController {
 
     System.out.println("best move from stockfish " + bestMove);
 
-    // no best move
 
     // Play piece on stockfish internal board
     LaboonChess.stockfish.movePiece(bestMove, BoardPanel.my_storage.getFen());
