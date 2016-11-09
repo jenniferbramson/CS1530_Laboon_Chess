@@ -20,21 +20,4 @@ public class TurnControllerTest {
     }
 
   }
-
-/*
-  @Test
-  public void SwitchTurn2() {
-    char playersColor = 'w';
-    TurnController controller = new TurnController(playersColor);
-
-    if (controller.getPlayersTurn()) {
-      controller.changeTurn();
-      assertTrue(!controller.getPlayersTurn());
-    } else if (!controller.getPlayersTurn()) {
-      controller.changeTurn();
-      assertTrue(controller.getPlayersTurn());
-    }
-
-  }
-*/
 }
