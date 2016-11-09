@@ -7,11 +7,16 @@ import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
 import static java.lang.Math.abs;
+<<<<<<< HEAD
+=======
+import java.util.*;
+import java.util.concurrent.TimeUnit;
+>>>>>>> 3b1e44647af9e8b1649dbaf315df67054267a411
 
 
 public class BoardPanel extends JPanel {
 	protected static Storage my_storage;
-  private Rulebook my_rulebook;
+  protected static Rulebook my_rulebook;
 	protected GridBagLayout gbl;
 	protected GridBagConstraints gbc;
   // These are buttons we will need to use listeners on
@@ -41,6 +46,17 @@ public class BoardPanel extends JPanel {
 	//for flipping the board
 	private boolean flipped = false;
 
+	//When history of moves is implemented use that instead but
+	//store the values in storage temporarily
+	protected static int lastMovePiecePositionX = 0;
+	protected static int lastMovePiecePositionY = 0;
+
+	private boolean pawnPromoted = false;
+
+	protected static String resultsOfGame = "noResult";
+	protected static LinkedList previousMoves;
+	protected static String playersMostRecentMove;
+	protected static String playersFenAfterMove;
 
 	//Keep track of the last saved fen
 	//Used for testing loss of progress
@@ -54,6 +70,8 @@ public class BoardPanel extends JPanel {
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
+
+		previousMoves = new LinkedList();
 
 		//Check if fen has been found from file
 		//No fen was loaded from a file
@@ -114,8 +132,12 @@ public class BoardPanel extends JPanel {
   }
 
 	/*-----------------------------------------------------------------------------------*/
+<<<<<<< HEAD
 
 	protected void setPieces(){
+=======
+	public void setPieces(){
+>>>>>>> 3b1e44647af9e8b1649dbaf315df67054267a411
 		//Added to try and draw letters
 		for(int i=0; i<8;i++){
 			for(int j=0; j<8;j++){
@@ -458,12 +480,13 @@ public class BoardPanel extends JPanel {
             boolean legal = my_rulebook.checkMove(old_y, old_x, y, x);
             System.out.println(legal);
             if (legal) {
+
+							// Check to see if moving King or Rook
 							char oldPiece = my_storage.getSpaceChar(old_x, old_y);
+							boolean castle = false;
 							System.out.println(oldPiece);
 
 							System.out.println("Moving " + old_spot + " to " + current_spot);
-							moved = true;
-
 							if ( (old_x+old_y) % 2== 0) {
 								checkers[old_y][old_x].setBackground(Color.WHITE);
 							} else {
@@ -476,14 +499,48 @@ public class BoardPanel extends JPanel {
 							// Play move on our board
 							System.out.println("Old spot: " + old_x + " " + old_y);
 							System.out.println("New spot: " + x + " " + y);
-	            my_storage.movePiece(old_y, old_x, y, x);
+							my_storage.movePiece(old_y, old_x, y, x);
+
+							lastMovePiecePositionY = x;
+							lastMovePiecePositionX = y;
+
+							//Get the piece that just moved
+							char piece = my_storage.getSpaceChar(x, y);
+
+							//Get whose turn it is right now
+							char turn = LaboonChess.getTurn();
+
+							//Indicates the color that the user selected to play as
+							char playercolor = LaboonChess.controller.playersColor;
+
+							//Open up pawn promotion window if it's the user who initiates pawn promotion
+							//Don't need to open the panel for stockfish, more overhead and stockfish handles
+							//pawn promotion automatically
+							if(turn == playercolor) {
+								//Check if pawn can be promoted
+								pawnPromoted = checkPromotion(y, piece);
+							}
+							else {
+								pawnPromoted = false;
+							}
 
 							// Play move on stockfish's internal board
-							// TODO: Check if this is a pawn promotion move and if so, append char for piece to move string
 							System.out.println("Fen before move " + fen);
-							String move = old_spot + current_spot;
+
+							String move;
+							if(pawnPromoted == true) {
+								System.out.println("Pawn was promoted!");
+								String resultOfPawnPromotion = PawnPromotionPanel.pawnPromotionSelection;
+								System.out.println("Upgrade Pawn to: " + resultOfPawnPromotion);
+								move = old_spot + current_spot + resultOfPawnPromotion;
+							}
+							else {
+								move = old_spot + current_spot;
+							}
+
 							System.out.println("move is " + move);
 							LaboonChess.stockfish.movePiece(move, my_storage.getFen());
+
               fen = LaboonChess.stockfish.getFen();
               System.out.println("New fen " + fen);
               LaboonChess.stockfish.drawBoard();
@@ -491,11 +548,18 @@ public class BoardPanel extends JPanel {
 	            //update storage fen with new fen pulled from stockfish output
 	            my_storage.setFen(fen);
 
-    					//redraw
+  					//redraw
     					setPieces();
     					firstTurnTaken = true;
 
               System.out.println("players turn " + LaboonChess.getPlayersTurn());
+
+							playersMostRecentMove = move;
+							playersFenAfterMove = fen;
+
+						  //redraw
+						  setPieces();
+
             } // end legality move check
 						else{
 							System.out.println("Not a legal move.");
@@ -561,6 +625,29 @@ public class BoardPanel extends JPanel {
 
     return action;
   }
+
+	//Method checks if the last moved pawn has reached to the other side of the board
+	//Test if the piece that just moved is a pawn
+	//	if so then test if it has reached the end of the board
+	//		if it has then let the user select what to promote the pawn to
+	//	else do nothing
+	public boolean checkPromotion(int y, char piece) {
+		boolean promoted = false;
+		//Check if the piece is a pawn
+		if(piece == 'p' || piece == 'P') {
+			//Check if piece has gotten to the end of the board
+			//Tests for both sides of the board, doesn't matter how board is flipped,
+			//Since pawns can't move backwards, should be okay to test if the pawn has
+			//reached either side
+			if(y == 0 || y == 7) {
+				System.out.println("BoardPanel: Pawn was promoted!");
+				PawnPromotion promote = new PawnPromotion();
+				promoted = true;
+			}
+		}
+
+		return promoted;
+	}
 
   /* If the user starts a new game and chooses to play as black, first stockfish will take its turn.*/
 

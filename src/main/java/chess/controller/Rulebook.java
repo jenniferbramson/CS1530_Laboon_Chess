@@ -1,5 +1,6 @@
 package chess;
 import static java.lang.Math.abs;
+import java.util.*;
 
 public class Rulebook {
 
@@ -648,4 +649,206 @@ public class Rulebook {
     return true;
   }
 
+  public String testGameEnded(String fen) {
+	String result = "noResult";
+
+	Stockfish player = new Stockfish();
+    player.startEngine();
+    // Tell the engine to switch to UCI mode
+    player.send("uci");
+	
+	String bestMove = player.getBestMove(fen, 100);
+	System.out.println("Best Move: " + bestMove);
+	
+	//Stockfish couldn't determine a best move given the current fen
+	if(bestMove.equals("(non")) {
+		
+		//Indicates which color couldn't make any moves
+		char turn = LaboonChess.getTurn();
+		
+		//Indicates the color that the user selected to play as
+		char playercolor = LaboonChess.controller.playersColor;
+		
+		TestBoard testBoard = new TestBoard(my_storage, 0, 0, 0, 0);
+		
+		//Test if draw condition - stalemate, unable to move any pieces and king is not in check
+		if(turn == 'w') {
+			//If it's white's turn, see if their king is in danger
+			boolean whiteKingDanger = kingDanger(testBoard.getWhiteKingX(), testBoard.getWhiteKingY(), 'K', testBoard);
+			if(whiteKingDanger == false) {
+				result = "draw";
+				System.out.println("Draw by stalemate on white's turn");
+			}
+		}
+		else {
+			//If it's black's turn, see if their king is in danger
+			boolean blackKingDanger = kingDanger(testBoard.getBlackKingX(), testBoard.getBlackKingY(), 'k', testBoard);
+			if(blackKingDanger == false) {
+				result = "draw";
+				System.out.println("Draw by stalemate on black's turn");
+			}
+		}
+
+		//If not a draw then it must be that someone won/loss
+		if(result.equals("noResult")) {
+			//If it was the player's turn and they have no best possible move then they lost
+			if(turn == playercolor) {
+				result = "loss";
+			}
+			//Else they won the game
+			else {
+				result = "win";
+			}
+		}
+	}
+	//There are still possible best moves
+	//This else mainly tests only for draw conditions
+	else {
+		System.out.println("Testing insufficient pieces");
+		
+		//Test insufficient number of pieces to win game draw conditions
+		result = checkInsufficientPieces(fen);
+		
+		//Test repetition of moves
+		if(result.equals("noResult")) {
+			
+			System.out.println("Testing move repetition");
+			
+			result = checkRepetition();
+		}
+		//Test 50 move rule if all other draw conditions weren't met
+		if(result.equals("noResult")) {
+			
+			System.out.println("Testing 50 move rule");
+			
+			result = check50MoveRule(fen);
+		}
+	}
+	
+	player.stopEngine();
+	
+	System.out.println("Results: " + result);
+	
+	return result;
+  }
+	
+	//Test insufficient number of pieces to win game - draw conditions
+	//This implementation will change when there is a running counter on the taken panel
+	//Using the taken panel will be more efficient, only have to pull a value instead of doing checks
+	//	would be able to test when there is a 2 pieces on one side and 1 pieces on another side
+	//	Test those pieces and see if its the one's that lead to a draw
+	public String checkInsufficientPieces(String fen) {
+		String result = "noResult";
+		
+		//Stores what pieces remain
+		String blackPieces = "";
+		String whitePieces = "";
+		
+		//Counts the number of pieces each side has remaining
+		int upperCase = 0;
+		int lowerCase = 0;
+		
+		String[] fenSections = fen.split(" ");
+		String boardState = fenSections[0];
+		
+		//Look at the number of pieces that both sides have
+		//Keep track of the pieces that remain
+		for(int i = 0; i < boardState.length(); i++) {
+			if(Character.isUpperCase(boardState.charAt(i))) {
+				
+				upperCase++;
+				
+				if(boardState.charAt(i) != 'K') {
+					whitePieces += boardState.charAt(i);
+				}
+			}
+			else if(Character.isLowerCase(boardState.charAt(i))) {
+				
+				lowerCase++;
+				
+				if(boardState.charAt(i) != 'k') {
+					blackPieces += boardState.charAt(i);
+				}
+			}
+		}
+		
+		//Check if there are only three pieces total for both sides
+		//If so then test the draw condition
+		if((upperCase == 2 && lowerCase == 1) || (upperCase == 1 && lowerCase == 2)) {
+			//Test knight draw and bishop draw for white side
+			if(upperCase == 2) {
+				//Test if the only piece the white side has left besides the king is a knight or bishop
+				//If so then it's a draw
+				if(whitePieces.equals("N") || whitePieces.equals("B")) {
+					result = "draw";
+					System.out.println("Draw by Insufficient Pieces to Win or Lose");
+				}
+			}
+
+			//Test knight draw and bishop draw for white side
+			else {
+				//Test if the only piece the black side has left besides the king is a knight or bishop
+				//If so then it's a draw
+				if(blackPieces.equals("n") || blackPieces.equals("b")) {
+					result = "draw";
+					System.out.println("Draw by Insufficient Pieces to Win or Lose");
+				}
+			}
+		}
+		
+		return result;
+	}
+	
+	//TODO
+	//Test draw condition - Repetition of Position
+	//When a chess position is repeated three times, perpetual checking
+	//This code could possibly be more efficient when we implement a history of the moves
+	//Because then we can just check the last three moves that each player made 
+	//and see if it satisfies the condition for drawing
+	
+	//Current implementation looks at the last 6 moves
+	//If the moves for the last three white turns match and same goes for the
+	//black turns then it's a draw by repetition
+	
+	//Currently previous moves aren't saved to the save file
+	//So if they are in the middle of the draw condition (i.e. last 2 moves from each player 
+	//were the same) then when the save file is reloaded the user will have to go through the 
+	//three repeated moves again (instead of just one from previously)
+	public String checkRepetition() {
+		String result = "noResult";
+		
+		LinkedList moves = BoardPanel.previousMoves;
+		
+		if(moves.size() == 6) {
+			System.out.println("Last 6 moves: " + moves);
+			
+			//Check if all of the moves made by both players have been the same for the last three turns
+			if((moves.get(0).equals(moves.get(4))) && (moves.get(1).equals(moves.get(5)))) {
+				result = "draw";
+				System.out.println("Draw by Repetition of Position");
+			}
+		}
+		return result;
+	}
+	
+	
+	//Tests the draw condition - 50 move rule
+	//If no pieces have been taken/traded for 50 moves
+	public String check50MoveRule(String fen) {
+		String result = "noResult";
+		
+		//Test for 50 move rule
+		//Fen contains a counter for the 50 move rule so we can just test that
+		String[] fenSections = fen.split(" ");
+		int check50MoveRule = Integer.parseInt(fenSections[4]);
+		if(check50MoveRule >= 50) {
+			result = "draw";
+			System.out.println("Draw by 50 Move Rule");
+		}
+	
+		//Test code to display number of moves with nothing being taken
+		System.out.println("Check 50 move rule: " + check50MoveRule); 
+
+		return result;
+	}
 }
