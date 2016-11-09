@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 public class BoardPanel extends JPanel {
 	protected static Storage my_storage;
-  private Rulebook my_rulebook;
+  protected static Rulebook my_rulebook;
 	protected GridBagLayout gbl;
 	protected GridBagConstraints gbc;
   // These are buttons we will need to use listeners on
@@ -51,8 +51,10 @@ public class BoardPanel extends JPanel {
 
 	private boolean pawnPromoted = false;
 	
-	protected static String resultsOfGame;
+	protected static String resultsOfGame = "noResult";
 	protected static LinkedList previousMoves;
+	protected static String playersMostRecentMove;
+	protected static String playersFenAfterMove;
 	
 	//Keep track of the last saved fen
 	//Used for testing loss of progress
@@ -535,30 +537,18 @@ public class BoardPanel extends JPanel {
 
 	            //update storage fen with new fen pulled from stockfish output
 	            my_storage.setFen(fen);
-
+				
+				playersMostRecentMove = move;
+				playersFenAfterMove = fen;
+				
 			  //redraw
 			  setPieces();
+
 			  firstTurnTaken = true;
 			  // Switch whose turn it is
 			  LaboonChess.changeTurn();
 			  
 			  System.out.println("players turn " + LaboonChess.getPlayersTurn());
-			  
-			  //Keep track of the last 6 moves
-			  if(previousMoves.size() < 6) {
-				previousMoves.add(move);
-			  }
-			  else {
-				previousMoves.add(move);
-				previousMoves.removeFirst();
-			  }
-			  
-			  //Display when testing win/loss/draw condition starts
-			  System.out.println("Starting tests for game results");
-			  resultsOfGame = my_rulebook.testGameEnded(fen);
-			  if(!resultsOfGame.equals("noResult")) {
-				GameResults result = new GameResults();
-			  }
             } // end legality move check
 						else{
 							System.out.println("Not a legal move.");
