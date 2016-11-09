@@ -116,6 +116,10 @@ public class TurnController {
 	          // turn switching
     else {
       playersTurn = true;
+      resultsOfGame = BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
+      if(!resultsOfGame.equals("noResult")) {
+          GameResults result = new GameResults();
+      }
     }
 
   }
