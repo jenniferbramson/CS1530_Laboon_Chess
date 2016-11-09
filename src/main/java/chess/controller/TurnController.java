@@ -10,6 +10,7 @@ public class TurnController {
   private char turn;
   private ConsoleGraphics graphics;
   private boolean graphicsExist = false;
+  protected static String resultsOfGame = "noResult";
 
   public TurnController(char playersColor) {
     turn = 'w';
@@ -78,8 +79,29 @@ public class TurnController {
 
     if (playersTurn) {
       playersTurn = false;  // Comment this out and start as white to test black/white
-      playMoveFromStockfish();
-
+	  
+	  //Obtain the user's move
+	  String move = BoardPanel.playersMostRecentMove;
+	  String fen = BoardPanel.playersFenAfterMove;
+	  
+	  //Keep track of the last 6 moves
+	  if(BoardPanel.previousMoves.size() < 6) {
+		BoardPanel.previousMoves.add(move);
+	  }
+	  else {
+		BoardPanel.previousMoves.add(move);
+		BoardPanel.previousMoves.removeFirst();
+	  }
+	  
+	  //Display when testing win/loss/draw condition starts
+	  System.out.println("Starting tests for game results");
+	  resultsOfGame = BoardPanel.my_rulebook.testGameEnded(fen);
+	  if(!resultsOfGame.equals("noResult")) {
+		GameResults result = new GameResults();
+	  }
+	  else {
+		playMoveFromStockfish();
+	  }
                             // turn switching
     } else {
       playersTurn = true;
@@ -95,8 +117,6 @@ public class TurnController {
   }
 
    public void playMoveFromStockfish(){
-
-
     String bestMove = LaboonChess.stockfish.getBestMove(BoardPanel.my_storage.getFen(), 1000);
     System.out.println("best mvoe from stockfish " + bestMove);
     LaboonChess.stockfish.movePiece(bestMove, BoardPanel.my_storage.getFen());
@@ -114,6 +134,29 @@ public class TurnController {
     BoardPanel.my_storage.movePiece(old_y, old_x, y, x);
     LaboonChess.stockfish.drawBoard();
     LaboonChess.changeTurn();
+	
+	//Update board with move made by stockfish
+	//This implementation avoids "non-static method cannot be referenced from static context error"
+	BoardPanel tempBoardPanel = ConsoleGraphics.board;
+	tempBoardPanel.setPieces();
+	ConsoleGraphics.board = tempBoardPanel;
+	
+	//Keep track of the last 6 moves
+
+	if(BoardPanel.previousMoves.size() < 6) {
+		BoardPanel.previousMoves.add(bestMove);
+	}
+	else {
+		BoardPanel.previousMoves.add(bestMove);
+		BoardPanel.previousMoves.removeFirst();
+	}
+
+	//Display when testing win/loss/draw condition starts
+	System.out.println("Starting tests for game results");
+	resultsOfGame = BoardPanel.my_rulebook.testGameEnded(fen);
+	if(!resultsOfGame.equals("noResult")) {
+		GameResults result = new GameResults();
+	}
 
   }
 
