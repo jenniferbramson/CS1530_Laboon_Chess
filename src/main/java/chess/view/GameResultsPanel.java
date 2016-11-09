@@ -23,6 +23,11 @@ public class GameResultsPanel extends JPanel {
 	private String drawMessage = "The Game was a Draw!";
 	
 	public GameResultsPanel() {
+		//Set variables back to default values
+		//Set the fen in load panel back to default settings
+		LoadPanel.fen = "";
+		BoardPanel.firstTurnTaken = false;
+		
 		BoxLayout box = new BoxLayout(this, BoxLayout.Y_AXIS);
 		this.setLayout(box);
 		this.setBackground(Color.WHITE);
