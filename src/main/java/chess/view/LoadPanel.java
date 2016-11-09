@@ -33,6 +33,7 @@ public class LoadPanel extends JPanel {
 
 	//Set text sizes
 	private int promptTextSize = 20;
+	private int promptErrorTextSize = 14;
 	private int buttonTextSize = 16;
 	private int textFieldSize = 16;
 
@@ -46,6 +47,10 @@ public class LoadPanel extends JPanel {
 	
 	private int numberColumns = 3;
 	private int centerPrompt = 3;
+	
+	private char playersColor;
+	private char currentColor;
+	private String[] splitFen;
 
 	public LoadPanel() {
 
@@ -107,7 +112,7 @@ public class LoadPanel extends JPanel {
 		}
 		
 		//Calculate dynamic height based on the number of row
-		calculatedHeight = (rowNumber * (loadGameHeight + 31)) + 100;
+		calculatedHeight = (rowNumber * (loadGameHeight + 31)) + 120;
 		
 		//If height is too large, limit it
 		if(calculatedHeight > 700) {
@@ -197,53 +202,55 @@ public class LoadPanel extends JPanel {
 			for(int i = 1; i < 9; i++) {
 				System.out.println("Row " + i + " : " + fileContents.get(i));
 			}
-			//Try to see if the board is open/visible
-			try {
-				checkChessboardVisible = ConsoleGraphics.frame.isShowing();
-			}
-			catch(NullPointerException ex) {
-				checkChessboardVisible = false;
-			}
-			
-			if(checkChessboardVisible != false) {
-				//Remove previous chessboard before creating the new one
-				//If there is some lag when loading the images
-				//Might just call drawpieces on the current board with new fen
-				ConsoleGraphics.frame.dispose();
-			}
-			
-		
 			
 			// Set controller to whoever's turn it should be
-			String[] splitFen = fen.split(" ");
+			splitFen = fen.split(" ");
 			// Whether it is currently white or black's turn is second string in fen
 			// Fen stores white's turn as 'w', black's turn as 'b' already
-			char currentColor = splitFen[1].charAt(0);
+			currentColor = splitFen[1].charAt(0);
 			// Last line in file stores what color the player is
-			char playersColor = fileContents.get(fileContents.size() - 1).charAt(0);
+			playersColor = fileContents.get(fileContents.size() - 1).charAt(0);
 			System.out.println("Players color is: " + playersColor);
-			LaboonChess.controller = new TurnController(currentColor, playersColor);
-			
+
+			//Test the file to see if it's valid
+			boolean testResult = testFile();
+			System.out.println("Test results: " + testResult);
+			if(testResult == true) {
+				//Try to see if the board is open/visible
+				try {
+					checkChessboardVisible = ConsoleGraphics.frame.isShowing();
+				}
+				catch(NullPointerException ex) {
+					checkChessboardVisible = false;
+				}
+				
+				if(checkChessboardVisible != false) {
+					//Remove previous chessboard before creating the new one
+					//If there is some lag when loading the images
+					//Might just call drawpieces on the current board with new fen
+					ConsoleGraphics.frame.dispose();
+				}
+
+				LaboonChess.controller = new TurnController(currentColor, playersColor);
+				
 				//Load chessboard
-			ConsoleGraphics chessboard = new ConsoleGraphics();
-			
-			LaboonChess.controller.addGraphicalTurn(chessboard);
-			
-			
-			
-			//Make load frame not visible after user clicks load game
-			JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this.getParent());
-			frame.dispose();
-			
+				ConsoleGraphics chessboard = new ConsoleGraphics();
+				
+				LaboonChess.controller.addGraphicalTurn(chessboard);
+				
+				//Make load frame not visible after user clicks load game
+				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this.getParent());
+				frame.dispose();
+				
+				//Update last saved fen
+				//Last saved fen as the new fen that was just loaded
+				BoardPanel.lastSaveFen = fen;
+			}
 		} catch (Exception eee) {
 			System.out.print("Exception: ");
 			System.out.println(eee.getMessage());
 			//eee.printStackTrace();
 		}
-		
-		//Update last saved fen
-		//Last saved fen as the new fen that was just loaded
-		BoardPanel.lastSaveFen = fen;
 	}
 
 	private void setUpPrompt() {
@@ -252,7 +259,7 @@ public class LoadPanel extends JPanel {
 		
 		//Add prompt back to panel
 		//Change the label text
-		prompt.setText("<html>Game hasn't been saved!<br>Do you want to save your progress?</html>");
+		prompt.setText("<html><div style='text-align: center;'>Game hasn't been saved!<br>Do you want to save your progress?</div></html>");
 
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.gridx = 0;
@@ -376,5 +383,49 @@ public class LoadPanel extends JPanel {
 		
 		this.validate();
 		this.repaint();
+	}
+	
+	private boolean testFile() {
+		String errorPrompt = "<html><html><div style='text-align: center;'>" + fileName + " is invalid!<br>Select different file to load!</div></html>";
+		int lengthOfSaveFile = 10;
+		boolean validSaveFile = true;
+		
+		String[] fenSeparatedByRow = splitFen[0].split("/");
+		
+		//Check that number of lines read in matches what was expected
+		//Not going to check anything else since the display of the table in the 
+		//Text file is test code, don't think it's necessary to check if the fen string
+		//Matches with the display of the board in the file
+		if(fileContents.size() != lengthOfSaveFile) {
+			prompt.setText(errorPrompt);
+			System.out.println("Save file was too long!");
+			validSaveFile = false;
+		}
+		//If the player's color is not white or black, display error to the user
+		else if(playersColor != 'w' && playersColor != 'b') {
+			prompt.setText(errorPrompt);
+			System.out.println("Save file contained an invalid player color!");
+			validSaveFile = false;
+		}
+		//Check if the current player's turn is white or black
+		else if(currentColor != 'w' && currentColor != 'b') {
+			prompt.setText(errorPrompt);
+			System.out.println("Save file contained an invalid turn color!");
+			validSaveFile = false;
+		}
+		//Check if the fen is too short or too long
+		else if(fenSeparatedByRow.length != 8) {
+			prompt.setText(errorPrompt);
+			System.out.println("Save file contained an invalid fen length!");
+			validSaveFile = false;
+		}
+		//Check if the fen string is valid, maybe somehow integrate with stockfish to check
+		else if(fen != fen) {
+			prompt.setText(errorPrompt);
+			System.out.println("Save file contained an invalid fen string!");
+			validSaveFile = false;
+		}
+		
+		return validSaveFile;
 	}
 }
