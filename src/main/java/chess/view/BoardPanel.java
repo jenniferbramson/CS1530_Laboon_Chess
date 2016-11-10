@@ -8,9 +8,8 @@ import java.io.*;
 import javax.imageio.*;
 import static java.lang.Math.abs;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 
-// import chess.Stockfish;
+
 
 public class BoardPanel extends JPanel {
 	protected static Storage my_storage;
@@ -18,7 +17,7 @@ public class BoardPanel extends JPanel {
 	protected GridBagLayout gbl;
 	protected GridBagConstraints gbc;
   // These are buttons we will need to use listeners on
-  protected JButton[][] checkers;
+  protected static JButton[][] checkers;
 	// values for keeping track of when to send moves to controller
 	boolean second_click = false;
 	private String old_spot = "";
@@ -39,23 +38,23 @@ public class BoardPanel extends JPanel {
 	private int whiteG = 0;
 	private int whiteB = 0;
 	//COLORS
-	private final Color SEAGREEN = new Color(180,238,180);
-	private final Color DARKSEAGREEN = new Color(155,205,155);
+	public static final Color SEAGREEN = new Color(180,238,180);
+	public static final Color DARKSEAGREEN = new Color(155,205,155);
 	//for flipping the board
 	private boolean flipped = false;
-	
-	//When history of moves is implemented use that instead but 
+
+	//When history of moves is implemented use that instead but
 	//store the values in storage temporarily
 	protected static int lastMovePiecePositionX = 0;
 	protected static int lastMovePiecePositionY = 0;
 
 	private boolean pawnPromoted = false;
-	
+
 	protected static String resultsOfGame = "noResult";
 	protected static LinkedList previousMoves;
 	protected static String playersMostRecentMove;
 	protected static String playersFenAfterMove;
-	
+
 	//Keep track of the last saved fen
 	//Used for testing loss of progress
 	protected static String lastSaveFen = "";		//Used to check if player made moves after load
@@ -64,12 +63,13 @@ public class BoardPanel extends JPanel {
 	private String defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 	public static boolean firstTurnTaken = false;
+	public static boolean moved = false;
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
-		
+
 		previousMoves = new LinkedList();
-		
+
 		//Check if fen has been found from file
 		//No fen was loaded from a file
 		if(LoadPanel.fen == "" || LoadPanel.fen == null) {
@@ -122,14 +122,15 @@ public class BoardPanel extends JPanel {
         checkers[i][j] = b;
       }
     }
+
 		setPieces();				//call method to SET the pieces as what they should be
 		drawBoard();			//call the method to draw the newly set pieces to the board
-
 
   }
 
 	/*-----------------------------------------------------------------------------------*/
-	public void setPieces(){
+
+	protected void setPieces(){
 		//Added to try and draw letters
 		for(int i=0; i<8;i++){
 			for(int j=0; j<8;j++){
@@ -385,7 +386,7 @@ public class BoardPanel extends JPanel {
 		addComponent(9,9,1,1,new JLabel(""));
 
 		// If computer goes first, it will play now
-	
+
 	}
 
 	//completely wipes the board
@@ -472,83 +473,88 @@ public class BoardPanel extends JPanel {
             boolean legal = my_rulebook.checkMove(old_y, old_x, y, x);
             System.out.println(legal);
             if (legal) {
-				// Check to see if moving King or Rook
-				char oldPiece = my_storage.getSpaceChar(old_x, old_y);
-				boolean castle = false;
-				System.out.println(oldPiece);
 
-				System.out.println("Moving " + old_spot + " to " + current_spot);
-				if ( (old_x+old_y) % 2== 0) {
-					checkers[old_y][old_x].setBackground(Color.WHITE);
-				} else {
-					checkers[old_y][old_x].setBackground(Color.GRAY);
-				}
-				second_click = false;
+							// Check to see if moving King or Rook
+							char oldPiece = my_storage.getSpaceChar(old_x, old_y);
+							boolean castle = false;
+							System.out.println(oldPiece);
 
-				String fen = my_storage.getFen();
+							System.out.println("Moving " + old_spot + " to " + current_spot);
+							if ( (old_x+old_y) % 2== 0) {
+								checkers[old_y][old_x].setBackground(Color.WHITE);
+							} else {
+								checkers[old_y][old_x].setBackground(Color.GRAY);
+							}
+							second_click = false;
 
-				// Play move on our board
-				System.out.println("Old spot: " + old_x + " " + old_y);
-				System.out.println("New spot: " + x + " " + y);
-				my_storage.movePiece(old_y, old_x, y, x);
-				
-				lastMovePiecePositionY = x;
-				lastMovePiecePositionX = y;
-				
-				//Get the piece that just moved
-				char piece = my_storage.getSpaceChar(x, y);
-				
-				//Get whose turn it is right now
-				char turn = LaboonChess.getTurn();
-				
-				//Indicates the color that the user selected to play as
-				char playercolor = LaboonChess.controller.playersColor;
-				
-				//Open up pawn promotion window if it's the user who initiates pawn promotion
-				//Don't need to open the panel for stockfish, more overhead and stockfish handles
-				//pawn promotion automatically
-				if(turn == playercolor) {
-					//Check if pawn can be promoted
-					pawnPromoted = checkPromotion(y, piece);
-				}
-				else {
-					pawnPromoted = false;
-				}
-				
-				// Play move on stockfish's internal board
-				System.out.println("Fen before move " + fen);
-				
-				String move;
-				if(pawnPromoted == true) {
-					System.out.println("Pawn was promoted!");
-					String resultOfPawnPromotion = PawnPromotionPanel.pawnPromotionSelection;
-					System.out.println("Upgrade Pawn to: " + resultOfPawnPromotion);
-					move = old_spot + current_spot + resultOfPawnPromotion;
-				}
-				else {
-					move = old_spot + current_spot;
-				}
-				
-				System.out.println("move is " + move);
-				LaboonChess.stockfish.movePiece(move, my_storage.getFen());
+							String fen = my_storage.getFen();
+
+							// Play move on our board
+							System.out.println("Old spot: " + old_x + " " + old_y);
+							System.out.println("New spot: " + x + " " + y);
+							my_storage.movePiece(old_y, old_x, y, x);
+
+
+							lastMovePiecePositionY = x;
+							lastMovePiecePositionX = y;
+
+							//Get the piece that just moved
+							char piece = my_storage.getSpaceChar(x, y);
+
+							//Get whose turn it is right now
+							char turn = LaboonChess.getTurn();
+
+							//Indicates the color that the user selected to play as
+							char playercolor = LaboonChess.controller.playersColor;
+
+							//Open up pawn promotion window if it's the user who initiates pawn promotion
+							//Don't need to open the panel for stockfish, more overhead and stockfish handles
+							//pawn promotion automatically
+							if(turn == playercolor) {
+								//Check if pawn can be promoted
+								pawnPromoted = checkPromotion(y, piece);
+							}
+							else {
+								pawnPromoted = false;
+							}
+
+							// Play move on stockfish's internal board
+							System.out.println("Fen before move " + fen);
+
+							String move;
+							if(pawnPromoted == true) {
+								System.out.println("Pawn was promoted!");
+								String resultOfPawnPromotion = PawnPromotionPanel.pawnPromotionSelection;
+								System.out.println("Upgrade Pawn to: " + resultOfPawnPromotion);
+								move = old_spot + current_spot + resultOfPawnPromotion;
+							}
+							else {
+								move = old_spot + current_spot;
+							}
+
+							System.out.println("move is " + move);
+							LaboonChess.stockfish.movePiece(move, my_storage.getFen());
+
               fen = LaboonChess.stockfish.getFen();
               System.out.println("New fen " + fen);
               LaboonChess.stockfish.drawBoard();
 
 	            //update storage fen with new fen pulled from stockfish output
 	            my_storage.setFen(fen);
-				
-				playersMostRecentMove = move;
-				playersFenAfterMove = fen;
-				
-			  //redraw
-			  setPieces();
 
-			  firstTurnTaken = true;
-			  // Switch whose turn it is
-			  LaboonChess.changeTurn();
-			  
-			  System.out.println("players turn " + LaboonChess.getPlayersTurn());
+  					//redraw
+    					setPieces();
+    					firstTurnTaken = true;
+							moved = true;
+
+              System.out.println("players turn " + LaboonChess.getPlayersTurn());
+
+							playersMostRecentMove = move;
+							playersFenAfterMove = fen;
+
+						  //redraw
+						  setPieces();
+
             } // end legality move check
 						else{
 							System.out.println("Not a legal move.");
@@ -592,11 +598,29 @@ public class BoardPanel extends JPanel {
 				if(x==0 && y==0){
 					System.out.println(my_storage.getFen());
 				}
+
+				/* Causes run() to be executed asynchronously on the AWT event dispatching thread. This will happen after all pending AWT events have been processed. */
+				SwingUtilities.invokeLater(new Runnable() {
+          public void run() {
+            // Only do something if the player has moved
+            if (moved){
+              int[] move = LaboonChess.controller.getMoveFromStockfish(true);
+              setPieces();
+              LaboonChess.controller.playMoveFromStockfish(move);
+              LaboonChess.changeTurn();
+              setPieces();
+              moved = false;
+            }
+
+          }
+        });
+        // end invokeLater
       }
     };
+
     return action;
   }
-  
+
 	//Method checks if the last moved pawn has reached to the other side of the board
 	//Test if the piece that just moved is a pawn
 	//	if so then test if it has reached the end of the board
@@ -616,20 +640,20 @@ public class BoardPanel extends JPanel {
 				promoted = true;
 			}
 		}
-		
+
 		return promoted;
 	}
 
+  /* If the user starts a new game and chooses to play as black, first stockfish will take its turn.*/
+
   public void playFirstTurnWithStockfish(){
-	
-	LaboonChess.firstStockfishTurn();
-	LaboonChess.setPlayersTurn(true);
-	firstTurnTaken = true;
-	setPieces();
- 	
+
+  	LaboonChess.firstStockfishTurn();
+  	LaboonChess.setPlayersTurn(true);
+  	firstTurnTaken = true;
+  	setPieces();
 
   }
-  	
 
 
 }//end of BoardPanel class

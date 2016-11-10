@@ -226,7 +226,7 @@ public class Stockfish {
     int index = output.lastIndexOf("bestmove");
     if (index == -1) return null; // best move not found
     // bestmove string starts after last occurrence of "bestmove " and has length 4
-    String bestMove = output.substring(index + 9, index + 13);
+    String bestMove = output.substring(index + 9, index + 14);
     return bestMove;
   }
 
