@@ -27,6 +27,7 @@ public class GameResultsPanel extends JPanel {
 		//Set the fen in load panel back to default settings
 		LoadPanel.fen = "";
 		BoardPanel.firstTurnTaken = false;
+		BoardPanel.moved = false;
 		
 		BoxLayout box = new BoxLayout(this, BoxLayout.Y_AXIS);
 		this.setLayout(box);
@@ -69,6 +70,9 @@ public class GameResultsPanel extends JPanel {
 			//Set results back to the default value
 			TurnController.resultsOfGame = "noResult";
 		}
+		
+		//Set game results back to default value
+		TurnController.resultsOfGame = "noResult";
 		
 		title.addActionListener(getFeature());
 		this.add(title);
