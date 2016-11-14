@@ -136,6 +136,9 @@ public class GameResultsPanel extends JPanel {
 			exit = new JButton("Exit");
 		}
 		this.add(exit);
+		
+		//Add spacing from top of title and top of window
+		this.add(Box.createRigidArea(new Dimension(0,topSpace)));
 	}
 	
 	private ActionListener startNewGame() {
@@ -144,6 +147,10 @@ public class GameResultsPanel extends JPanel {
 			// Placeholder for when we add functionality
 				//Run the color selection for chess game
 				ChooseColor choice = new ChooseColor();
+				
+				//Stop video from playing after the user has left the screen
+				GameResults.video.exit();
+
 				//Dispose of startup screen so it's not visible
 				JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(newGame.getParent());
 				dialog.dispose();
@@ -174,6 +181,10 @@ public class GameResultsPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 			// Placeholder for when we add functionality
 				LoadGame loadGame = new LoadGame();
+				
+				//Stop video from playing after the user has left the screen
+				GameResults.video.exit();
+
 				//Dispose of startup screen so it's not visible
 				JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(load.getParent());
 				dialog.dispose();
