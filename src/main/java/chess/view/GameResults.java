@@ -11,8 +11,14 @@ public class GameResults extends JDialog {
 	private Dimension screen;
 	
 	//Modify startup screen sizes
+	//private int screenWidth = 800;
+	//private int screenHeight = 400;
+	
+	//Size adjusted to include the video
 	private int screenWidth = 800;
-	private int screenHeight = 400;
+	private int screenHeight = 800;
+	
+	protected static YouTubeVideoPanel video;
 	
 	public GameResults() {
 		//Find out whether the game was won, lost, draw
@@ -22,12 +28,14 @@ public class GameResults extends JDialog {
 		Container content = dialog.getContentPane();
 
 		GameResultsPanel resultsPanel = new GameResultsPanel();
+		video = new YouTubeVideoPanel();
 		
 		JPanel mainPanel = new JPanel();
 		
 		//Room to add anything else
 		mainPanel.setLayout(new BorderLayout());
-		mainPanel.add(resultsPanel, BorderLayout.CENTER);
+		mainPanel.add(video, BorderLayout.NORTH);
+		mainPanel.add(resultsPanel, BorderLayout.SOUTH);
 		
 		content.add(mainPanel);
 		
@@ -44,6 +52,9 @@ public class GameResults extends JDialog {
 		
 		//Causes user to have to select one fo the options of the menu
 		dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		
+		//Test code
+		//dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		dialog.setVisible(true);                    
 	}
