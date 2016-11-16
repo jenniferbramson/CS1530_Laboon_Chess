@@ -11,12 +11,12 @@ public class GameResults extends JDialog {
 	private Dimension screen;
 	
 	//Modify startup screen sizes
-	//private int screenWidth = 800;
-	//private int screenHeight = 400;
+	private int screenWidth = 800;
+	private int screenHeight = 400;
 	
 	//Size adjusted to include the video
-	private int screenWidth = 800;
-	private int screenHeight = 800;
+	private int screenWidthVideo = 800;
+	private int screenHeightVideo = 800;
 	
 	protected static VideoPanel video;
 	
@@ -28,22 +28,41 @@ public class GameResults extends JDialog {
 		Container content = dialog.getContentPane();
 
 		GameResultsPanel resultsPanel = new GameResultsPanel();
-		video = new VideoPanel();
 		
 		JPanel mainPanel = new JPanel();
 		
 		//Room to add anything else
 		mainPanel.setLayout(new BorderLayout());
-		mainPanel.add(video, BorderLayout.NORTH);
-		mainPanel.add(resultsPanel, BorderLayout.SOUTH);
+	
+		String resultsOfGame = BoardPanel.my_rulebook.resultsOfGame;
+		if(resultsOfGame.equals("win")) {
+			//Maybe add different video/party parrot/etc
+			mainPanel.add(resultsPanel, BorderLayout.SOUTH);
+		}
+		else if(resultsOfGame.equals("loss")) {
+			video = new VideoPanel();
+			mainPanel.add(video, BorderLayout.NORTH);
+			mainPanel.add(resultsPanel, BorderLayout.SOUTH);
+		}
+		else if(resultsOfGame.equals("draw")) {
+			//Maybe add different video/party parrot/etc
+			mainPanel.add(resultsPanel, BorderLayout.SOUTH);
+		}
 		
 		content.add(mainPanel);
 		
 		dialog.pack();
 		
-		//Set fixed screen size
-		dialog.setSize(screenWidth, screenHeight);
-		
+		if(resultsOfGame.equals("loss")) {
+			//Screen side with video
+			//Set fixed screen size
+			dialog.setSize(screenWidthVideo, screenHeightVideo);
+		}
+		else {
+			//Screen side without video
+			//Set fixed screen size
+			dialog.setSize(screenWidth, screenHeight);
+		}
 		//Get size of computer screen
 		//Set the screen so it appears in the middle
 		t = getToolkit();
