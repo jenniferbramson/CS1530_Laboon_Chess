@@ -26,8 +26,21 @@ public class VideoPanel extends JPanel {
 		//Adding the video to the dialog box
 		Platform.setImplicitExit(false);
 		JFXPanel web = new JFXPanel();
+		
+		String url= "";
+		String resultsOfGame = BoardPanel.my_rulebook.resultsOfGame;
+		if(resultsOfGame.equals("win")) {
+			//url = this.getClass().getResource("/nyancat.mp4").toExternalForm();
+			url = this.getClass().getResource("/rickroll.mp4").toExternalForm();
+		}
+		else if(resultsOfGame.equals("loss")) {
+			url = this.getClass().getResource("/rickroll.mp4").toExternalForm();
+		}
+		else if(resultsOfGame.equals("draw")) {
+			//url = this.getClass().getResource("/grumpycat.mp4").toExternalForm();
+			url = this.getClass().getResource("/rickroll.mp4").toExternalForm();
+		}
 
-		String url = this.getClass().getResource("/rickroll.mp4").toExternalForm();
 		player = new MediaPlayer(new Media(url));
 		player.setAutoPlay(true);
 
@@ -36,7 +49,7 @@ public class VideoPanel extends JPanel {
 		mediaView.setFitHeight(450);	//Sets video height
 		mediaView.setMediaPlayer(player);
 		BorderPane pane = new BorderPane();
-    pane.setCenter(mediaView);
+		pane.setCenter(mediaView);
 		Scene scene = new Scene(pane, Color.BLACK);
 		web.setScene(scene);
 
