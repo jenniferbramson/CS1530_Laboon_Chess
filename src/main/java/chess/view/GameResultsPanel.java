@@ -56,7 +56,7 @@ public class GameResultsPanel extends JPanel {
 			Image img = ImageIO.read(getClass().getResource("/GameResults.png"));
 			title.setIcon(new ImageIcon(img));
 		} catch (Exception ex) {
-			String resultsOfGame = TurnController.resultsOfGame;
+			String resultsOfGame = BoardPanel.my_rulebook.resultsOfGame;
 			//Player wins the game
 			if(resultsOfGame.equals("win")) {
 				title.setText(winMessage);
