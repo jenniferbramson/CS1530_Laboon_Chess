@@ -28,6 +28,8 @@ public class GameResultsPanel extends JPanel {
 		LoadPanel.fen = "";
 		BoardPanel.firstTurnTaken = false;
 		BoardPanel.moved = false;
+		LaboonChess.stockfish.stopEngine();
+		LaboonChess.stockfish.startEngine();  
 		
 		BoxLayout box = new BoxLayout(this, BoxLayout.Y_AXIS);
 		this.setLayout(box);
