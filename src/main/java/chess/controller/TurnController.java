@@ -117,10 +117,7 @@ public class TurnController {
 
   	  //Display when testing win/loss/draw condition starts
   	  System.out.println("Starting tests for game results in changeTurn if");
-  	  resultsOfGame = BoardPanel.my_rulebook.testGameEnded(fen);
-  	  if(!resultsOfGame.equals("noResult")) {
-  		    GameResults result = new GameResults();
-  	  }
+  	  BoardPanel.my_rulebook.testGameEnded(fen);
     }
 	          // turn switching
     else {
@@ -208,10 +205,7 @@ public class TurnController {
 			if(checkLoadScreenVisible == false) {
 			  System.out.println("Starting tests for game results in changeTurn else");
 			  System.out.println(BoardPanel.my_storage.getFen());
-			  resultsOfGame = BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
-			  if(!resultsOfGame.equals("noResult")) {
-				  GameResults result = new GameResults();
-			  }
+			  BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
 			}
     }
 
@@ -279,11 +273,7 @@ public class TurnController {
 		ConsoleGraphics.board = tempBoardPanel;
 		
 		System.out.println("Starting tests for game results in playMoveFromStockfish");
-		resultsOfGame = BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
-       if(!resultsOfGame.equals("noResult")) {
-         GameResults result = new GameResults();
-       }
-
+		BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
      }
   }
 
