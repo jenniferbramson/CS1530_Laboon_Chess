@@ -18,7 +18,7 @@ public class GameResults extends JDialog {
 	private int screenWidth = 800;
 	private int screenHeight = 800;
 	
-	protected static YouTubeVideoPanel video;
+	protected static VideoPanel video;
 	
 	public GameResults() {
 		//Find out whether the game was won, lost, draw
@@ -28,7 +28,7 @@ public class GameResults extends JDialog {
 		Container content = dialog.getContentPane();
 
 		GameResultsPanel resultsPanel = new GameResultsPanel();
-		video = new YouTubeVideoPanel();
+		video = new VideoPanel();
 		
 		JPanel mainPanel = new JPanel();
 		
