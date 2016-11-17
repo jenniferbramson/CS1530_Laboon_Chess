@@ -205,7 +205,9 @@ public class TurnController {
 			if(checkLoadScreenVisible == false) {
 			  System.out.println("Starting tests for game results in changeTurn else");
 			  System.out.println(BoardPanel.my_storage.getFen());
-			  BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
+			  if(BoardPanel.my_rulebook.resultsOfGame.equals("noResults")) {
+				BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
+			  }
 			}
     }
 
