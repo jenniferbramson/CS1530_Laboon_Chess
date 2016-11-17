@@ -18,7 +18,7 @@ public class ConsoleGraphics extends JFrame {
 	protected static BoardPanel board;
 	protected ButtonsPanel buttons;
 	protected TimerPanel timer;
-	protected KibitzerPanel kib;
+	protected static KibitzerPanel kib;
 	protected Container content;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc;
