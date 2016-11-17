@@ -6,7 +6,6 @@ import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
-import static java.lang.Math.abs;
 import java.util.*;
 
 
@@ -94,7 +93,6 @@ public class BoardPanel extends JPanel {
 
 
 		//Setting up Display --------------------------------------------------------------------------------------
-		this.setBackground(Color.WHITE); 	//make it white
 		gbl = new GridBagLayout();
 		gbc = new GridBagConstraints();
 		this.setLayout(gbl);
@@ -116,7 +114,7 @@ public class BoardPanel extends JPanel {
         if ((i + j) % 2 == 0) {   // White square
           b.setBackground(Color.WHITE);
         } else {                  // Black Square
-          b.setBackground(Color.GRAY);
+          b.setBackground(new Color(125,198,200));
         }
 
         checkers[i][j] = b;
@@ -311,26 +309,34 @@ public class BoardPanel extends JPanel {
 	/*--------------------------------------------------------------------------------------------------------*/
 	//draws the labels and pieces on the board
 	public void drawBoard(){
+		ChessLabel blankLabel1 = new ChessLabel("");
+		blankLabel1.setPreferredSize(new Dimension(25, 25));
+		ChessLabel blankLabel2 = new ChessLabel("");
+		blankLabel2.setPreferredSize(new Dimension(25, 25));
+		ChessLabel blankLabel3 = new ChessLabel("");
+		blankLabel3.setPreferredSize(new Dimension(25, 25));
+		ChessLabel blankLabel4 = new ChessLabel("");
+		blankLabel4.setPreferredSize(new Dimension(25, 25));
 
 		// Create Labels for a through h for the first rows
-		addComponent(0,0,1,1,new JLabel(""));  // Corners are empty
+		addComponent(0,0,1,1,blankLabel1);  // Corners are empty
 		if(!flipped){
 			for (int i = 0; i < 8; i++) {
-				JLabel label = new JLabel("" + (char)(97 + i));
-				label.setHorizontalAlignment(SwingConstants.CENTER);
+				ChessLabel label = new ChessLabel("" + (char)(97 + i));
+				label.setPreferredSize(new Dimension(64, 25));
 				addComponent(i+1,0,1,1,label);
 			}
 		}
 		else{
 			for (int i = 7; i >= 0; i--) {
-				JLabel label = new JLabel("" + (char)(97 + i));
-				label.setHorizontalAlignment(SwingConstants.CENTER);
+				ChessLabel label = new ChessLabel("" + (char)(97 + i));
+				label.setPreferredSize(new Dimension(64, 25));
 				addComponent(8-i,0,1,1,label);
 			}
 		}
 
-		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
-
+		addComponent(0,9,1,1,blankLabel2);  // Corners are empty
+		addComponent(0,9,1,1,blankLabel2);	// For some reason this square only shows up on second add?
 
 		// Fill out the center of the panel
 		//if not flipped, print them out in normal order
@@ -339,8 +345,8 @@ public class BoardPanel extends JPanel {
 				for (int j = 0; j < 10; j++) {    // columns
 					if (j == 0 || j == 9) {
 						// Beginning or end of row, add column number
-						JLabel label = new JLabel("" + (8 - i));
-						label.setHorizontalAlignment(SwingConstants.CENTER);
+						ChessLabel label = new ChessLabel("" + (8 - i));
+						label.setPreferredSize(new Dimension(25, 64));
 						addComponent(j,i+1,1,1,label);
 					} else {
 						// Add chess squares
@@ -355,8 +361,8 @@ public class BoardPanel extends JPanel {
 				for (int j = 9; j >= 0; j--) {    // columns
 					if (j == 0 || j == 9) {
 						// Beginning or end of row, add column number
-						JLabel label = new JLabel("" + (9 - i));
-						label.setHorizontalAlignment(SwingConstants.CENTER);
+						ChessLabel label = new ChessLabel("" + (9 - i));
+						label.setPreferredSize(new Dimension(25, 64));
 						addComponent(9-j,9-i,1,1,label);
 					} else {
 						// Add chess squares
@@ -368,22 +374,23 @@ public class BoardPanel extends JPanel {
 
 
 		// Fill out the last row of letters a through h
-		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
+		addComponent(0,9,1,1,blankLabel3);  // Corners are empty
 		if(!flipped){
 			for (int i = 0; i < 8; i++) {
-				JLabel label = new JLabel("" + (char)(97 + i));
-				label.setHorizontalAlignment(SwingConstants.CENTER);
+				ChessLabel label = new ChessLabel("" + (char)(97 + i));
+				label.setPreferredSize(new Dimension(64, 25));
 				addComponent(i+1,9,1,1,label);
 			}
 		}
 		else{
 			for (int i = 7; i >= 0; i--) {
-				JLabel label = new JLabel("" + (char)(97 + i));
-				label.setHorizontalAlignment(SwingConstants.CENTER);
+				ChessLabel label = new ChessLabel("" + (char)(97 + i));
+				label.setPreferredSize(new Dimension(64, 25));
 				addComponent(8-i,9,1,1,label);
 			}
 		}
-		addComponent(9,9,1,1,new JLabel(""));
+
+		addComponent(9,9,1,1,blankLabel4);
 
 		// If computer goes first, it will play now
 

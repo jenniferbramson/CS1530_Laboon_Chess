@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 import javax.imageio.*;
 import java.util.concurrent.TimeUnit;
+import java.io.IOException;
+import java.awt.image.BufferedImage;
 
 public class ConsoleGraphics extends JFrame {
 
@@ -29,20 +31,28 @@ public class ConsoleGraphics extends JFrame {
 	protected JComboBox whiteColorList;
 	protected JLabel blackColorLabel;
 	protected JLabel whiteColorLabel;
-	
-	
-	
+	protected JLabel background;
+
+
+
 
   // Puts all the components together to create the screen
   public ConsoleGraphics() {
 
     frame = new JFrame("Laboon Chess");
     content = frame.getContentPane();   // Get reference to content pane
-		content.setBackground(Color.WHITE); 	//make it white
+
+		// Add background image
+		Image woodenTable = readImage();
+		if (woodenTable != null) {					// If found wood image, set background
+			woodenTable = getScaledImage(woodenTable, 1200, 700);
+			background = new JLabel(new ImageIcon(woodenTable));
+			content.add(background);
+		}
 
     // Left side of the board has the timer, chess board, and buttons (load and
     // save) stacked vertically
-		
+
 		//timer = new TimerPanel();           // Get the timer panel
 		JButton flipButton = new JButton("Flip Board");
 		flipButton.addActionListener(flipBoard());
@@ -54,12 +64,13 @@ public class ConsoleGraphics extends JFrame {
     left.add(flipButton, BorderLayout.NORTH);
     left.add(board, BorderLayout.CENTER);
     left.add(buttons, BorderLayout.SOUTH);
+		left.setOpaque(false);
 
     // Middle part of board has the turn signals
     whiteTurn = playerTurnButton("White");
     blackTurn = playerTurnButton("Black");
-		
-		
+
+
 		//drop list for black side pieces
 		blackColorList = new JComboBox(colors);
 		blackColorList.setSelectedIndex(0);
@@ -71,6 +82,13 @@ public class ConsoleGraphics extends JFrame {
 		//labels for the lists
 		whiteColorLabel = new JLabel("White Piece color: ");
 		blackColorLabel = new JLabel("Black Piece color: ");
+		Border empty = BorderFactory.createEmptyBorder(2,4,2,4);
+		blackColorLabel.setOpaque(true);
+		whiteColorLabel.setOpaque(true);
+		blackColorLabel.setBorder(empty);
+		whiteColorLabel.setBorder(empty);
+		whiteColorLabel.setBackground(Color.WHITE);
+		blackColorLabel.setBackground(Color.WHITE);
 		JLabel spacing = new JLabel("");
 		spacing.setPreferredSize(new Dimension(100,140));	//spacing for making sure the buttons are centered
 
@@ -82,15 +100,15 @@ public class ConsoleGraphics extends JFrame {
     // Setting up layout stuff
 		gbl = new GridBagLayout();
 		gbc = new GridBagConstraints();
-		content.setLayout(gbl);
-		
+		background.setLayout(gbl);
+
 		//NOTE: addComponent parameters are: x,y, width, height, ipadx, ipady, component
 		addComponent(0,0, 12, 12, 0, 0, left);
 		addComponent(13,1,1,1,0,0, spacing);
-		
+
 		//add the buttons and lists that appear on the right side
 		addComponentSet();
-		
+
 		frame.pack();
 
     //Get size of computer screen
@@ -109,9 +127,6 @@ public class ConsoleGraphics extends JFrame {
       }
     });
 
-   
-
-
     frame.setVisible(true);                     // Do this last
 
   	if (!(LaboonChess.getPlayersTurn()) & !board.firstTurnTaken){
@@ -119,6 +134,27 @@ public class ConsoleGraphics extends JFrame {
   	}
   }
 
+	private Image getScaledImage(Image srcImg, int w, int h){
+	    BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+	    Graphics2D g2 = resizedImg.createGraphics();
+
+	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+	    g2.drawImage(srcImg, 0, 0, w, h, null);
+	    g2.dispose();
+
+	    return resizedImg;
+	}
+
+	private Image readImage() {
+		Image woodenTable;
+		try {
+			woodenTable = ImageIO.read(getClass().getResource("/wood.jpeg"));
+		} catch (IOException e) {
+			System.out.println("Error reading background image");
+			woodenTable = null;
+		}
+		return woodenTable;
+	}
 
   // method that builds the "player turn" button
 	// If there is an issue reading the image, creates a multi-line button.
@@ -161,7 +197,7 @@ public class ConsoleGraphics extends JFrame {
     whiteTurn.setBackground(Color.WHITE);
     blackTurn.setBackground(TURQUOISE);
   }
-	
+
 	private ActionListener updateWhiteList() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e){
@@ -172,7 +208,7 @@ public class ConsoleGraphics extends JFrame {
 		};
 		return action;
 	}
-	
+
 	private ActionListener updateBlackList() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e){
@@ -183,7 +219,7 @@ public class ConsoleGraphics extends JFrame {
 		};
 		return action;
 	}
-	
+
 	private void setWhiteColor(String color){
 		if(color.equals("Red")){
 			board.setParty(false, true);								//false for no party, true for white
@@ -218,7 +254,7 @@ public class ConsoleGraphics extends JFrame {
 			board.colorizeWhite(false, 0, 0, 0);
 		}
 	}
-	
+
 	//function that colorizes the black side pieces
 	private void setBlackColor(String color){
 		if(color.equals("Red")){
@@ -255,7 +291,7 @@ public class ConsoleGraphics extends JFrame {
 			board.colorizeBlack(false, 0, 0, 0);
 		}
 	}
-	
+
 	//helper function for adding components into the  frame
 	public void addComponent(int x, int y, int w, int h, int padx, int pady, Component aComponent) {
 		Insets inset = new Insets(10, 10, 10, 10);
@@ -267,9 +303,9 @@ public class ConsoleGraphics extends JFrame {
 		gbc.ipadx = padx;
 		gbc.ipady = pady;
 		gbl.setConstraints(aComponent,gbc);
-		content.add(aComponent);
+		background.add(aComponent);
 	}
-	
+
 	//method that flips the arrangement of buttons and flips board
 	private ActionListener flipBoard() {
 		ActionListener action = new ActionListener() {
@@ -283,13 +319,13 @@ public class ConsoleGraphics extends JFrame {
 				//call the boardpanel to flip itself
 				board.setFlip(flipped);
 				//redraw
-				content.revalidate();
-				content.repaint();
+				background.revalidate();
+				background.repaint();
 			}
 		};
 		return action;
 	}
-	
+
 	private void addComponentSet(){
 			if(!flipped){
 				addComponent(13,5,1,1, 0, 0, blackTurn);
@@ -307,22 +343,22 @@ public class ConsoleGraphics extends JFrame {
 				addComponent(13,9,1,1,0,0, blackColorList);
 				addComponent(13,10,1,1,0, 0, blackTurn);
 			}
-			
+
 	}
 
 	private void clearComponentSet(){
-		content.remove(blackTurn);
-		content.remove(blackColorLabel);
-		content.remove(blackColorList);
-		content.remove(whiteColorLabel);
-		content.remove(whiteColorList);
-		content.remove(whiteTurn);
+		background.remove(blackTurn);
+		background.remove(blackColorLabel);
+		background.remove(blackColorList);
+		background.remove(whiteColorLabel);
+		background.remove(whiteColorList);
+		background.remove(whiteTurn);
 	}
-	
+
   public static void main(String[] args) {
     ConsoleGraphics chessBoard = new ConsoleGraphics();
   }
 
-  
+
 
 }
