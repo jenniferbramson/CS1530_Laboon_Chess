@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 import javax.imageio.*;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class KibitzerPanel extends JPanel {
 	
@@ -20,7 +21,7 @@ public class KibitzerPanel extends JPanel {
 	
 	private static boolean checkChessboardVisible = true;
 	
-	private static Thread t;
+	protected static Thread t;
 	
 	public KibitzerPanel() {
 		
@@ -70,11 +71,13 @@ public class KibitzerPanel extends JPanel {
 	private static void changeDisplay() {
 		int testCounter = 0;
 		
+		checkChessboardVisible = true;
+		
 		while(checkChessboardVisible == true) {
 			System.out.println("Test Counter: " + testCounter);
 			
 			//Generate random number based on the size of the list
-			int randomInt = rng.nextInt(kibFiles.size());
+			int randomInt = ThreadLocalRandom.current().nextInt(0, (kibFiles.size() - 1));
 			String fileName = kibFiles.get(randomInt);
 			
 			try{
@@ -91,7 +94,7 @@ public class KibitzerPanel extends JPanel {
 			
 			//Generate random number between 1 and 5
 			//Convert to seconds
-			int randomIntTime = rng.nextInt(5) + 1;
+			int randomIntTime = ThreadLocalRandom.current().nextInt(1, 5);
 			secondsWait = randomIntTime * 1000;
 			
 			System.out.println("Thread waiting for: " + randomIntTime + " seconds");
@@ -100,6 +103,8 @@ public class KibitzerPanel extends JPanel {
 				Thread.sleep(secondsWait);
 			} catch (InterruptedException iex) { 
 				System.out.println("Something terrible has happened to the thread...");
+				t.interrupt();
+				t.start();
 			}
 			
 			//Try to see if the board is open/visible
