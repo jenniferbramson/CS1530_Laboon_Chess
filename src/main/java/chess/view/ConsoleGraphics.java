@@ -134,6 +134,7 @@ public class ConsoleGraphics extends JFrame {
   	}
   }
 
+	// From http://stackoverflow.com/questions/6714045/how-to-resize-jlabel-imageicon
 	private Image getScaledImage(Image srcImg, int w, int h){
 	    BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 	    Graphics2D g2 = resizedImg.createGraphics();

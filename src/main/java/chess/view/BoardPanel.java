@@ -39,6 +39,7 @@ public class BoardPanel extends JPanel {
 	//COLORS
 	public static final Color SEAGREEN = new Color(180,238,180);
 	public static final Color DARKSEAGREEN = new Color(155,205,155);
+	public static final Color GREENBLUE = new Color(125,198,200);
 	//for flipping the board
 	private boolean flipped = false;
 
@@ -114,7 +115,7 @@ public class BoardPanel extends JPanel {
         if ((i + j) % 2 == 0) {   // White square
           b.setBackground(Color.WHITE);
         } else {                  // Black Square
-          b.setBackground(new Color(125,198,200));
+          b.setBackground(GREENBLUE);
         }
 
         checkers[i][j] = b;
@@ -472,7 +473,7 @@ public class BoardPanel extends JPanel {
             if ( (old_x+old_y) % 2== 0) {
               checkers[old_y][old_x].setBackground(Color.WHITE);
             } else {
-              checkers[old_y][old_x].setBackground(Color.GRAY);
+              checkers[old_y][old_x].setBackground(GREENBLUE);
             }
             second_click = false;
           } else {
@@ -488,7 +489,7 @@ public class BoardPanel extends JPanel {
 							if ( (old_x+old_y) % 2== 0) {
 								checkers[old_y][old_x].setBackground(Color.WHITE);
 							} else {
-								checkers[old_y][old_x].setBackground(Color.GRAY);
+								checkers[old_y][old_x].setBackground(GREENBLUE);
 							}
 							second_click = false;
 
