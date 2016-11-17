@@ -18,6 +18,7 @@ public class ConsoleGraphics extends JFrame {
 	protected static BoardPanel board;
 	protected ButtonsPanel buttons;
 	protected TimerPanel timer;
+	protected KibitzerPanel kib;
 	protected Container content;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc;
@@ -48,12 +49,14 @@ public class ConsoleGraphics extends JFrame {
 		flipButton.addActionListener(flipBoard());
     board = new BoardPanel();           // Get the square board
     buttons = new ButtonsPanel();     // Get the buttons panel
-
+	kib = new KibitzerPanel();
+	
     JPanel left = new JPanel();                    // Stack the three panels above
     left.setLayout(new BorderLayout());
     left.add(flipButton, BorderLayout.NORTH);
     left.add(board, BorderLayout.CENTER);
     left.add(buttons, BorderLayout.SOUTH);
+	left.add(kib, BorderLayout.WEST);
 
     // Middle part of board has the turn signals
     whiteTurn = playerTurnButton("White");
