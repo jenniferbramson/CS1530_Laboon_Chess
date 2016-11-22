@@ -247,7 +247,7 @@ public class Rulebook {
       if (danger) {
         return false;
       }
-      
+
       for (int i = 1; i < 3; i++) { // Checks to the right 2 spaces
         space = my_storage.getSpaceChar(x + i, y);
         if (space == '\u0000') {
@@ -664,86 +664,86 @@ public class Rulebook {
   }
 
   public String testGameEnded(String fen) {
-	String result = "noResult";
+  	String result = "noResult";
 
-	Stockfish player = new Stockfish();
-    player.startEngine();
-    // Tell the engine to switch to UCI mode
-    player.send("uci");
+  	Stockfish player = new Stockfish();
+      player.startEngine();
+      // Tell the engine to switch to UCI mode
+      player.send("uci");
 
-	String bestMove = player.getBestMove(fen, 100);
-	System.out.println("Best Move: " + bestMove);
+  	String bestMove = player.getBestMove(fen, 100);
+  	System.out.println("Best Move: " + bestMove);
 
-	//Stockfish couldn't determine a best move given the current fen
-	if(bestMove.equals("(none")) {
+  	//Stockfish couldn't determine a best move given the current fen
+  	if(bestMove.equals("(none")) {
 
-		//Indicates which color couldn't make any moves
-		char turn = LaboonChess.getTurn();
+  		//Indicates which color couldn't make any moves
+  		char turn = LaboonChess.getTurn();
 
-		//Indicates the color that the user selected to play as
-		char playercolor = LaboonChess.controller.playersColor;
+  		//Indicates the color that the user selected to play as
+  		char playercolor = LaboonChess.controller.playersColor;
 
-		TestBoard testBoard = new TestBoard(my_storage, 0, 0, 0, 0);
+  		TestBoard testBoard = new TestBoard(my_storage, 0, 0, 0, 0);
 
-		//Test if draw condition - stalemate, unable to move any pieces and king is not in check
-		if(turn == 'w') {
-			//If it's white's turn, see if their king is in danger
-			boolean whiteKingDanger = kingDanger(testBoard.getWhiteKingX(), testBoard.getWhiteKingY(), 'K', testBoard);
-			if(whiteKingDanger == false) {
-				result = "draw";
-				System.out.println("Draw by stalemate on white's turn");
-			}
-		}
-		else {
-			//If it's black's turn, see if their king is in danger
-			boolean blackKingDanger = kingDanger(testBoard.getBlackKingX(), testBoard.getBlackKingY(), 'k', testBoard);
-			if(blackKingDanger == false) {
-				result = "draw";
-				System.out.println("Draw by stalemate on black's turn");
-			}
-		}
+  		//Test if draw condition - stalemate, unable to move any pieces and king is not in check
+  		if(turn == 'w') {
+  			//If it's white's turn, see if their king is in danger
+  			boolean whiteKingDanger = kingDanger(testBoard.getWhiteKingX(), testBoard.getWhiteKingY(), 'K', testBoard);
+  			if(whiteKingDanger == false) {
+  				result = "draw";
+  				System.out.println("Draw by stalemate on white's turn");
+  			}
+  		}
+  		else {
+  			//If it's black's turn, see if their king is in danger
+  			boolean blackKingDanger = kingDanger(testBoard.getBlackKingX(), testBoard.getBlackKingY(), 'k', testBoard);
+  			if(blackKingDanger == false) {
+  				result = "draw";
+  				System.out.println("Draw by stalemate on black's turn");
+  			}
+  		}
 
-		//If not a draw then it must be that someone won/loss
-		if(result.equals("noResult")) {
-			//If it was the player's turn and they have no best possible move then they lost
-			if(turn == playercolor) {
-				result = "loss";
-			}
-			//Else they won the game
-			else {
-				result = "win";
-			}
-		}
-	}
-	//There are still possible best moves
-	//This else mainly tests only for draw conditions
-	else {
-		System.out.println("Testing insufficient pieces");
+  		//If not a draw then it must be that someone won/loss
+  		if(result.equals("noResult")) {
+  			//If it was the player's turn and they have no best possible move then they lost
+  			if(turn == playercolor) {
+  				result = "loss";
+  			}
+  			//Else they won the game
+  			else {
+  				result = "win";
+  			}
+  		}
+  	}
+  	//There are still possible best moves
+  	//This else mainly tests only for draw conditions
+  	else {
+  		System.out.println("Testing insufficient pieces");
 
-		//Test insufficient number of pieces to win game draw conditions
-		result = checkInsufficientPieces(fen);
+  		//Test insufficient number of pieces to win game draw conditions
+  		result = checkInsufficientPieces(fen);
 
-		//Test repetition of moves
-		if(result.equals("noResult")) {
+  		//Test repetition of moves
+  		if(result.equals("noResult")) {
 
-			System.out.println("Testing move repetition");
+  			System.out.println("Testing move repetition");
 
-			result = checkRepetition();
-		}
-		//Test 50 move rule if all other draw conditions weren't met
-		if(result.equals("noResult")) {
+  			result = checkRepetition();
+  		}
+  		//Test 50 move rule if all other draw conditions weren't met
+  		if(result.equals("noResult")) {
 
-			System.out.println("Testing 50 move rule");
+  			System.out.println("Testing 50 move rule");
 
-			result = check50MoveRule(fen);
-		}
-	}
+  			result = check50MoveRule(fen);
+  		}
+  	}
 
-	player.stopEngine();
+  	player.stopEngine();
 
-	System.out.println("Results: " + result);
+  	System.out.println("Results: " + result);
 
-	return result;
+  	return result;
   }
 
 	//Test insufficient number of pieces to win game - draw conditions

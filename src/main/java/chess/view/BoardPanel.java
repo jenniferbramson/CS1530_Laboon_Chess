@@ -63,7 +63,6 @@ public class BoardPanel extends JPanel {
 	private String defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 	public static boolean firstTurnTaken = false;
-	public static boolean moved = false;
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
@@ -551,7 +550,6 @@ public class BoardPanel extends JPanel {
   						//redraw
     					setPieces();
     					firstTurnTaken = true;
-							moved = true;
 
               System.out.println("players turn " + LaboonChess.getPlayersTurn());
 
@@ -560,6 +558,7 @@ public class BoardPanel extends JPanel {
 
 						  //redraw
 						  setPieces();
+							LaboonChess.changeTurn();
 
             } // end legality move check
 						else{
@@ -605,17 +604,19 @@ public class BoardPanel extends JPanel {
 					System.out.println(my_storage.getFen());
 				}
 
-				/* Causes run() to be executed asynchronously on the AWT event dispatching thread. This will happen after all pending AWT events have been processed. */
+				// This method delays all swing updates until the method completes
+				// Causes run() to be executed asynchronously on the AWT event dispatching
+				// thread. This will happen after all pending AWT events have been processed.
 				SwingUtilities.invokeLater(new Runnable() {
           public void run() {
-            // Only do something if the player has moved
-            if (moved){
+            // Only do something if the player has moved aka if it is the computer's turn
+            if (!LaboonChess.getPlayersTurn()){
               int[] move = LaboonChess.controller.getMoveFromStockfish(true);
               setPieces();
               LaboonChess.controller.playMoveFromStockfish(move);
+						//	LaboonChess.controller.makeCompMove();
               LaboonChess.changeTurn();
               setPieces();
-              moved = false;
             }
 
           }
