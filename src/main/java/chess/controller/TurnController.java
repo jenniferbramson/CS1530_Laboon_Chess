@@ -21,6 +21,7 @@ public class TurnController {
   private String fenBeforeMove;
   private String fenAfterMove;
   private String bestMove;
+  public static final Color GREENBLUE = new Color(125,198,200);
 
   int moveRule50Counter = 0;
 
@@ -239,13 +240,13 @@ public class TurnController {
       if ( (old_x+old_y) % 2== 0) {
         BoardPanel.checkers[old_y][old_x].setBackground(Color.WHITE);
       } else {
-        BoardPanel.checkers[old_y][old_x].setBackground(Color.GRAY);
+        BoardPanel.checkers[old_y][old_x].setBackground(GREENBLUE);
       }
 
       if ( (x+y) % 2== 0) {
         BoardPanel.checkers[y][x].setBackground(Color.WHITE);
       } else {
-        BoardPanel.checkers[y][x].setBackground(Color.GRAY);
+        BoardPanel.checkers[y][x].setBackground(GREENBLUE);
       }
 
       BoardPanel.my_storage.movePiece(old_y, old_x, y, x);
