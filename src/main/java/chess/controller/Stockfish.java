@@ -12,6 +12,10 @@ import java.io.InputStreamReader;
 
 import java.util.concurrent.TimeUnit;
 
+enum DifficultyLevel {
+  EASY, MEDIUM, HARD, EXPERT
+}
+
 
 
 
@@ -87,7 +91,9 @@ public class Stockfish {
       started = engine.isAlive();
 
       // Tell stockfish process to start communicating in UCI mode
-      this.send("ucinewgame");
+      // this.send("ucinewgame");
+      this.send("uci");
+      System.out.println(this.getOutput());
     }
 
     /* If there has been a FileNotFoundException or an IOException,
@@ -282,6 +288,18 @@ public class Stockfish {
       } catch(IOException e){}
     }
     return stopped;
+  }
+
+
+  public void setDifficultyLevel(DifficultyLevel level) {
+    switch (level) {
+      case EASY:
+        send("setoption name Skill Level value 1");
+        break;
+
+      default:
+        break;
+    }
   }
 
   // Have stockfish play against itself for specified number of rounds

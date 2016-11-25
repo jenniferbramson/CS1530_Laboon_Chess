@@ -27,10 +27,21 @@ public class LaboonChess {
   }
 
   public static void main(String[] args) {
-    stockfish.startEngine();   
+    stockfish.startEngine();
+    stockfish.enableDebugLog();
+    stockfish.setDifficultyLevel(DifficultyLevel.EASY);
     StartUpMenu chessBoard = new StartUpMenu();
+
+
+    //-------
+    //
+    // Stockfish sf = new Stockfish();
+    // sf.startEngine();
+    // sf.enableDebugLog();
+    // // System.out.println(sf.getOutput());
+    // sf.setDifficultyLevel(DifficultyLevel.EASY);
+    // sf.stopEngine();
 
   }
 
 }
-
