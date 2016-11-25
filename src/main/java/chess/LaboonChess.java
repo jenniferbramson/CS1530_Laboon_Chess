@@ -30,6 +30,7 @@ public class LaboonChess {
     stockfish.startEngine();
     stockfish.enableDebugLog();
     stockfish.setDifficultyLevel(DifficultyLevel.EASY);
+    stockfish.send("uci");
     StartUpMenu chessBoard = new StartUpMenu();
 
 

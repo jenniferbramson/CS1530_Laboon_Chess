@@ -292,9 +292,22 @@ public class Stockfish {
 
 
   public void setDifficultyLevel(DifficultyLevel level) {
+    String command = "setoption name Skill Level value ";
     switch (level) {
       case EASY:
-        send("setoption name Skill Level value 1");
+        send(command + "0");
+        break;
+
+      case MEDIUM:
+        send(command + "7");
+        break;
+
+      case HARD:
+        send(command + "14");
+        break;
+
+      case EXPERT:
+        send(command + "20");
         break;
 
       default:
