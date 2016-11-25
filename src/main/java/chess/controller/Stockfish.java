@@ -13,7 +13,7 @@ import java.io.InputStreamReader;
 import java.util.concurrent.TimeUnit;
 
 enum DifficultyLevel {
-  EASY, MEDIUM, HARD, EXPERT
+  EASY, MEDIUM, HARD, EXPERT;
 }
 
 

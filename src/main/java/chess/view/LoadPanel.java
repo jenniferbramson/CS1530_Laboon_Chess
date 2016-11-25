@@ -9,11 +9,11 @@ import java.lang.*;
 
 public class LoadPanel extends JPanel {
 	private JLabel prompt;
-	
+
 	private JButton loadGame;
 	private int loadGameWidth = 200;
 	private int loadGameHeight = 25;
-	
+
 	private String fileName;
 
 	private JButton save;
@@ -38,16 +38,16 @@ public class LoadPanel extends JPanel {
 	private int textFieldSize = 16;
 
 	private GridBagConstraints gbc;
-	
+
 	private int promptWidth = 600;
 	private int promptHeight = 200;
-	
+
 	private int calculatedHeight;
 	private int defaultWidth = 800;
-	
+
 	private int numberColumns = 3;
 	private int centerPrompt = 3;
-	
+
 	private char playersColor;
 	private char currentColor;
 	private String[] splitFen;
@@ -56,7 +56,7 @@ public class LoadPanel extends JPanel {
 
 		//Retrieve all valid file names
 		getListOfSaveFiles();
-		
+
 		GridBagLayout layout = new GridBagLayout();
 		this.setLayout(layout);
 		this.setBackground(Color.WHITE);
@@ -67,7 +67,7 @@ public class LoadPanel extends JPanel {
 		prompt = new JLabel("Select save file to load");
 		prompt.setHorizontalAlignment(JLabel.CENTER);
 		prompt.setFont(new Font("Arial", Font.BOLD, promptTextSize));
-		
+
 		gbc.insets = new Insets(7, 7, 7, 7);
 
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -78,11 +78,11 @@ public class LoadPanel extends JPanel {
 		gbc.ipady = 15;
 
 		this.add(prompt, gbc);
-		
+
 		//Code related to new load file layout
 		int rowNumber = 1;
 		int colNumber = 0;
-		
+
 		for(int i = 0; i < listOfAllSaveFiles.size(); i++)
 		{
 			//Add buttons to the panel
@@ -92,14 +92,14 @@ public class LoadPanel extends JPanel {
 			loadGame.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
 			loadGame.setPreferredSize(new Dimension(loadGameWidth,loadGameHeight));
 			loadGame.addActionListener(loadChessGame());
-			
+
 			gbc.ipadx = 25;
-			
+
 			gbc.gridx = colNumber;
 			gbc.gridy = rowNumber;
 			gbc.gridwidth = 1;
 			this.add(loadGame, gbc);
-			
+
 			//If button hasn't filled up the row add another one
 			if(colNumber < (numberColumns-1)) {
 				colNumber++;
@@ -110,10 +110,10 @@ public class LoadPanel extends JPanel {
 				colNumber = 0;
 			}
 		}
-		
+
 		//Calculate dynamic height based on the number of row
 		calculatedHeight = (rowNumber * (loadGameHeight + 31)) + 120;
-		
+
 		//If height is too large, limit it
 		if(calculatedHeight > 700) {
 			calculatedHeight = 700;
@@ -130,11 +130,11 @@ public class LoadPanel extends JPanel {
 				//Code for load button panel layout
 				//Get the file name based on what button was clicked
 				fileName = e.getActionCommand();
-				
+
 				fileNamePath = "/" + fileName;
-				
+
 				System.out.println("FileName of button clicked: " + fileName);
-				
+
 				//Try to see if the board is open/visible
 				try {
 					checkChessboardVisible = ConsoleGraphics.frame.isShowing();
@@ -146,7 +146,7 @@ public class LoadPanel extends JPanel {
 				//If so then the user is trying to load a game from the chessboard layout
 				if(checkChessboardVisible == true) {
 					System.out.println("Board is visible!");
-		
+
 					//Get current fen from the board
 					String currFen = BoardPanel.my_storage.getFen();
 
@@ -173,16 +173,16 @@ public class LoadPanel extends JPanel {
 		};
 		return action;
 	}
-	
+
 	//Load the entered file, retrieve it's contents and display it on the board
 	private void loadFile() {
 		System.out.println("Filename in load file method: " + fileName);
-		
+
 		fileContents = new ArrayList<String>();
 		//Try to open contents of the file
 		try {
 			File file = new File(this.getClass().getResource(fileNamePath).toURI());
-			
+
 			//Read in all contents of the file and store it into an ArrayList
 			BufferedReader readFile = new BufferedReader(new FileReader(file));
 			while((tempLine = readFile.readLine()) != null)
@@ -190,11 +190,12 @@ public class LoadPanel extends JPanel {
 				fileContents.add(tempLine);
 			}
 			readFile.close();
-			
+
 			//Get fen from the file
 			//Assume that fen is the first line in the file
 			fen = fileContents.get(0);
-			
+
+
 			//TEST CODE
 			//Read out the board in the file to make sure its the same
 			//As what is displayed
@@ -202,14 +203,15 @@ public class LoadPanel extends JPanel {
 			for(int i = 1; i < 9; i++) {
 				System.out.println("Row " + i + " : " + fileContents.get(i));
 			}
-			
+
 			// Set controller to whoever's turn it should be
 			splitFen = fen.split(" ");
 			// Whether it is currently white or black's turn is second string in fen
 			// Fen stores white's turn as 'w', black's turn as 'b' already
 			currentColor = splitFen[1].charAt(0);
-			// Last line in file stores what color the player is
-			playersColor = fileContents.get(fileContents.size() - 1).charAt(0);
+
+			// Second to last line in file stores what color the player is
+			playersColor = fileContents.get(fileContents.size() - 2).charAt(0);
 			System.out.println("Players color is: " + playersColor);
 
 			//Test the file to see if it's valid
@@ -223,7 +225,7 @@ public class LoadPanel extends JPanel {
 				catch(NullPointerException ex) {
 					checkChessboardVisible = false;
 				}
-				
+
 				if(checkChessboardVisible != false) {
 					//Remove previous chessboard before creating the new one
 					//If there is some lag when loading the images
@@ -232,16 +234,22 @@ public class LoadPanel extends JPanel {
 				}
 
 				LaboonChess.controller = new TurnController(currentColor, playersColor);
-				
+
+				// Set difficulty level of stockfish
+				String difficulty = fileContents.get(fileContents.size() - 1);
+				System.out.println("Difficulty level: " + difficulty);
+				DifficultyLevel level = DifficultyLevel.valueOf(difficulty);
+				LaboonChess.stockfish.setDifficultyLevel(level);
+
 				//Load chessboard
 				ConsoleGraphics chessboard = new ConsoleGraphics();
-				
+
 				LaboonChess.controller.addGraphicalTurn(chessboard);
-				
+
 				//Make load frame not visible after user clicks load game
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(this.getParent());
 				frame.dispose();
-				
+
 				//Update last saved fen
 				//Last saved fen as the new fen that was just loaded
 				BoardPanel.lastSaveFen = fen;
@@ -256,7 +264,7 @@ public class LoadPanel extends JPanel {
 	private void setUpPrompt() {
 		//Remove all components in the board
 		this.removeAll();
-		
+
 		//Add prompt back to panel
 		//Change the label text
 		prompt.setText("<html><div style='text-align: center;'>Game hasn't been saved!<br>Do you want to save your progress?</div></html>");
@@ -337,18 +345,18 @@ public class LoadPanel extends JPanel {
 			//Retrieve all files or directories in the resource folder
 			File resourceFolder = new File(this.getClass().getResource(saveFilePath).toURI());
 			File[] listOfFiles = resourceFolder.listFiles();
-			
+
 			listOfAllSaveFiles = new ArrayList<String>();
-			
+
 			//Check all files
 			for(File f : listOfFiles) {
 				//Check if file is a folder
 				if(f.isFile()) {
 					String saveFileName = f.getName();
-					
+
 					//Display all files
 					//System.out.println(saveFileName);
-					
+
 					//Check the extension to make sure it's a text file
 					//If file is a text file, then most likely it's a save file
 					String checkExtension = saveFileName.substring(saveFileName.lastIndexOf(".") + 1, saveFileName.length());
@@ -357,43 +365,43 @@ public class LoadPanel extends JPanel {
 					}
 				}
 			}
-			
+
 			//Print out what files are saved in the list
 			System.out.println(listOfAllSaveFiles);
-			
+
 		} catch (Exception ex) {
 			System.out.print("Exception: ");
 			System.out.println(ex.getMessage());
 		}
 	}
-	
+
 	//Sets the frame size for the load panel dynamically
 	private void setNewFrameSize(int width, int height) {
 		//Set the new frame width and height
 		LoadGame.screenWidth = width;
 		LoadGame.screenHeight = height;
-		
+
 		//Modify the size of the frame
 		LoadGame.frame.setSize(LoadGame.screenWidth, LoadGame.screenHeight);
-		
+
 		//Recenter the frame in the middle of the screen
 		Toolkit t = getToolkit();
 		Dimension screen = t.getScreenSize();
 		LoadGame.frame.setLocation(screen.width/2-LoadGame.frame.getWidth()/2,screen.height/2-LoadGame.frame.getHeight()/2);
-		
+
 		this.validate();
 		this.repaint();
 	}
-	
+
 	private boolean testFile() {
 		String errorPrompt = "<html><html><div style='text-align: center;'>" + fileName + " is invalid!<br>Select different file to load!</div></html>";
-		int lengthOfSaveFile = 10;
+		int lengthOfSaveFile = 11;
 		boolean validSaveFile = true;
-		
+
 		String[] fenSeparatedByRow = splitFen[0].split("/");
-		
+
 		//Check that number of lines read in matches what was expected
-		//Not going to check anything else since the display of the table in the 
+		//Not going to check anything else since the display of the table in the
 		//Text file is test code, don't think it's necessary to check if the fen string
 		//Matches with the display of the board in the file
 		if(fileContents.size() != lengthOfSaveFile) {
@@ -425,7 +433,7 @@ public class LoadPanel extends JPanel {
 			System.out.println("Save file contained an invalid fen string!");
 			validSaveFile = false;
 		}
-		
+
 		return validSaveFile;
 	}
 }
