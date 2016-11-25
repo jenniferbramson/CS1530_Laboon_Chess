@@ -26,23 +26,15 @@ public class LaboonChess {
     controller.firstStockfishTurn();
   }
 
+  public static void setDifficultyLevel(DifficultyLevel level) {
+    stockfish.setDifficultyLevel(level);
+  }
+
   public static void main(String[] args) {
     stockfish.startEngine();
     stockfish.enableDebugLog();
-    stockfish.setDifficultyLevel(DifficultyLevel.EASY);
     stockfish.send("uci");
     StartUpMenu chessBoard = new StartUpMenu();
-
-
-    //-------
-    //
-    // Stockfish sf = new Stockfish();
-    // sf.startEngine();
-    // sf.enableDebugLog();
-    // // System.out.println(sf.getOutput());
-    // sf.setDifficultyLevel(DifficultyLevel.EASY);
-    // sf.stopEngine();
-
   }
 
 }
