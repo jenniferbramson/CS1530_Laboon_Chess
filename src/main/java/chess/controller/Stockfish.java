@@ -45,6 +45,7 @@ public class Stockfish {
    */
   public static final String STARTING_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
   public String fen = STARTING_POS;
+  private DifficultyLevel level;
 
 
   /** Start Stockfish process.
@@ -246,8 +247,6 @@ public class Stockfish {
     */
   public boolean movePiece(String move, String fen){
     this.send("position fen " + fen + " moves " + move);
-    // check to see if valid - not sure how yet
-    // maybe should call RuleBook?
     return true; // if valid move
 
   }
@@ -292,6 +291,7 @@ public class Stockfish {
 
 
   public void setDifficultyLevel(DifficultyLevel level) {
+    this.level = level;
     String command = "setoption name Skill Level value ";
     switch (level) {
       case EASY:
@@ -313,6 +313,10 @@ public class Stockfish {
       default:
         break;
     }
+  }
+
+  public DifficultyLevel getDifficultyLevel() {
+    return level;
   }
 
   // Have stockfish play against itself for specified number of rounds
