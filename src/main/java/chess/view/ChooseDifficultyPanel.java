@@ -56,7 +56,7 @@ public class ChooseDifficultyPanel extends JPanel {
 		//Add spacing between buttons
 		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
 
-		//Add white pieces selection button
+		//Add selection button for easy difficulty
 		easy = new JButton("");
 		try{
 			Image img = ImageIO.read(getClass().getResource(""));
@@ -67,7 +67,7 @@ public class ChooseDifficultyPanel extends JPanel {
 			easy.setAlignmentX(Component.CENTER_ALIGNMENT);
 			easy.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
 		}
-		//Set an icon for white pawn or king
+
 		easy.setAlignmentX(Component.CENTER_ALIGNMENT);
 		easy.addActionListener(playEasy());
 		this.add(easy);
@@ -75,7 +75,6 @@ public class ChooseDifficultyPanel extends JPanel {
 		//Add spacing between buttons
 		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
 
-		//Add black pieces selection button
 		medium = new JButton("");
 		try{
 			Image img = ImageIO.read(getClass().getResource(""));
@@ -85,7 +84,6 @@ public class ChooseDifficultyPanel extends JPanel {
 			medium = new JButton("MEDIUM");
 			medium.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
 		}
-		//Set icon medium pawn/king
 		medium.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		medium.addActionListener(playMedium());
@@ -94,17 +92,15 @@ public class ChooseDifficultyPanel extends JPanel {
 		//Add spacing between buttons
 		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
 
-		//Add black pieces selection button
 		hard = new JButton("");
 		try{
 			Image img = ImageIO.read(getClass().getResource(""));
 			hard.setIcon(new ImageIcon(img));
 			hard.setBorder(null);
 		} catch(Exception e){
-			hard = new JButton("hard");
+			hard = new JButton("HARD");
 			hard.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
 		}
-		//Set icon hard pawn/king
 		hard.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		hard.addActionListener(playHard());
@@ -113,24 +109,19 @@ public class ChooseDifficultyPanel extends JPanel {
 		//Add spacing between buttons
 		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
 
-		//Add black pieces selection button
 		expert = new JButton("");
 		try{
 			Image img = ImageIO.read(getClass().getResource(""));
 			expert.setIcon(new ImageIcon(img));
 			expert.setBorder(null);
 		} catch(Exception e){
-			expert = new JButton("expert");
+			expert = new JButton("EXPERT");
 			expert.setFont(new Font("Arial", Font.BOLD, buttonTextSize));
 		}
-		//Set icon expert pawn/king
 		expert.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		expert.addActionListener(playExpert());
 		this.add(expert);
-
-
-
 
 
 		//Add spacing between buttons
@@ -219,7 +210,7 @@ public class ChooseDifficultyPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 			// Placeholder for when we add functionality
 				StartUpMenu start = new StartUpMenu();
-				//Dispose color choice panel after user clicks to return to previous menu
+				//Dispose difficulty after user clicks to return to previous menu
 				JFrame frame = (JFrame) SwingUtilities.getWindowAncestor(backToMenu.getParent());
 				frame.dispose();
 			}
