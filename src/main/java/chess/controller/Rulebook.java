@@ -183,6 +183,13 @@ public class Rulebook {
 
     // Queenside
     if ((piece == 'K' && whiteCanCastle) || (piece == 'k' && blackCanCastle)) {
+      // Check original space - king cannot castle FROM a check!
+      testBoard = new TestBoard(my_storage, x, y, x, y);
+      danger = kingDanger(x, y, piece, testBoard);
+      if (danger) {
+        return false;
+      }
+
       for (int i = 1; i < 3; i++) { // Checks to the left two spaces
         space = my_storage.getSpaceChar(x - i, y);
         if (space == '\u0000') {
@@ -234,6 +241,13 @@ public class Rulebook {
 
     // Kingside
     if ((piece == 'K' && whiteCanCastle) || (piece == 'k' && blackCanCastle)) {
+      // Check original space - king cannot castle FROM a check!
+      testBoard = new TestBoard(my_storage, x, y, x, y);
+      danger = kingDanger(x, y, piece, testBoard);
+      if (danger) {
+        return false;
+      }
+      
       for (int i = 1; i < 3; i++) { // Checks to the right 2 spaces
         space = my_storage.getSpaceChar(x + i, y);
         if (space == '\u0000') {

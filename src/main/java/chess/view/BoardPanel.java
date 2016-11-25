@@ -300,8 +300,8 @@ public class BoardPanel extends JPanel {
 							break;
 					}
 				} catch(IOException e){
-						System.out.println("Error loading pieces!");
-						System.exit(0);
+					System.out.println("Error loading pieces!");
+					System.exit(0);
 				}
 
 			}
@@ -316,16 +316,16 @@ public class BoardPanel extends JPanel {
 		addComponent(0,0,1,1,new JLabel(""));  // Corners are empty
 		if(!flipped){
 			for (int i = 0; i < 8; i++) {
-			JLabel label = new JLabel("" + (char)(97 + i));
-			label.setHorizontalAlignment(SwingConstants.CENTER);
-			addComponent(i+1,0,1,1,label);
+				JLabel label = new JLabel("" + (char)(97 + i));
+				label.setHorizontalAlignment(SwingConstants.CENTER);
+				addComponent(i+1,0,1,1,label);
 			}
 		}
 		else{
 			for (int i = 7; i >= 0; i--) {
-			JLabel label = new JLabel("" + (char)(97 + i));
-			label.setHorizontalAlignment(SwingConstants.CENTER);
-			addComponent(8-i,0,1,1,label);
+				JLabel label = new JLabel("" + (char)(97 + i));
+				label.setHorizontalAlignment(SwingConstants.CENTER);
+				addComponent(8-i,0,1,1,label);
 			}
 		}
 
@@ -371,16 +371,16 @@ public class BoardPanel extends JPanel {
 		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
 		if(!flipped){
 			for (int i = 0; i < 8; i++) {
-			JLabel label = new JLabel("" + (char)(97 + i));
-			label.setHorizontalAlignment(SwingConstants.CENTER);
-			addComponent(i+1,9,1,1,label);
+				JLabel label = new JLabel("" + (char)(97 + i));
+				label.setHorizontalAlignment(SwingConstants.CENTER);
+				addComponent(i+1,9,1,1,label);
 			}
 		}
 		else{
 			for (int i = 7; i >= 0; i--) {
-			JLabel label = new JLabel("" + (char)(97 + i));
-			label.setHorizontalAlignment(SwingConstants.CENTER);
-			addComponent(8-i,9,1,1,label);
+				JLabel label = new JLabel("" + (char)(97 + i));
+				label.setHorizontalAlignment(SwingConstants.CENTER);
+				addComponent(8-i,9,1,1,label);
 			}
 		}
 		addComponent(9,9,1,1,new JLabel(""));
@@ -474,9 +474,7 @@ public class BoardPanel extends JPanel {
             System.out.println(legal);
             if (legal) {
 
-							// Check to see if moving King or Rook
 							char oldPiece = my_storage.getSpaceChar(old_x, old_y);
-							boolean castle = false;
 							System.out.println(oldPiece);
 
 							System.out.println("Moving " + old_spot + " to " + current_spot);
@@ -542,7 +540,7 @@ public class BoardPanel extends JPanel {
 	            //update storage fen with new fen pulled from stockfish output
 	            my_storage.setFen(fen);
 
-  					//redraw
+  						//redraw
     					setPieces();
     					firstTurnTaken = true;
 							moved = true;
