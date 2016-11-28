@@ -26,8 +26,6 @@ enum DifficultyLevel {
  */
 
 public class Stockfish {
-  
-  
 
   private Process engine;
   private BufferedReader processReader = null;
@@ -88,7 +86,7 @@ public class Stockfish {
       inputStreamReader = new InputStreamReader(inputStream);
       processReader = new BufferedReader(inputStreamReader);
       processWriter = new BufferedWriter(new OutputStreamWriter(engine.getOutputStream()));
-      System.out.println("Stockfish engine started");
+      // System.out.println("Stockfish engine started");
 
       started = engine.isAlive();
 
@@ -264,7 +262,7 @@ public class Stockfish {
       // Wait for process to completely exit
       this.engine.waitFor();
       stopped = true;
-      System.out.println("Stockfish engine stopped");
+      //System.out.println("Stockfish engine stopped");
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -323,8 +321,8 @@ public class Stockfish {
   public static boolean playGame(int rounds, String level1, String level2) {
     DifficultyLevel dl = DifficultyLevel.valueOf(level1);
     DifficultyLevel dl2 = DifficultyLevel.valueOf(level2);
-    
-    
+
+
     int wins1 = 0;
     int wins2 = 0;
     Stockfish player1 = new Stockfish();
@@ -338,13 +336,13 @@ public class Stockfish {
     player2.startEngine();
     player2.send("uci");
     player2.setDifficultyLevel(dl2);
-    
-    
+
+
 
     String fen = player1.STARTING_POS;
     StringBuilder allMoves = new StringBuilder();
     boolean player1Win = false;
-    
+
     int count = 0;
     for (int i = 0; i < rounds; i++){
       count ++;
