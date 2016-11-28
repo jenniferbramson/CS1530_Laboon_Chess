@@ -67,8 +67,49 @@ public class StockfishTest {
     // Fen should contain string with the 4th white pawn in the middle
     assertTrue(fen.contains("3P4"));
     sf.stopEngine();
+  
   }
 
+  /** This test starts two instances of stockfishk, with "player 1" set to easy and "player 2" to 
+	expert (the default level). The number of wins for each player is counted. Player 1 should always win. 
+	*/
+	@Test
+  public void testDifficultyLevelEasy() {
+ 		
+		int wins1 = 0, wins2 = 0;
+		
+		
+		for (int i = 0; i < 5; i++){
+			boolean player1Wins = Stockfish.playGame(100, "EASY", "EXPERT");
+			if (player1Wins) 
+				wins1++;
+			else
+				wins2++;
+			}
+
+		System.out.println("Player 1 wins: " + wins1 + "\nPlayer 2 wins: " + wins2);
+		assert(wins1<wins2);
+	}
+
+	@Test
+  public void testDifficultyLevelExpert() {
+ 		
+		int wins1 = 0, wins2 = 0;
+		
+		
+		for (int i = 0; i < 5; i++){
+			boolean player1Wins = Stockfish.playGame(100, "EXPERT", "EASY");
+			if (player1Wins) 
+				wins1++;
+			else
+				wins2++;
+			}
+
+		System.out.println("Player 1 wins: " + wins1 + "\nPlayer 2 wins: " + wins2);
+		
+	
+		assert(wins1>wins2);
+	}
      //Not working  on all OS's yet
   /* Enable debug mode, then check to see if log has been modified since the time when
      this test started. */
