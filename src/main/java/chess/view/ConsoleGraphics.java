@@ -13,10 +13,8 @@ public class ConsoleGraphics extends JFrame {
 	protected static JFrame frame;
   private Toolkit t;
   private Dimension screen;
-  protected JButton whiteTurn;
-  protected JButton blackTurn;
-	protected JButton blackColorButton;
-	protected JButton whiteColorButton;
+  protected JLabel whiteTurn;
+  protected JLabel blackTurn;
 	protected static BoardPanel board;
 	protected ButtonsPanel buttons;
 	protected TimerPanel timer;
@@ -159,8 +157,8 @@ public class ConsoleGraphics extends JFrame {
 
   // method that builds the "player turn" button
 	// If there is an issue reading the image, creates a multi-line button.
-  private JButton playerTurnButton(String s) {
-    JButton b = new JButton();
+  private JLabel playerTurnButton(String s) {
+    JLabel b = new JLabel();
 		try{
 			//just initializing to black or compiler complains about it not being initialized
 			Image img = ImageIO.read(getClass().getResource("/BlackTurn.png"));
@@ -172,7 +170,7 @@ public class ConsoleGraphics extends JFrame {
       b.setOpaque(true);            // Necessary to see background color
 			b.setBackground(Color.WHITE);
 			b.setPreferredSize(new Dimension(62, 58));
-			b.setBorderPainted(false);
+			//b.setBorderPainted(false);
 		} catch( Exception e){
 			//if something went wrong, use the old buttons
 			b.setLayout(new BorderLayout());
