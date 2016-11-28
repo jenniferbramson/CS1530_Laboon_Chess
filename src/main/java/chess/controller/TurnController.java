@@ -166,7 +166,7 @@ public class TurnController {
 		  //Indicates that stockfish made a move and didn't take piece, therefore it's a draw
 		  if(countPiecesBefore == countPiecesAfter) {
 
-			resultsOfGame = "draw";
+			BoardPanel.my_rulebook.resultsOfGame = "draw";
 			System.out.println("Draw by 50 move rule");
 
 			//Update board with move made by stockfish
@@ -204,8 +204,9 @@ public class TurnController {
 			}
 			if(checkLoadScreenVisible == false) {
 			  System.out.println("Starting tests for game results in changeTurn else");
+			  BoardPanel.my_rulebook.resultsOfGame = "noResult";
 			  System.out.println(BoardPanel.my_storage.getFen());
-			  if(BoardPanel.my_rulebook.resultsOfGame.equals("noResults")) {
+			  if(BoardPanel.my_rulebook.resultsOfGame.equals("noResult")) {
 				BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
 			  }
 			}
