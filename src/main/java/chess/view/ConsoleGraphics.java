@@ -17,7 +17,6 @@ public class ConsoleGraphics extends JFrame {
   protected JLabel blackTurn;
 	protected static BoardPanel board;
 	protected ButtonsPanel buttons;
-	protected TimerPanel timer;
 	protected Container content;
 	private GridBagLayout gbl;
 	private GridBagConstraints gbc;
@@ -48,10 +47,8 @@ public class ConsoleGraphics extends JFrame {
 			content.add(background);
 		}
 
-    // Left side of the board has the timer, chess board, and buttons (load and
-    // save) stacked vertically
-
-		//timer = new TimerPanel();           // Get the timer panel
+    // Left side of the board has the chess board, flip board, and buttons
+		// (load and save) stacked vertically
 		JButton flipButton = new JButton("Flip Board");
 		flipButton.addActionListener(flipBoard());
     board = new BoardPanel();           // Get the square board
