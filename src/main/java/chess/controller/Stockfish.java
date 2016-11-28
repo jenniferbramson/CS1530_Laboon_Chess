@@ -344,10 +344,12 @@ public class Stockfish {
     String fen = player1.STARTING_POS;
     StringBuilder allMoves = new StringBuilder();
     boolean player1Win = false;
-
+    
+    int count = 0;
     for (int i = 0; i < rounds; i++){
+      count ++;
 
-      System.out.println("ROUND " + (i/2+1));
+      // System.out.println("ROUND " + (i/2+1));
 
       player1.send("position fen " + fen);
       //player1.send("d");
@@ -381,7 +383,10 @@ public class Stockfish {
 
     }
     player1.stopEngine();
+    System.out.println("Final board: ");
+    player2.drawBoard();
     player2.stopEngine();
+    System.out.println("Total number of rounds: " + count);
     return player1Win;
   }
 

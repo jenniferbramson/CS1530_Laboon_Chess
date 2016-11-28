@@ -96,7 +96,7 @@ public class StockfishTest {
  		
 		int wins1 = 0, wins2 = 0;
 		
-		
+	
 		for (int i = 0; i < 5; i++){
 			boolean player1Wins = Stockfish.playGame(100, "EXPERT", "EASY");
 			if (player1Wins) 
@@ -109,6 +109,28 @@ public class StockfishTest {
 		
 	
 		assert(wins1>wins2);
+	
+	}
+
+
+	@Test
+  public void testDifficultyLevelMedium() {
+ 		
+		int wins1 = 0, wins2 = 0;
+		
+	
+		for (int i = 0; i < 5; i++){
+			boolean player1Wins = Stockfish.playGame(100, "MEDIUM", "EXPERT");
+			if (player1Wins) 
+				wins1++;
+			else
+				wins2++;
+			}
+
+		System.out.println("Player 1 wins: " + wins1 + "\nPlayer 2 wins: " + wins2);
+		
+	
+		assert(wins1<wins2);
 	}
      //Not working  on all OS's yet
   /* Enable debug mode, then check to see if log has been modified since the time when
