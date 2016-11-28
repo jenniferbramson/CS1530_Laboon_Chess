@@ -36,7 +36,7 @@ public class VideoPanel extends JPanel {
 			url = this.getClass().getResource("/rickroll.mp4").toExternalForm();
 		}
 		else if(resultsOfGame.equals("draw")) {
-			url = this.getClass().getResource("/rickroll.mp4").toExternalForm();
+			url = this.getClass().getResource("/ross.mp4").toExternalForm();
 		}
 
 		player = new MediaPlayer(new Media(url));
