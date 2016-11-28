@@ -15,8 +15,9 @@ public class ChooseDifficultyPanel extends JPanel {
 	private JButton backToMenu;
 
 	//Variables to change the spacing of buttons and title
-	private int topSpace = 50;
+	private int topSpace = 100;
 	private int buttonSpace = 10;
+	private int largerSpace = 50;
 
 	private int titleTextSize = 48;
 	private int buttonTextSize = 24;
@@ -33,8 +34,8 @@ public class ChooseDifficultyPanel extends JPanel {
 		//Add Title image here
 		try {
 
-			//TODO: get image for title
-			Image img = ImageIO.read(getClass().getResource(""));
+			//get image for title
+			Image img = ImageIO.read(getClass().getResource("/ChooseDifficulty.png"));
 			title.setIcon(new ImageIcon(img));
 			title.setAlignmentX(Component.CENTER_ALIGNMENT);
 			title.setBorder(null);
@@ -54,12 +55,12 @@ public class ChooseDifficultyPanel extends JPanel {
 		this.add(title);
 
 		//Add spacing between buttons
-		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
+		this.add(Box.createRigidArea(new Dimension(0,largerSpace)));
 
 		//Add selection button for easy difficulty
 		easy = new JButton("");
 		try{
-			Image img = ImageIO.read(getClass().getResource(""));
+			Image img = ImageIO.read(getClass().getResource("/Easy.png"));
 			easy.setIcon(new ImageIcon(img));
 			easy.setBorder(null);
 		} catch(Exception e){
@@ -77,7 +78,7 @@ public class ChooseDifficultyPanel extends JPanel {
 
 		medium = new JButton("");
 		try{
-			Image img = ImageIO.read(getClass().getResource(""));
+			Image img = ImageIO.read(getClass().getResource("/Medium.png"));
 			medium.setIcon(new ImageIcon(img));
 			medium.setBorder(null);
 		} catch(Exception e){
@@ -94,7 +95,7 @@ public class ChooseDifficultyPanel extends JPanel {
 
 		hard = new JButton("");
 		try{
-			Image img = ImageIO.read(getClass().getResource(""));
+			Image img = ImageIO.read(getClass().getResource("/Hard.png"));
 			hard.setIcon(new ImageIcon(img));
 			hard.setBorder(null);
 		} catch(Exception e){
@@ -111,7 +112,7 @@ public class ChooseDifficultyPanel extends JPanel {
 
 		expert = new JButton("");
 		try{
-			Image img = ImageIO.read(getClass().getResource(""));
+			Image img = ImageIO.read(getClass().getResource("/Expert.png"));
 			expert.setIcon(new ImageIcon(img));
 			expert.setBorder(null);
 		} catch(Exception e){

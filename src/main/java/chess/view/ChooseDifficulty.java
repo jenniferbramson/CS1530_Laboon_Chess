@@ -11,8 +11,8 @@ public class ChooseDifficulty extends JPanel {
 	private Dimension screen;
 
 	//Modify startup screen sizes
-	private int screenWidth = 800;
-	private int screenHeight = 400;
+	private int screenWidth = 1000;
+	private int screenHeight = 650;
 
 	public ChooseDifficulty() {
 		JFrame frame = new JFrame("Choose Difficulty");
