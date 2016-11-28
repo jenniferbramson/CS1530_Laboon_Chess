@@ -30,14 +30,12 @@ public class VideoPanel extends JPanel {
 		String url= "";
 		String resultsOfGame = BoardPanel.my_rulebook.resultsOfGame;
 		if(resultsOfGame.equals("win")) {
-			//url = this.getClass().getResource("/nyancat.mp4").toExternalForm();
-			url = this.getClass().getResource("/rickroll.mp4").toExternalForm();
+			url = this.getClass().getResource("/nyan.mp4").toExternalForm();
 		}
 		else if(resultsOfGame.equals("loss")) {
 			url = this.getClass().getResource("/rickroll.mp4").toExternalForm();
 		}
 		else if(resultsOfGame.equals("draw")) {
-			//url = this.getClass().getResource("/grumpycat.mp4").toExternalForm();
 			url = this.getClass().getResource("/rickroll.mp4").toExternalForm();
 		}
 
