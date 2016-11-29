@@ -43,7 +43,7 @@ public class ConsoleGraphics extends JFrame {
 		// Add background image
 		Image woodenTable = readImage();
 		if (woodenTable != null) {					// If found wood image, set background
-			woodenTable = getScaledImage(woodenTable, 1200, 700);
+			woodenTable = getScaledImage(woodenTable, 1240, 720);
 			background = new JLabel(new ImageIcon(woodenTable));
 			content.add(background);
 		}
