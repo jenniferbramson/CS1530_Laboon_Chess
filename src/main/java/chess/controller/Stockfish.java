@@ -12,6 +12,9 @@ import java.io.InputStreamReader;
 
 import java.util.concurrent.TimeUnit;
 
+enum DifficultyLevel {
+    EASY, MEDIUM, HARD, EXPERT;
+  }
 
 
 
@@ -41,6 +44,7 @@ public class Stockfish {
    */
   public static final String STARTING_POS = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
   public String fen = STARTING_POS;
+  private DifficultyLevel level;
 
 
   /** Start Stockfish process.
@@ -82,12 +86,12 @@ public class Stockfish {
       inputStreamReader = new InputStreamReader(inputStream);
       processReader = new BufferedReader(inputStreamReader);
       processWriter = new BufferedWriter(new OutputStreamWriter(engine.getOutputStream()));
-      System.out.println("Stockfish engine started");
+      // System.out.println("Stockfish engine started");
 
       started = engine.isAlive();
 
       // Tell stockfish process to start communicating in UCI mode
-      this.send("ucinewgame");
+      this.send("uci");
     }
 
     /* If there has been a FileNotFoundException or an IOException,
@@ -240,8 +244,6 @@ public class Stockfish {
     */
   public boolean movePiece(String move, String fen){
     this.send("position fen " + fen + " moves " + move);
-    // check to see if valid - not sure how yet
-    // maybe should call RuleBook?
     return true; // if valid move
 
   }
@@ -260,7 +262,7 @@ public class Stockfish {
       // Wait for process to completely exit
       this.engine.waitFor();
       stopped = true;
-      System.out.println("Stockfish engine stopped");
+      //System.out.println("Stockfish engine stopped");
     }
     catch (Exception e) {
       e.printStackTrace();
@@ -284,44 +286,106 @@ public class Stockfish {
     return stopped;
   }
 
+
+  public void setDifficultyLevel(DifficultyLevel level) {
+    this.level = level;
+    String command = "setoption name Skill Level value ";
+    switch (level) {
+      case EASY:
+        send(command + "0");
+        break;
+
+      case MEDIUM:
+        send(command + "7");
+        break;
+
+      case HARD:
+        send(command + "14");
+        break;
+
+      case EXPERT:
+        send(command + "20");
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  public DifficultyLevel getDifficultyLevel() {
+    return level;
+  }
+
   // Have stockfish play against itself for specified number of rounds
   // Just for testing to see how engine acts over many turns
-  public static void playGame(int rounds) {
+  public static boolean playGame(int rounds, String level1, String level2) {
+    DifficultyLevel dl = DifficultyLevel.valueOf(level1);
+    DifficultyLevel dl2 = DifficultyLevel.valueOf(level2);
+
+
+    int wins1 = 0;
+    int wins2 = 0;
     Stockfish player1 = new Stockfish();
     player1.startEngine();
     // Tell the engine to switch to UCI mode
     player1.send("uci");
-    // player1.turnOnDebug();
+    player1.enableDebugLog();
+    player1.setDifficultyLevel(dl);
 
-    Stockfish player2 = player1;
+    Stockfish player2 = new Stockfish();
+    player2.startEngine();
+    player2.send("uci");
+    player2.setDifficultyLevel(dl2);
+
+
 
     String fen = player1.STARTING_POS;
     StringBuilder allMoves = new StringBuilder();
+    boolean player1Win = false;
 
+    int count = 0;
     for (int i = 0; i < rounds; i++){
+      count ++;
 
-      System.out.println("ROUND " + (i/2+1));
+      // System.out.println("ROUND " + (i/2+1));
 
       player1.send("position fen " + fen);
-      player1.send("d");
-      String output = player1.getOutput();
-      System.out.println("Output" + output);
+      //player1.send("d");
+      //String output = player1.getOutput();
+      //System.out.println("Output" + output);
 
       String bestMove = player1.getBestMove(fen, 100);
+      if (bestMove.equals("(none")){
+        System.out.println("PLAYER 2 WINS!");
+        player1Win = false;
+        break;
+      }
       player1.movePiece(bestMove, fen);
       fen = player1.getFen();
-      System.out.println("Fen string after move " + (i+1) + ": " + bestMove + " --- "  + fen);
-      player1.drawBoard();
+      // System.out.println("Fen string after move " + (i+1) + ": " + bestMove + " --- "  + fen);
+      //player1.drawBoard();
 
       bestMove = player2.getBestMove(fen, 100);
+      if (bestMove.equals("(none")){
+        System.out.println("PLAYER 1 WINS!");
+        wins1++;
+        player1Win = true;
+        fen = player1.STARTING_POS;
+        break;
+      }
       player2.movePiece(bestMove, fen);
       fen = player2.getFen();
       i++;
-      System.out.println("Fen string after move " + (i+1) + ": " + bestMove + " --- " + fen);
-      player2.drawBoard();
+      // System.out.println("Fen string after move " + (i+1) + ": " + bestMove + " --- " + fen);
+      // player2.drawBoard();
 
     }
     player1.stopEngine();
+    System.out.println("Final board: ");
+    player2.drawBoard();
+    player2.stopEngine();
+    System.out.println("Total number of rounds: " + count);
+    return player1Win;
   }
 
 

@@ -8,3 +8,4 @@ P--P----
 -PP-PPPP
 -NB-KBNR
 w
+EASY
