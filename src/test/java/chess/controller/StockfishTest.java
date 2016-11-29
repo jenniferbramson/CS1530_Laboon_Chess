@@ -129,17 +129,4 @@ public class StockfishTest {
 		System.out.println("Player 1 wins: " + wins1 + "\nPlayer 2 wins: " + wins2);
 		assert(wins1<wins2);
 	}
-
-  @Test
-  public void testDifficultyLevelEqual() {
-    int wins1 = 0, wins2 = 0;
-    for (int i = 0; i < 6; i++){
-      boolean player1Wins = Stockfish.playGame(100, "EASY", "EASY");
-      if (player1Wins)
-        wins1++;
-      else
-        wins2++;
-      }
-    System.out.println("Player 1 wins: " + wins1 + "\nPlayer 2 wins: " + wins2);
-  }
 }
