@@ -14,6 +14,7 @@ public class ChooseColorPanel extends JPanel {
 
 	//Variables to change the spacing of buttons and title
 	private int topSpace = 50;
+	private int bottomSpace = 70;
 	private int buttonSpace = 10;
 
 	private int titleTextSize = 48;
@@ -49,12 +50,17 @@ public class ChooseColorPanel extends JPanel {
 		this.add(title);
 
 		//Add spacing between buttons
-		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
+		//this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
 
+		//Create new Panel so we can put the buttons next to each other!
+		JPanel innerPanel = new JPanel();
+		innerPanel.setBackground(Color.WHITE);
+		innerPanel.setLayout(new FlowLayout());
+		
 		//Add white pieces selection button
 		white = new JButton("");
 		try{
-			Image img = ImageIO.read(getClass().getResource("/SelectWhite.png"));
+			Image img = ImageIO.read(getClass().getResource("/WhitePiece.png"));
 			white.setIcon(new ImageIcon(img));
 			white.setBorder(null);
 		} catch(Exception e){
@@ -65,15 +71,12 @@ public class ChooseColorPanel extends JPanel {
 		//Set an icon for white pawn or king
 		white.setAlignmentX(Component.CENTER_ALIGNMENT);
 		white.addActionListener(playWhite());
-		this.add(white);
-
-		//Add spacing between buttons
-		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
+		innerPanel.add(white);
 
 		//Add black pieces selection button
 		black = new JButton("");
 		try{
-			Image img = ImageIO.read(getClass().getResource("/SelectBlack.png"));
+			Image img = ImageIO.read(getClass().getResource("/BlackPiece.png"));
 			black.setIcon(new ImageIcon(img));
 			black.setBorder(null);
 		} catch(Exception e){
@@ -82,12 +85,11 @@ public class ChooseColorPanel extends JPanel {
 		}
 		//Set icon black pawn/king
 		black.setAlignmentX(Component.CENTER_ALIGNMENT);
-
 		black.addActionListener(playBlack());
-		this.add(black);
+		innerPanel.add(black);
 
-		//Add spacing between buttons
-		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
+		//Add both buttons
+		this.add(innerPanel);
 
 		//Add back to menu button
 		backToMenu = new JButton("");
@@ -102,6 +104,10 @@ public class ChooseColorPanel extends JPanel {
 		backToMenu.setAlignmentX(Component.CENTER_ALIGNMENT);
 		backToMenu.addActionListener(returnToStartUp());
 		this.add(backToMenu);
+		
+		//Add spacing on bottom
+		this.add(Box.createRigidArea(new Dimension(0,bottomSpace)));
+		
 	}
 
 	private ActionListener playWhite() {

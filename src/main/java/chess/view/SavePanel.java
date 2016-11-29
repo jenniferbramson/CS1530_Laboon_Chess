@@ -188,6 +188,8 @@ public class SavePanel extends JPanel {
 			fileInfo.append(row + "\n");
 		}
 
+
+
 		//Test if save file information was written correctly
 		System.out.print(fileInfo);
 
@@ -207,6 +209,10 @@ public class SavePanel extends JPanel {
 			fileIn.write(fileInfo.toString());
 			//Last line of file, record what color the player is
 			fileIn.write(LaboonChess.controller.getPlayersColor() + "\n");
+
+			//Append difficulty level to file
+			fileIn.write(LaboonChess.stockfish.getDifficultyLevel().name());
+
 			fileIn.close();
 
 		} catch(Exception ex) {
