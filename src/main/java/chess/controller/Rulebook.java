@@ -5,6 +5,7 @@ import java.util.*;
 public class Rulebook {
 
   private Storage my_storage;
+  protected static String resultsOfGame = "noResult";
 
   public Rulebook(Storage my_storage) {
     this.my_storage = my_storage;
@@ -663,7 +664,7 @@ public class Rulebook {
     return true;
   }
 
-  public String testGameEnded(String fen) {
+  public void testGameEnded(String fen) {
   	String result = "noResult";
 
   	Stockfish player = new Stockfish();
@@ -743,7 +744,11 @@ public class Rulebook {
 
   	System.out.println("Results: " + result);
 
-  	return result;
+  	if(!result.equals("noResult")) {
+  		resultsOfGame = result;
+  		GameResults results = new GameResults();
+  	}
+
   }
 
 	//Test insufficient number of pieces to win game - draw conditions

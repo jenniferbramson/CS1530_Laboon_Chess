@@ -118,10 +118,7 @@ public class TurnController {
 
   	  //Display when testing win/loss/draw condition starts
   	  System.out.println("Starting tests for game results in changeTurn if");
-  	  resultsOfGame = BoardPanel.my_rulebook.testGameEnded(fen);
-  	  if(!resultsOfGame.equals("noResult")) {
-  		    GameResults result = new GameResults();
-  	  }
+  	  BoardPanel.my_rulebook.testGameEnded(fen);
     }
 	          // turn switching
     else {
@@ -138,48 +135,20 @@ public class TurnController {
   		if(moveRule50Counter == 49) {
   			String fen = BoardPanel.my_storage.getFen();
 
-  		  //Check if a piece was taken
-  		  //Need to do this check since stockfish automatically resets the 50 move counter to 0 when it hits 50
-  		  //Therefore we need to test it manually
-  		  String[] fenSectionsBeforeMove = fen.split(" ");
-  		  String fenBefore = fenSectionsBeforeMove[0];
-  		  char temp;
-
-  		  //Count number of pieces before stockfish makes a move
-  		  for(int i = 0; i < fenBefore.length(); i++) {
-    			temp = fenBefore.charAt(i);
-    			if(Character.isLetter(temp)) {
-    			  countPiecesBefore++;
-    			}
-		    }
-
   		  String[] fenSectionsAfterMove = fen.split(" ");
-  		  String fenAfter = fenSectionsAfterMove[0];
-
-  		  //Count number of pieces after stockfish makes a move
-  		  for(int i = 0; i < fenAfter.length(); i++) {
-    			temp = fenAfter.charAt(i);
-    			if(Character.isLetter(temp)) {
-    			  countPiecesAfter++;
-    			}
-  		  }
-
-  		  System.out.println("Number of pieces before the move: " + countPiecesBefore);
-  		  System.out.println("Number of pieces after the move: " + countPiecesAfter);
 
   		  //Indicates that stockfish made a move and didn't take piece, therefore it's a draw
-  		  if(countPiecesBefore == countPiecesAfter) {
+  		  if(fenSectionsAfterMove[4].equals("50")) {
+  			BoardPanel.my_rulebook.resultsOfGame = "draw";
+  			System.out.println("Draw by 50 move rule");
 
-    			resultsOfGame = "draw";
-    			System.out.println("Draw by 50 move rule");
+  			//Update board with move made by stockfish
+  			//This implementation avoids "non-static method cannot be referenced from static context error"
+  			BoardPanel tempBoardPanel = ConsoleGraphics.board;
+  			tempBoardPanel.setPieces();
+  			ConsoleGraphics.board = tempBoardPanel;
 
-    			//Update board with move made by stockfish
-    			//This implementation avoids "non-static method cannot be referenced from static context error"
-    			BoardPanel tempBoardPanel = ConsoleGraphics.board;
-    			tempBoardPanel.setPieces();
-    			ConsoleGraphics.board = tempBoardPanel;
-
-    			GameResults result = new GameResults();
+  			GameResults result = new GameResults();
   		  }
   		}
   		//Update board with move made by stockfish
@@ -208,10 +177,10 @@ public class TurnController {
 			}
 			if(checkLoadScreenVisible == false) {
 			  System.out.println("Starting tests for game results in changeTurn else");
+			  BoardPanel.my_rulebook.resultsOfGame = "noResult";
 			  System.out.println(BoardPanel.my_storage.getFen());
-			  resultsOfGame = BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
-			  if(!resultsOfGame.equals("noResult")) {
-				  GameResults result = new GameResults();
+			  if(BoardPanel.my_rulebook.resultsOfGame.equals("noResult")) {
+				BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
 			  }
 			}
     }
@@ -265,22 +234,24 @@ public class TurnController {
     else {
       //Display when testing win/loss/draw condition starts
       System.out.println("No best move");
+      playersTurn = false;
+      if (turn == 'w')
+        turn = 'b';
+      else
+        turn='w';
 
-      System.out.println("turn " + turn);
+	    System.out.println("turn " + turn);
 
-    	//Update board with move made by stockfish
-    	//This implementation avoids "non-static method cannot be referenced from static context error"
-    	BoardPanel tempBoardPanel = ConsoleGraphics.board;
-    	tempBoardPanel.setPieces();
-    	ConsoleGraphics.board = tempBoardPanel;
+  		//Update board with move made by stockfish
+  		//This implementation avoids "non-static method cannot be referenced from static context error"
+  		BoardPanel tempBoardPanel = ConsoleGraphics.board;
+  		tempBoardPanel.setPieces();
+  		ConsoleGraphics.board = tempBoardPanel;
 
-    	System.out.println("Starting tests for game results in playMoveFromStockfish");
-    	resultsOfGame = BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
-      if(!resultsOfGame.equals("noResult")) {
-        GameResults result = new GameResults();
-      }
-
+  		System.out.println("Starting tests for game results in playMoveFromStockfish");
+  		BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
     }
+
   }
 
   /** Ask stockfish process to return best move.
@@ -332,16 +303,16 @@ public class TurnController {
     // pause before takine stockfish turn
     if (wait) sleeper.doInBackground();
 
-    Color o1 =  BoardPanel.checkers[old_y][old_x].getBackground();
-    Color o2 = BoardPanel.checkers[y][x].getBackground();
+      Color o1 =  BoardPanel.checkers[old_y][old_x].getBackground();
+      Color o2 = BoardPanel.checkers[y][x].getBackground();
 
-    // this isn't working yet
-    BoardPanel.checkers[old_y][old_x].setBackground(BoardPanel.SEAGREEN);
-    BoardPanel.checkers[y][x].setBackground(BoardPanel.SEAGREEN);
-    // if(wait) sleeper.doInBackground();
-    int [] move = {old_y, old_x, y, x};
+      // this isn't working yet
+      BoardPanel.checkers[old_y][old_x].setBackground(BoardPanel.SEAGREEN);
+      BoardPanel.checkers[y][x].setBackground(BoardPanel.SEAGREEN);
+      // if(wait) sleeper.doInBackground();
+      int [] move = {old_y, old_x, y, x};
 
-    return move;
+      return move;
     }
   }
 

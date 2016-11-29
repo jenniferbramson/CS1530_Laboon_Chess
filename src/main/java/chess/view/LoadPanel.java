@@ -229,6 +229,8 @@ public class LoadPanel extends JPanel {
 					//If there is some lag when loading the images
 					//Might just call drawpieces on the current board with new fen
 					ConsoleGraphics.frame.dispose();
+					
+					ConsoleGraphics.kib.t.interrupt();
 				}
 
 				LaboonChess.controller = new TurnController(currentColor, playersColor);
