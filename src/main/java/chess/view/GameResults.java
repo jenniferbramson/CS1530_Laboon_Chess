@@ -14,6 +14,12 @@ public class GameResults extends JDialog {
 	private int screenWidth = 800;
 	private int screenHeight = 400;
 	
+	//Size adjusted to include the video
+	private int screenWidthVideo = 800;
+	private int screenHeightVideo = 800;
+	
+	protected static VideoPanel video;
+	
 	public GameResults() {
 		//Find out whether the game was won, lost, draw
 		//Make dialog title based on the results
@@ -27,15 +33,17 @@ public class GameResults extends JDialog {
 		
 		//Room to add anything else
 		mainPanel.setLayout(new BorderLayout());
-		mainPanel.add(resultsPanel, BorderLayout.CENTER);
+	
+		video = new VideoPanel();
+		mainPanel.add(video, BorderLayout.NORTH);
+		mainPanel.add(resultsPanel, BorderLayout.SOUTH);
 		
 		content.add(mainPanel);
 		
 		dialog.pack();
 		
-		//Set fixed screen size
-		dialog.setSize(screenWidth, screenHeight);
-		
+		dialog.setSize(screenWidthVideo, screenHeightVideo);
+			
 		//Get size of computer screen
 		//Set the screen so it appears in the middle
 		t = getToolkit();
@@ -44,6 +52,9 @@ public class GameResults extends JDialog {
 		
 		//Causes user to have to select one fo the options of the menu
 		dialog.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		
+		//Test code
+		//dialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		
 		dialog.setVisible(true);                    
 	}
