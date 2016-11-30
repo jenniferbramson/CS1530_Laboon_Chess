@@ -22,13 +22,11 @@ public class TurnController {
   private String fenAfterMove;
   private String bestMove;
   public static final Color GREENBLUE = new Color(125,198,200);
-  protected static boolean gameOver;
 
   int moveRule50Counter = 0;
 
   public TurnController(char playersColor) {
     turn = 'w';
-    gameOver = false;
     this.playersColor = playersColor;
     if (playersColor == 'w') {
       playersTurn = true;
@@ -43,7 +41,6 @@ public class TurnController {
   public TurnController(char currentColor, char playersColor) {
     if ((currentColor == 'b' || currentColor == 'w') && (playersColor == 'b' || playersColor == 'w')) {
       turn = currentColor;
-      gameOver = false;
       this.playersColor = playersColor;
       if (playersColor == currentColor) {
         playersTurn = true;
@@ -123,13 +120,6 @@ public class TurnController {
   	  System.out.println("Starting tests for game results in changeTurn if");
   	  BoardPanel.my_rulebook.testGameEnded(fen);
 
-      if (Rulebook.resultsOfGame.equals("loss") ||
-          Rulebook.resultsOfGame.equals("win") ||
-          Rulebook.resultsOfGame.equals("draw")) {
-          System.out.println("RESULT: " + Rulebook.resultsOfGame);
-          System.out.println("GAME OVER");
-          gameOver = true;
-      }
     }
 	          // turn switching
     else {
@@ -194,12 +184,7 @@ public class TurnController {
           BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
 			  }
 			}
-      if (Rulebook.resultsOfGame.equals("loss") ||
-          Rulebook.resultsOfGame.equals("win") ||
-          Rulebook.resultsOfGame.equals("draw")) {
-          System.out.println("GAME OVER");
-          gameOver = true;
-      }
+
     }
 
   }

@@ -559,7 +559,24 @@ public class BoardPanel extends JPanel {
 						  //redraw
 						  setPieces();
 							LaboonChess.changeTurn();
-							System.out.println("Game over????" + LaboonChess.controller.gameOver);
+
+							// This method delays all swing updates until the method completes
+							// Causes run() to be executed asynchronously on the AWT event dispatching
+							// thread. This will happen after all pending AWT events have been processed.
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run() {
+									// Only do something if the player has moved aka if it is the computer's turn
+									if (!LaboonChess.getPlayersTurn()){
+										System.out.println("Entered Stock input");
+										int[] move = LaboonChess.controller.getMoveFromStockfish(true);
+										LaboonChess.controller.playMoveFromStockfish(move);
+										setPieces();
+										LaboonChess.changeTurn();
+									}
+
+								}
+							});
+							// end invokeLater
             } // end legality move check
 						else{
 							System.out.println("Not a legal move.");
@@ -568,7 +585,7 @@ public class BoardPanel extends JPanel {
 				} // end second click
 				else{
 					// Ignore input unless it is the player's turn and game is not over
-          if (LaboonChess.getPlayersTurn() && !LaboonChess.controller.gameOver) {
+          if (LaboonChess.getPlayersTurn()) {
 						System.out.println("Entered Player input");
             boolean validColor = false;     // Tells if the right color piece is trying to move
             if (Character.isUpperCase(my_storage.getSpaceChar(x, y))) {
@@ -605,25 +622,6 @@ public class BoardPanel extends JPanel {
 					System.out.println(my_storage.getFen());
 				}
 
-				// This method delays all swing updates until the method completes
-				// Causes run() to be executed asynchronously on the AWT event dispatching
-				// thread. This will happen after all pending AWT events have been processed.
-				SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            // Only do something if the player has moved aka if it is the computer's turn
-						// and if the game is not over
-						System.out.println("Game over?????? " + LaboonChess.controller.gameOver);
-            if (!LaboonChess.getPlayersTurn() && !LaboonChess.controller.gameOver){
-							System.out.println("Entered Stock input");
-              int[] move = LaboonChess.controller.getMoveFromStockfish(true);
-              LaboonChess.controller.playMoveFromStockfish(move);
-              setPieces();
-							LaboonChess.changeTurn();
-            }
-
-          }
-        });
-        // end invokeLater
       }
     };
 
