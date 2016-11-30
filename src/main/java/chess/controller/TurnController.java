@@ -21,6 +21,7 @@ public class TurnController {
   private String fenBeforeMove;
   private String fenAfterMove;
   private String bestMove;
+  public static final Color GREENBLUE = new Color(125,198,200);
 
   int moveRule50Counter = 0;
 
@@ -91,7 +92,7 @@ public class TurnController {
 
     if (playersTurn) {
       playersTurn = false;  // Comment this out and start as white to test black/white
-	  
+
       //Obtain the user's move
   	  String move = BoardPanel.playersMostRecentMove;
   	  String fen = BoardPanel.playersFenAfterMove;
@@ -108,64 +109,65 @@ public class TurnController {
     		BoardPanel.previousMoves.add(move);
     		BoardPanel.previousMoves.removeFirst();
   	  }
-	  
+
 	    //Update board with move made by stockfish
-		//This implementation avoids "non-static method cannot be referenced from static context error"
-		BoardPanel tempBoardPanel = ConsoleGraphics.board;
-		tempBoardPanel.setPieces();
-		ConsoleGraphics.board = tempBoardPanel;
+  		//This implementation avoids "non-static method cannot be referenced from static context error"
+  		BoardPanel tempBoardPanel = ConsoleGraphics.board;
+  		tempBoardPanel.setPieces();
+  		ConsoleGraphics.board = tempBoardPanel;
 
   	  //Display when testing win/loss/draw condition starts
   	  System.out.println("Starting tests for game results in changeTurn if");
   	  BoardPanel.my_rulebook.testGameEnded(fen);
+
     }
 	          // turn switching
     else {
       playersTurn = true;
-		
-		int countPiecesBefore = 0;
-		int countPiecesAfter = 0;
-		
-		System.out.println("Move Counter: " + moveRule50Counter);
 
-		//Check if the move counter before stockfish makes it's move was 49
-		//Indicates that one more move could lead to a draw
-		//Stockfish's next move could initiate a draw
-		if(moveRule50Counter == 49) {
-			String fen = BoardPanel.my_storage.getFen();
+  		int countPiecesBefore = 0;
+  		int countPiecesAfter = 0;
 
-		  String[] fenSectionsAfterMove = fen.split(" ");
+  		System.out.println("Move Counter: " + moveRule50Counter);
 
-		  //Indicates that stockfish made a move and didn't take piece, therefore it's a draw
-		  if(fenSectionsAfterMove[4].equals("50")) {
-			BoardPanel.my_rulebook.resultsOfGame = "draw";
-			System.out.println("Draw by 50 move rule");
+  		//Check if the move counter before stockfish makes it's move was 49
+  		//Indicates that one more move could lead to a draw
+  		//Stockfish's next move could initiate a draw
+  		if(moveRule50Counter == 49) {
+  			String fen = BoardPanel.my_storage.getFen();
 
-			//Update board with move made by stockfish
-			//This implementation avoids "non-static method cannot be referenced from static context error"
-			BoardPanel tempBoardPanel = ConsoleGraphics.board;
-			tempBoardPanel.setPieces();
-			ConsoleGraphics.board = tempBoardPanel;
+  		  String[] fenSectionsAfterMove = fen.split(" ");
 
-			GameResults result = new GameResults();
-		  }
-		}
-		//Update board with move made by stockfish
-		//This implementation avoids "non-static method cannot be referenced from static context error"
-		BoardPanel tempBoardPanel = ConsoleGraphics.board;
-		tempBoardPanel.setPieces();
-		ConsoleGraphics.board = tempBoardPanel;
+  		  //Indicates that stockfish made a move and didn't take piece, therefore it's a draw
+  		  if(fenSectionsAfterMove[4].equals("50")) {
+    			BoardPanel.my_rulebook.resultsOfGame = "draw";
+    			System.out.println("Draw by 50 move rule");
 
-		//Keep track of the last 6 moves
+    			//Update board with move made by stockfish
+    			//This implementation avoids "non-static method cannot be referenced from static context error"
+    			BoardPanel tempBoardPanel = ConsoleGraphics.board;
+    			tempBoardPanel.setPieces();
+    			ConsoleGraphics.board = tempBoardPanel;
 
-		if(BoardPanel.previousMoves.size() < 6) {
-		  BoardPanel.previousMoves.add(bestMove);
-		}
-		else {
-		  BoardPanel.previousMoves.add(bestMove);
-		  BoardPanel.previousMoves.removeFirst();
-		}
-		  
+    			GameResults result = new GameResults();
+  		  }
+  		}
+  		//Update board with move made by stockfish
+  		//This implementation avoids "non-static method cannot be referenced from static context error"
+  		BoardPanel tempBoardPanel = ConsoleGraphics.board;
+  		tempBoardPanel.setPieces();
+  		ConsoleGraphics.board = tempBoardPanel;
+
+  		//Keep track of the last 6 moves
+
+  		if(BoardPanel.previousMoves.size() < 6) {
+  		  BoardPanel.previousMoves.add(bestMove);
+  		}
+  		else {
+  		  BoardPanel.previousMoves.add(bestMove);
+  		  BoardPanel.previousMoves.removeFirst();
+  		}
+
 		  boolean checkLoadScreenVisible = true;
 		  //Try to see if the board is open/visible
 			try {
@@ -179,9 +181,10 @@ public class TurnController {
 			  BoardPanel.my_rulebook.resultsOfGame = "noResult";
 			  System.out.println(BoardPanel.my_storage.getFen());
 			  if(BoardPanel.my_rulebook.resultsOfGame.equals("noResult")) {
-				BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
+          BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
 			  }
 			}
+
     }
 
   }
@@ -196,60 +199,61 @@ public class TurnController {
   }
 
 
-   public void playMoveFromStockfish(int[] move){
+  public void playMoveFromStockfish(int[] move){
 
-     if (move != null){
+    if (move != null){
 
-       int old_y = move[0];
-       int old_x = move[1];
-       int y = move[2];
-       int x = move[3];
+      int old_y = move[0];
+      int old_x = move[1];
+      int y = move[2];
+      int x = move[3];
 
-       if ( (old_x+old_y) % 2== 0) {
-         BoardPanel.checkers[old_y][old_x].setBackground(Color.WHITE);
-       } else {
-         BoardPanel.checkers[old_y][old_x].setBackground(Color.GRAY);
-       }
+      if ( (old_x+old_y) % 2== 0) {
+        BoardPanel.checkers[old_y][old_x].setBackground(Color.WHITE);
+      } else {
+        BoardPanel.checkers[old_y][old_x].setBackground(GREENBLUE);
+      }
 
-       if ( (x+y) % 2== 0) {
-         BoardPanel.checkers[y][x].setBackground(Color.WHITE);
-       } else {
-         BoardPanel.checkers[y][x].setBackground(Color.GRAY);
-       }
+      if ( (x+y) % 2== 0) {
+        BoardPanel.checkers[y][x].setBackground(Color.WHITE);
+      } else {
+        BoardPanel.checkers[y][x].setBackground(GREENBLUE);
+      }
 
-       BoardPanel.my_storage.movePiece(old_y, old_x, y, x);
-       if (promotion){
-         // Set pawn to be new piece
-         BoardPanel.my_storage.setSpace(y, x, newPiece);
-         // Reset
-         promotion = false;
-         newPiece = ' ';
-       }
+      BoardPanel.my_storage.movePiece(old_y, old_x, y, x);
+      if (promotion){
+        // Set pawn to be new piece
+        BoardPanel.my_storage.setSpace(y, x, newPiece);
+        // Reset
+        promotion = false;
+        newPiece = ' ';
+      }
 
-       LaboonChess.stockfish.drawBoard();
-       LaboonChess.changeTurn();
-     }
+      LaboonChess.stockfish.drawBoard();
+      //LaboonChess.changeTurn();
+    }
 
-     else {
-       //Display when testing win/loss/draw condition starts
-       System.out.println("No best move");
-       playersTurn = false;
-       if (turn == 'w')
-         turn = 'b';
-      else
-        turn='w';
-	
-	  System.out.println("turn " + turn);
-	  
-		//Update board with move made by stockfish
-		//This implementation avoids "non-static method cannot be referenced from static context error"
-		BoardPanel tempBoardPanel = ConsoleGraphics.board;
-		tempBoardPanel.setPieces();
-		ConsoleGraphics.board = tempBoardPanel;
-		
-		System.out.println("Starting tests for game results in playMoveFromStockfish");
-		BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
-     }
+    else {
+      //Display when testing win/loss/draw condition starts
+      // System.out.println("No best move");
+      // playersTurn = false;
+      // if (turn == 'w')
+      //   turn = 'b';
+      // else
+      //   turn='w';
+      //
+	    // System.out.println("turn " + turn);
+
+  		//Update board with move made by stockfish
+  		//This implementation avoids "non-static method cannot be referenced from static context error"
+  		BoardPanel tempBoardPanel = ConsoleGraphics.board;
+  		tempBoardPanel.setPieces();
+  		ConsoleGraphics.board = tempBoardPanel;
+
+  		// System.out.println("Starting tests for game results in playMoveFromStockfish");
+  		// BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
+    }
+
   }
 
   /** Ask stockfish process to return best move.
@@ -295,22 +299,22 @@ public class TurnController {
     int y = Integer.parseInt(bestMove.substring(3,4));
     y = 8 - y;
 
-	fenAfterMove = BoardPanel.my_storage.getFen();
-	
+    fenAfterMove = BoardPanel.my_storage.getFen();
+
     Sleeper sleeper = new Sleeper();
     // pause before takine stockfish turn
     if (wait) sleeper.doInBackground();
 
-    Color o1 =  BoardPanel.checkers[old_y][old_x].getBackground();
-    Color o2 = BoardPanel.checkers[y][x].getBackground();
+      Color o1 =  BoardPanel.checkers[old_y][old_x].getBackground();
+      Color o2 = BoardPanel.checkers[y][x].getBackground();
 
-    // this isn't working yet
-    BoardPanel.checkers[old_y][old_x].setBackground(BoardPanel.SEAGREEN);
-    BoardPanel.checkers[y][x].setBackground(BoardPanel.SEAGREEN);
-    // if(wait) sleeper.doInBackground();
-    int [] move = {old_y, old_x, y, x};
+      // this isn't working yet
+      BoardPanel.checkers[old_y][old_x].setBackground(BoardPanel.SEAGREEN);
+      BoardPanel.checkers[y][x].setBackground(BoardPanel.SEAGREEN);
+      // if(wait) sleeper.doInBackground();
+      int [] move = {old_y, old_x, y, x};
 
-    return move;
+      return move;
     }
   }
 
