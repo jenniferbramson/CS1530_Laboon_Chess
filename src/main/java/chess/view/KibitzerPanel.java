@@ -55,7 +55,6 @@ public class KibitzerPanel extends JPanel {
 			commentDisplay.setBorder(null);
 		} catch(Exception e){
 			String tempName = kibFiles.get(randomInt);
-			System.out.println("Temp name: " + tempName);
 			commentDisplay.setText("Name in ArrayList: " + tempName);
 			commentDisplay.setHorizontalAlignment(JLabel.CENTER);
 			commentDisplay.setFont(new Font("Arial", Font.BOLD, 16));
@@ -74,8 +73,6 @@ public class KibitzerPanel extends JPanel {
 		checkChessboardVisible = true;
 
 		while(checkChessboardVisible == true) {
-			System.out.println("Test Counter: " + testCounter);
-
 			//Generate random number based on the size of the list
 			int randomInt = ThreadLocalRandom.current().nextInt(0, (kibFiles.size() - 1));
 			String fileName = kibFiles.get(randomInt);
@@ -86,7 +83,6 @@ public class KibitzerPanel extends JPanel {
 				commentDisplay.setBorder(null);
 			} catch(Exception e){
 				String tempName = kibFiles.get(randomInt);
-				System.out.println("Temp name: " + tempName);
 				commentDisplay.setText("Name in ArrayList: " + tempName);
 				commentDisplay.setHorizontalAlignment(JLabel.CENTER);
 				commentDisplay.setFont(new Font("Arial", Font.BOLD, 16));
@@ -97,7 +93,7 @@ public class KibitzerPanel extends JPanel {
 			int randomIntTime = ThreadLocalRandom.current().nextInt(1, 5);
 			secondsWait = randomIntTime * 1000;
 
-			System.out.println("Thread waiting for: " + randomIntTime + " seconds");
+			System.out.println("Test Counter: " + testCounter + " - Thread waiting for: " + randomIntTime + " seconds");
 
 			try {
 				Thread.sleep(secondsWait);
