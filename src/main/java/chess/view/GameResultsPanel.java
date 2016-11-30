@@ -10,34 +10,33 @@ public class GameResultsPanel extends JPanel {
 	private JButton load;
 	private JButton exit;
 	private JButton title;
-	
+
 	//Variables to change the spacing of buttons and title
 	private int topSpace = 50;
 	private int buttonSpace = 10;
-	
+
 	private int titleTextSize = 20;
 	private int buttonTextSize = 16;
-	
+
 	private String winMessage = "You Won the Game!";
 	private String lossMessage = "You Lost the Game!";
 	private String drawMessage = "The Game was a Draw!";
-	
+
 	public GameResultsPanel() {
 		//Set variables back to default values
 		//Set the fen in load panel back to default settings
 		LoadPanel.fen = "";
 		BoardPanel.firstTurnTaken = false;
-		BoardPanel.moved = false;
 		LaboonChess.stockfish.stopEngine();
-		LaboonChess.stockfish.startEngine();  
-		
+		LaboonChess.stockfish.startEngine();
+
 		BoxLayout box = new BoxLayout(this, BoxLayout.Y_AXIS);
 		this.setLayout(box);
 		this.setBackground(Color.WHITE);
-		
+
 		//Add spacing from top of title and top of window
 		this.add(Box.createRigidArea(new Dimension(0,topSpace)));
-		
+
 		//Add Image/modify title
 		title = new JButton("");
 		title.setOpaque(true);
@@ -47,7 +46,7 @@ public class GameResultsPanel extends JPanel {
 		//Size of title scales with size of font
 		//title.setPreferredSize(new Dimension(500, 300));
 		title.setFont(new Font("Arial", Font.BOLD, titleTextSize));
-		
+
 		//Add Title image
 		//Set title as the result of the game
 		//Could do checks if party parrot theme is used to give different look
@@ -72,16 +71,16 @@ public class GameResultsPanel extends JPanel {
 			//Set results back to the default value
 			TurnController.resultsOfGame = "noResult";
 		}
-		
+
 		//Set game results back to default value
 		TurnController.resultsOfGame = "noResult";
-		
+
 		title.addActionListener(getFeature());
 		this.add(title);
-		
+
 		//Add spacing between buttons
 		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
-		
+
 		//Add new game button
 		newGame = new JButton("");
 		newGame.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -98,10 +97,10 @@ public class GameResultsPanel extends JPanel {
 			newGame = new JButton("New Game");
 		}
 		this.add(newGame);
-		
+
 		//Add spacing between buttons
 		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
-		
+
 		//Add load game button
 		load = new JButton("");
 		load.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -118,10 +117,10 @@ public class GameResultsPanel extends JPanel {
 			load = new JButton("Load Game");
 		}
 		this.add(load);
-		
+
 		//Add spacing between buttons
 		this.add(Box.createRigidArea(new Dimension(0,buttonSpace)));
-		
+
 		//Add exit button
 		exit = new JButton("");
 		exit.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -138,27 +137,27 @@ public class GameResultsPanel extends JPanel {
 			exit = new JButton("Exit");
 		}
 		this.add(exit);
-		
+
 		//Add spacing from top of title and top of window
 		this.add(Box.createRigidArea(new Dimension(0,topSpace)));
 	}
-	
+
 	private ActionListener startNewGame() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			// Placeholder for when we add functionality
 				//Run the color selection for chess game
 				ChooseColor choice = new ChooseColor();
-				
+
 				//Stop video from playing after the user has left the screen
 				GameResults.video.exit();
 
 				//Dispose of startup screen so it's not visible
 				JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(newGame.getParent());
 				dialog.dispose();
-				
+
 				boolean checkChessboardVisible;
-				
+
 				//Try to see if the board is open/visible
 				try {
 					checkChessboardVisible = ConsoleGraphics.frame.isShowing();
@@ -166,7 +165,7 @@ public class GameResultsPanel extends JPanel {
 				catch(NullPointerException ex) {
 					checkChessboardVisible = false;
 				}
-				
+
 				if(checkChessboardVisible != false) {
 					//Remove previous chessboard before creating the new one
 					//If there is some lag when loading the images
@@ -177,22 +176,22 @@ public class GameResultsPanel extends JPanel {
 		};
 		return action;
 	}
-	
+
 	private ActionListener getLoadGame() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 			// Placeholder for when we add functionality
 				LoadGame loadGame = new LoadGame();
-				
+
 				//Stop video from playing after the user has left the screen
 				GameResults.video.exit();
 
 				//Dispose of startup screen so it's not visible
 				JDialog dialog = (JDialog) SwingUtilities.getWindowAncestor(load.getParent());
 				dialog.dispose();
-				
+
 				boolean checkChessboardVisible;
-				
+
 				//Try to see if the board is open/visible
 				try {
 					checkChessboardVisible = ConsoleGraphics.frame.isShowing();
@@ -200,7 +199,7 @@ public class GameResultsPanel extends JPanel {
 				catch(NullPointerException ex) {
 					checkChessboardVisible = false;
 				}
-				
+
 				if(checkChessboardVisible != false) {
 					//Remove previous chessboard before creating the new one
 					//If there is some lag when loading the images
@@ -211,7 +210,7 @@ public class GameResultsPanel extends JPanel {
 		};
 		return action;
 	}
-	
+
 	private ActionListener exitMenu() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -222,7 +221,7 @@ public class GameResultsPanel extends JPanel {
 		};
 		return action;
 	}
-	
+
 	private ActionListener getFeature() {
 		ActionListener action = new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

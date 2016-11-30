@@ -6,7 +6,6 @@ import java.awt.event.*;  // awt.* does not import Action or Event Listeners
 import java.awt.image.*;
 import java.io.*;
 import javax.imageio.*;
-import static java.lang.Math.abs;
 import java.util.*;
 
 
@@ -40,6 +39,7 @@ public class BoardPanel extends JPanel {
 	//COLORS
 	public static final Color SEAGREEN = new Color(180,238,180);
 	public static final Color DARKSEAGREEN = new Color(155,205,155);
+	public static final Color GREENBLUE = new Color(125,198,200);
 	//for flipping the board
 	private boolean flipped = false;
 
@@ -63,7 +63,6 @@ public class BoardPanel extends JPanel {
 	private String defaultFen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
 
 	public static boolean firstTurnTaken = false;
-	public static boolean moved = false;
   // Makes the checkerboard with a JPanel array and adds JLabels around it to
   // label the rows 1 to 8 and the columns a to h
   public BoardPanel() {
@@ -94,7 +93,6 @@ public class BoardPanel extends JPanel {
 
 
 		//Setting up Display --------------------------------------------------------------------------------------
-		this.setBackground(Color.WHITE); 	//make it white
 		gbl = new GridBagLayout();
 		gbc = new GridBagConstraints();
 		this.setLayout(gbl);
@@ -116,7 +114,7 @@ public class BoardPanel extends JPanel {
         if ((i + j) % 2 == 0) {   // White square
           b.setBackground(Color.WHITE);
         } else {                  // Black Square
-          b.setBackground(Color.GRAY);
+          b.setBackground(GREENBLUE);
         }
 
         checkers[i][j] = b;
@@ -311,26 +309,34 @@ public class BoardPanel extends JPanel {
 	/*--------------------------------------------------------------------------------------------------------*/
 	//draws the labels and pieces on the board
 	public void drawBoard(){
+		ChessLabel blankLabel1 = new ChessLabel("");
+		blankLabel1.setPreferredSize(new Dimension(25, 25));
+		ChessLabel blankLabel2 = new ChessLabel("");
+		blankLabel2.setPreferredSize(new Dimension(25, 25));
+		ChessLabel blankLabel3 = new ChessLabel("");
+		blankLabel3.setPreferredSize(new Dimension(25, 25));
+		ChessLabel blankLabel4 = new ChessLabel("");
+		blankLabel4.setPreferredSize(new Dimension(25, 25));
 
 		// Create Labels for a through h for the first rows
-		addComponent(0,0,1,1,new JLabel(""));  // Corners are empty
+		addComponent(0,0,1,1,blankLabel1);  // Corners are empty
 		if(!flipped){
 			for (int i = 0; i < 8; i++) {
-				JLabel label = new JLabel("" + (char)(97 + i));
-				label.setHorizontalAlignment(SwingConstants.CENTER);
+				ChessLabel label = new ChessLabel("" + (char)(97 + i));
+				label.setPreferredSize(new Dimension(64, 25));
 				addComponent(i+1,0,1,1,label);
 			}
 		}
 		else{
 			for (int i = 7; i >= 0; i--) {
-				JLabel label = new JLabel("" + (char)(97 + i));
-				label.setHorizontalAlignment(SwingConstants.CENTER);
+				ChessLabel label = new ChessLabel("" + (char)(97 + i));
+				label.setPreferredSize(new Dimension(64, 25));
 				addComponent(8-i,0,1,1,label);
 			}
 		}
 
-		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
-
+		addComponent(0,9,1,1,blankLabel2);  // Corners are empty
+		addComponent(0,9,1,1,blankLabel2);	// For some reason this square only shows up on second add?
 
 		// Fill out the center of the panel
 		//if not flipped, print them out in normal order
@@ -339,8 +345,8 @@ public class BoardPanel extends JPanel {
 				for (int j = 0; j < 10; j++) {    // columns
 					if (j == 0 || j == 9) {
 						// Beginning or end of row, add column number
-						JLabel label = new JLabel("" + (8 - i));
-						label.setHorizontalAlignment(SwingConstants.CENTER);
+						ChessLabel label = new ChessLabel("" + (8 - i));
+						label.setPreferredSize(new Dimension(25, 64));
 						addComponent(j,i+1,1,1,label);
 					} else {
 						// Add chess squares
@@ -355,8 +361,8 @@ public class BoardPanel extends JPanel {
 				for (int j = 9; j >= 0; j--) {    // columns
 					if (j == 0 || j == 9) {
 						// Beginning or end of row, add column number
-						JLabel label = new JLabel("" + (9 - i));
-						label.setHorizontalAlignment(SwingConstants.CENTER);
+						ChessLabel label = new ChessLabel("" + (9 - i));
+						label.setPreferredSize(new Dimension(25, 64));
 						addComponent(9-j,9-i,1,1,label);
 					} else {
 						// Add chess squares
@@ -368,22 +374,23 @@ public class BoardPanel extends JPanel {
 
 
 		// Fill out the last row of letters a through h
-		addComponent(0,9,1,1,new JLabel(""));  // Corners are empty
+		addComponent(0,9,1,1,blankLabel3);  // Corners are empty
 		if(!flipped){
 			for (int i = 0; i < 8; i++) {
-				JLabel label = new JLabel("" + (char)(97 + i));
-				label.setHorizontalAlignment(SwingConstants.CENTER);
+				ChessLabel label = new ChessLabel("" + (char)(97 + i));
+				label.setPreferredSize(new Dimension(64, 25));
 				addComponent(i+1,9,1,1,label);
 			}
 		}
 		else{
 			for (int i = 7; i >= 0; i--) {
-				JLabel label = new JLabel("" + (char)(97 + i));
-				label.setHorizontalAlignment(SwingConstants.CENTER);
+				ChessLabel label = new ChessLabel("" + (char)(97 + i));
+				label.setPreferredSize(new Dimension(64, 25));
 				addComponent(8-i,9,1,1,label);
 			}
 		}
-		addComponent(9,9,1,1,new JLabel(""));
+
+		addComponent(9,9,1,1,blankLabel4);
 
 		// If computer goes first, it will play now
 
@@ -465,7 +472,7 @@ public class BoardPanel extends JPanel {
             if ( (old_x+old_y) % 2== 0) {
               checkers[old_y][old_x].setBackground(Color.WHITE);
             } else {
-              checkers[old_y][old_x].setBackground(Color.GRAY);
+              checkers[old_y][old_x].setBackground(GREENBLUE);
             }
             second_click = false;
           } else {
@@ -481,7 +488,7 @@ public class BoardPanel extends JPanel {
 							if ( (old_x+old_y) % 2== 0) {
 								checkers[old_y][old_x].setBackground(Color.WHITE);
 							} else {
-								checkers[old_y][old_x].setBackground(Color.GRAY);
+								checkers[old_y][old_x].setBackground(GREENBLUE);
 							}
 							second_click = false;
 
@@ -543,7 +550,6 @@ public class BoardPanel extends JPanel {
   						//redraw
     					setPieces();
     					firstTurnTaken = true;
-							moved = true;
 
               System.out.println("players turn " + LaboonChess.getPlayersTurn());
 
@@ -552,7 +558,30 @@ public class BoardPanel extends JPanel {
 
 						  //redraw
 						  setPieces();
+							LaboonChess.changeTurn();
 
+							// This method delays all swing updates until the method completes
+							// Causes run() to be executed asynchronously on the AWT event dispatching
+							// thread. This will happen after all pending AWT events have been processed.
+							SwingUtilities.invokeLater(new Runnable() {
+								public void run() {
+									// Only do something if the player has moved aka if it is the computer's turn
+									// and if the game has not ended (which prevents the extra move
+									// after the game has ended, which was causing the draw screen
+									// to pop up when loading or starting a new game)
+									boolean gameOver = !my_rulebook.resultsOfGame.equals("noResult");
+
+									if (!LaboonChess.getPlayersTurn() && !gameOver){
+										System.out.println("Entered Stock input");
+										int[] move = LaboonChess.controller.getMoveFromStockfish(true);
+										LaboonChess.controller.playMoveFromStockfish(move);
+										setPieces();
+										LaboonChess.changeTurn();
+									}
+
+								}
+							});
+							// end invokeLater
             } // end legality move check
 						else{
 							System.out.println("Not a legal move.");
@@ -560,8 +589,9 @@ public class BoardPanel extends JPanel {
           } // end checking move
 				} // end second click
 				else{
-
-          if (LaboonChess.getPlayersTurn()) { // Ignore input unless it is the player's turn
+					// Ignore input unless it is the player's turn and game is not over
+          if (LaboonChess.getPlayersTurn()) {
+						System.out.println("Entered Player input");
             boolean validColor = false;     // Tells if the right color piece is trying to move
             if (Character.isUpperCase(my_storage.getSpaceChar(x, y))) {
               if (LaboonChess.getTurn() == 'w') {
@@ -597,22 +627,6 @@ public class BoardPanel extends JPanel {
 					System.out.println(my_storage.getFen());
 				}
 
-				/* Causes run() to be executed asynchronously on the AWT event dispatching thread. This will happen after all pending AWT events have been processed. */
-				SwingUtilities.invokeLater(new Runnable() {
-          public void run() {
-            // Only do something if the player has moved
-            if (moved){
-              int[] move = LaboonChess.controller.getMoveFromStockfish(true);
-              setPieces();
-              LaboonChess.controller.playMoveFromStockfish(move);
-              LaboonChess.changeTurn();
-              setPieces();
-              moved = false;
-            }
-
-          }
-        });
-        // end invokeLater
       }
     };
 
@@ -647,10 +661,9 @@ public class BoardPanel extends JPanel {
   public void playFirstTurnWithStockfish(){
 
   	LaboonChess.firstStockfishTurn();
-  	LaboonChess.setPlayersTurn(true);
   	firstTurnTaken = true;
   	setPieces();
-
+		LaboonChess.changeTurn();
   }
 
 

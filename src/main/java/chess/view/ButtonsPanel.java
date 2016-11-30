@@ -10,7 +10,8 @@ public class ButtonsPanel extends JPanel {
 
   // Makes the load and save buttons
   public ButtonsPanel() {
-		this.setBackground(Color.WHITE); 	//make it white
+		//this.setBackground(Color.WHITE); 	//make it white
+    this.setOpaque(false);
 
     this.setLayout(new FlowLayout(FlowLayout.CENTER));
 
