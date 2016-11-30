@@ -29,7 +29,7 @@ public class KibitzerPanel extends JPanel {
 		kibFiles.add("/Kib/laboon.jpg");
 		kibFiles.add("/Kib/lynx.jpeg");
 		kibFiles.add("/Kib/cats_play_chess.jpeg");
-		kibFiles.add("/Kib/queen_cat.jpeg");
+		kibFiles.add("/Kib/hammock.jpeg");
 		kibFiles.add("/Kib/facepalm.jpeg");
 		kibFiles.add("/Kib/bday_cat.jpeg");
 		kibFiles.add("/Kib/jeans_cat.jpeg");
@@ -74,7 +74,7 @@ public class KibitzerPanel extends JPanel {
 
 		while(checkChessboardVisible == true) {
 			//Generate random number based on the size of the list
-			int randomInt = ThreadLocalRandom.current().nextInt(0, (kibFiles.size() - 1));
+			int randomInt = ThreadLocalRandom.current().nextInt(0, (kibFiles.size()));
 			String fileName = kibFiles.get(randomInt);
 
 			try{
