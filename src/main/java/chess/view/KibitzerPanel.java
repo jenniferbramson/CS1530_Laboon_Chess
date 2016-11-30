@@ -115,6 +115,8 @@ public class KibitzerPanel extends JPanel {
 				checkChessboardVisible = false;
 			}
 
+			// End loop if the game has ended - prevents the multithreading that
+			// was caused by the thread from the last game not stopping.
 			boolean gameOver = !BoardPanel.my_rulebook.resultsOfGame.equals("noResult");
 			if (gameOver) {
 				checkChessboardVisible = false;

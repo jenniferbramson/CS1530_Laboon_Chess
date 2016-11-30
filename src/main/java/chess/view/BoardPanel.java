@@ -566,8 +566,11 @@ public class BoardPanel extends JPanel {
 							SwingUtilities.invokeLater(new Runnable() {
 								public void run() {
 									// Only do something if the player has moved aka if it is the computer's turn
+									// and if the game has not ended (which prevents the extra move
+									// after the game has ended, which was causing the draw screen
+									// to pop up when loading or starting a new game)
 									boolean gameOver = !my_rulebook.resultsOfGame.equals("noResult");
-									
+
 									if (!LaboonChess.getPlayersTurn() && !gameOver){
 										System.out.println("Entered Stock input");
 										int[] move = LaboonChess.controller.getMoveFromStockfish(true);
