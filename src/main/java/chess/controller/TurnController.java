@@ -127,8 +127,10 @@ public class TurnController {
 
   		int countPiecesBefore = 0;
   		int countPiecesAfter = 0;
-
-  		System.out.println("Move Counter: " + moveRule50Counter);
+		
+		boolean end = false;
+		
+  		System.out.println("Move Counter in else: " + moveRule50Counter);
 
   		//Check if the move counter before stockfish makes it's move was 49
   		//Indicates that one more move could lead to a draw
@@ -142,6 +144,8 @@ public class TurnController {
   		  if(fenSectionsAfterMove[4].equals("50")) {
     			BoardPanel.my_rulebook.resultsOfGame = "draw";
     			System.out.println("Draw by 50 move rule");
+				
+				end = true;
 
     			//Update board with move made by stockfish
     			//This implementation avoids "non-static method cannot be referenced from static context error"
@@ -180,8 +184,8 @@ public class TurnController {
 			  System.out.println("Starting tests for game results in changeTurn else");
 			  BoardPanel.my_rulebook.resultsOfGame = "noResult";
 			  System.out.println(BoardPanel.my_storage.getFen());
-			  if(BoardPanel.my_rulebook.resultsOfGame.equals("noResult")) {
-          BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
+			  if(BoardPanel.my_rulebook.resultsOfGame.equals("noResult") && end == false) {
+				BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
 			  }
 			}
 
