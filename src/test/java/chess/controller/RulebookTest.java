@@ -4,6 +4,13 @@ import static org.junit.Assert.*;
 import chess.Rulebook;
 import chess.Storage;
 
+/***
+  This class tests that pieces can only move in legal ways. This class by no
+  means tests every possible illegal move or every possible legal move. For
+  the most part, castling and en passant are the most heavily tested and the
+  remaining illegal moves are pieces moving in the wrong pattern.
+***/
+
 public class RulebookTest {
 
   @Test
@@ -56,6 +63,7 @@ public class RulebookTest {
 
   @Test
   public void testWhiteLegalCastleRight() {
+    // Legal Kingside castling for the white King
     Storage temp = new Storage("rnbqkbnr/p1p2ppp/8/1p1pp3/4P3/5N2/PPPPBPPP/RNBQK2R w KQkq - 6 4");
     Rulebook r = new Rulebook(temp);
     assertEquals(temp.getSpaceChar(4, 7), 'K');
@@ -69,6 +77,7 @@ public class RulebookTest {
 
   @Test
   public void testWhiteLegalCastleLeft() {
+    // Legal Queenside castling for the white King
     Storage temp = new Storage("Bn1qkb2/p4p2/2p1prp1/1p3bP1/3P3N/1PNQB3/P1P5/R3K2R w Q - 52 27");
     Rulebook r = new Rulebook(temp);
     assertEquals(temp.getSpaceChar(4, 7), 'K');
@@ -82,7 +91,8 @@ public class RulebookTest {
 
   @Test
   public void testWhiteIllegalCastleQueen() {
-    // Moves through queen check
+    // King moves through queen check, which is illegal because kings cannot
+    // move through checks
     Storage temp = new Storage("rnb1kbnr/pppp1ppp/4p3/8/8/4PNq1/PPPP1P1P/RNBQK2R w KQkq - 8 5");
     Rulebook r = new Rulebook(temp);
     assertEquals(temp.getSpaceChar(4, 7), 'K');
@@ -96,7 +106,7 @@ public class RulebookTest {
 
   @Test
   public void testWhiteIllegalCastleBishop() {
-    // Moves through bishop check
+    // King moves through bishop check
     Storage temp = new Storage("Bn1qkb2/p4p2/2p1prp1/1Q4P1/3P3N/1PN1B3/P1b5/R3K2R w Q - 54 28");
     Rulebook r = new Rulebook(temp);
     assertEquals(temp.getSpaceChar(4, 7), 'K');
@@ -110,7 +120,7 @@ public class RulebookTest {
 
   @Test
   public void testBlackIllegalCastleKnight() {
-    // Moves through bishop check
+    // King moves through knight check
     Storage temp = new Storage("r3kbnr/Nqppppp1/Qp6/6np/8/1PP1PPP1/P6P/R1B1KBNR b kq - 25 13");
     Rulebook r = new Rulebook(temp);
     assertEquals(temp.getSpaceChar(4, 0), 'k');
@@ -138,7 +148,7 @@ public class RulebookTest {
 
   @Test
   public void testBlacklegalCastle() {
-    // Moves through bishop check
+    // King moves through bishop check
     Storage temp = new Storage("r3kbnr/1qppppp1/Qp2n3/1N5p/8/1PP1PPP1/P6P/R1B1KBNR b kq - 27 14");
     Rulebook r = new Rulebook(temp);
     assertEquals(temp.getSpaceChar(4, 0), 'k');
@@ -152,7 +162,7 @@ public class RulebookTest {
 
   @Test
   public void testWhiteIllegalCastle1() {
-    // King already moved
+    // King already moved - Kings cannot castle once they have moved
     Storage temp = new Storage("rnbqkbnr/p1p4p/5pp1/1p1pp3/4P3/5N2/PPPPBPPP/RNBQK2R w kq - 10 6");
     Rulebook r = new Rulebook(temp);
     assertEquals(temp.getSpaceChar(4, 7), 'K');
@@ -208,6 +218,8 @@ public class RulebookTest {
 
   @Test
   public void illegalMoveBlackPawn() {
+    // White pawn tries to move 4 spaces in both directions, which is an illegal
+    // because pawns can only move two spaces at the beginning (row 1 for white)
   	Storage temp = new Storage();
     Rulebook r = new Rulebook(temp);
     assertEquals(temp.getSpaceChar(1, 1), 'p');
@@ -219,6 +231,7 @@ public class RulebookTest {
 
   @Test
   public void illegalMoveBlackKnight() {
+    // Black knight tried to move 5 columns and 4 rows - illegal pattern
     Storage temp = new Storage();
     Rulebook r = new Rulebook(temp);
     assertEquals(temp.getSpaceChar(1, 0), 'n');
@@ -230,6 +243,7 @@ public class RulebookTest {
 
   @Test
   public void illegalMoveWhitePawn() {
+    // White pawn tries to move 4 columns - pawns cannot move horizontally
     Storage temp = new Storage();
     Rulebook r = new Rulebook(temp);
     assertEquals(temp.getSpaceChar(1, 6), 'P');
@@ -252,6 +266,7 @@ public class RulebookTest {
 
   @Test
   public void legalMoveWhiteRook() {
+    // White rook moving legally
     Storage temp = new Storage("1nbqkbnr/1p1ppppp/r7/p1p5/P3P3/R7/1PPP1PPP/1NBQKBNR w Kk - 0 4");
     Rulebook r = new Rulebook(temp);
     assertEquals(temp.getSpaceChar(0, 5), 'R');
@@ -263,6 +278,8 @@ public class RulebookTest {
 
   @Test
   public void illegalMoveWhiteRook() {
+    // A white rook trying to move vertically - rooks can only move in one
+    // direction at a time
     Storage temp = new Storage("1nbqkbnr/1p1ppppp/r7/p1p5/P3P3/R7/1PPP1PPP/1NBQKBNR w Kk - 0 4");
     Rulebook r = new Rulebook(temp);
     assertEquals(temp.getSpaceChar(0, 5), 'R');
@@ -285,6 +302,7 @@ public class RulebookTest {
 
   @Test
   public void illegalMoveWhiteKing() {
+    // King illegally tries to move more than one space vertically
     Storage temp = new Storage("1nbqkbnr/1p1ppppp/r7/p1p5/P3P3/R7/1PPP1PPP/1NBQKBNR w Kk - 0 4");
     Rulebook r = new Rulebook(temp);
     assertEquals(temp.getSpaceChar(4, 7), 'K');
