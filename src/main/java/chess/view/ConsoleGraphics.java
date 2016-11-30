@@ -32,8 +32,6 @@ public class ConsoleGraphics extends JFrame {
 	protected JLabel background;
 
 
-
-
   // Puts all the components together to create the screen
   public ConsoleGraphics() {
 
@@ -45,8 +43,15 @@ public class ConsoleGraphics extends JFrame {
 		if (woodenTable != null) {					// If found wood image, set background
 			woodenTable = getScaledImage(woodenTable, 1240, 720);
 			background = new JLabel(new ImageIcon(woodenTable));
-			content.add(background);
+		} else {
+			// If image is null, make background white
+			background = new JLabel();
+			background.setPreferredSize(new Dimension(1240, 720));
+			background.setBackground(Color.WHITE);
 		}
+
+		content.setBackground(Color.WHITE);
+		content.add(background);
 
     // Left side of the board has the chess board, flip board, and buttons
 		// (load and save) stacked vertically
@@ -90,11 +95,6 @@ public class ConsoleGraphics extends JFrame {
 		JLabel spacing = new JLabel("");
 		spacing.setPreferredSize(new Dimension(100,140));	//spacing for making sure the buttons are centered
 
-    // Right side of the board has the the taken black and white pieces stacked
-    // vertically
-    //TakenPanel takenBlack = new TakenPanel("Taken Black Pieces");
-    //TakenPanel takenWhite = new TakenPanel("Taken White Pieces");
-
     // Setting up layout stuff
 		gbl = new GridBagLayout();
 		gbc = new GridBagConstraints();
@@ -115,7 +115,6 @@ public class ConsoleGraphics extends JFrame {
     screen = t.getScreenSize();
     frame.setLocation(screen.width/2-frame.getWidth()/2,screen.height/2-frame.getHeight()/2);
 
-		//frame.setSize(screen.width,screen.height);  // For maybe fitting game to screen later
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     // Listen for the window closing and stop the stockfish process when it closes
