@@ -9,6 +9,7 @@ public class Rulebook {
 
   public Rulebook(Storage my_storage) {
     this.my_storage = my_storage;
+    resultsOfGame = "noResult";
   }
 
   // Checks if moves are legal. It does not check the case of no movement since
@@ -668,9 +669,9 @@ public class Rulebook {
   	String result = "noResult";
 
   	Stockfish player = new Stockfish();
-      player.startEngine();
-      // Tell the engine to switch to UCI mode
-      player.send("uci");
+    player.startEngine();
+    // Tell the engine to switch to UCI mode
+    player.send("uci");
 
   	String bestMove = player.getBestMove(fen, 100);
   	System.out.println("Best Move: " + bestMove);

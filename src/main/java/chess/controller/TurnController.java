@@ -22,11 +22,13 @@ public class TurnController {
   private String fenAfterMove;
   private String bestMove;
   public static final Color GREENBLUE = new Color(125,198,200);
+  protected static boolean gameOver;
 
   int moveRule50Counter = 0;
 
   public TurnController(char playersColor) {
     turn = 'w';
+    gameOver = false;
     this.playersColor = playersColor;
     if (playersColor == 'w') {
       playersTurn = true;
@@ -41,6 +43,7 @@ public class TurnController {
   public TurnController(char currentColor, char playersColor) {
     if ((currentColor == 'b' || currentColor == 'w') && (playersColor == 'b' || playersColor == 'w')) {
       turn = currentColor;
+      gameOver = false;
       this.playersColor = playersColor;
       if (playersColor == currentColor) {
         playersTurn = true;
@@ -119,6 +122,14 @@ public class TurnController {
   	  //Display when testing win/loss/draw condition starts
   	  System.out.println("Starting tests for game results in changeTurn if");
   	  BoardPanel.my_rulebook.testGameEnded(fen);
+
+      if (Rulebook.resultsOfGame.equals("loss") ||
+          Rulebook.resultsOfGame.equals("win") ||
+          Rulebook.resultsOfGame.equals("draw")) {
+          System.out.println("RESULT: " + Rulebook.resultsOfGame);
+          System.out.println("GAME OVER");
+          gameOver = true;
+      }
     }
 	          // turn switching
     else {
@@ -139,16 +150,16 @@ public class TurnController {
 
   		  //Indicates that stockfish made a move and didn't take piece, therefore it's a draw
   		  if(fenSectionsAfterMove[4].equals("50")) {
-  			BoardPanel.my_rulebook.resultsOfGame = "draw";
-  			System.out.println("Draw by 50 move rule");
+    			BoardPanel.my_rulebook.resultsOfGame = "draw";
+    			System.out.println("Draw by 50 move rule");
 
-  			//Update board with move made by stockfish
-  			//This implementation avoids "non-static method cannot be referenced from static context error"
-  			BoardPanel tempBoardPanel = ConsoleGraphics.board;
-  			tempBoardPanel.setPieces();
-  			ConsoleGraphics.board = tempBoardPanel;
+    			//Update board with move made by stockfish
+    			//This implementation avoids "non-static method cannot be referenced from static context error"
+    			BoardPanel tempBoardPanel = ConsoleGraphics.board;
+    			tempBoardPanel.setPieces();
+    			ConsoleGraphics.board = tempBoardPanel;
 
-  			GameResults result = new GameResults();
+    			GameResults result = new GameResults();
   		  }
   		}
   		//Update board with move made by stockfish
@@ -180,9 +191,15 @@ public class TurnController {
 			  BoardPanel.my_rulebook.resultsOfGame = "noResult";
 			  System.out.println(BoardPanel.my_storage.getFen());
 			  if(BoardPanel.my_rulebook.resultsOfGame.equals("noResult")) {
-				BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
+          BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
 			  }
 			}
+      if (Rulebook.resultsOfGame.equals("loss") ||
+          Rulebook.resultsOfGame.equals("win") ||
+          Rulebook.resultsOfGame.equals("draw")) {
+          System.out.println("GAME OVER");
+          gameOver = true;
+      }
     }
 
   }
@@ -233,14 +250,14 @@ public class TurnController {
 
     else {
       //Display when testing win/loss/draw condition starts
-      System.out.println("No best move");
-      playersTurn = false;
-      if (turn == 'w')
-        turn = 'b';
-      else
-        turn='w';
-
-	    System.out.println("turn " + turn);
+      // System.out.println("No best move");
+      // playersTurn = false;
+      // if (turn == 'w')
+      //   turn = 'b';
+      // else
+      //   turn='w';
+      //
+	    // System.out.println("turn " + turn);
 
   		//Update board with move made by stockfish
   		//This implementation avoids "non-static method cannot be referenced from static context error"
@@ -248,8 +265,8 @@ public class TurnController {
   		tempBoardPanel.setPieces();
   		ConsoleGraphics.board = tempBoardPanel;
 
-  		System.out.println("Starting tests for game results in playMoveFromStockfish");
-  		BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
+  		// System.out.println("Starting tests for game results in playMoveFromStockfish");
+  		// BoardPanel.my_rulebook.testGameEnded(BoardPanel.my_storage.getFen());
     }
 
   }

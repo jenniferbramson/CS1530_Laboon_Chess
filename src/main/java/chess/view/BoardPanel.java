@@ -559,7 +559,7 @@ public class BoardPanel extends JPanel {
 						  //redraw
 						  setPieces();
 							LaboonChess.changeTurn();
-
+							System.out.println("Game over????" + LaboonChess.controller.gameOver);
             } // end legality move check
 						else{
 							System.out.println("Not a legal move.");
@@ -567,8 +567,9 @@ public class BoardPanel extends JPanel {
           } // end checking move
 				} // end second click
 				else{
-
-          if (LaboonChess.getPlayersTurn()) { // Ignore input unless it is the player's turn
+					// Ignore input unless it is the player's turn and game is not over
+          if (LaboonChess.getPlayersTurn() && !LaboonChess.controller.gameOver) {
+						System.out.println("Entered Player input");
             boolean validColor = false;     // Tells if the right color piece is trying to move
             if (Character.isUpperCase(my_storage.getSpaceChar(x, y))) {
               if (LaboonChess.getTurn() == 'w') {
@@ -610,13 +611,14 @@ public class BoardPanel extends JPanel {
 				SwingUtilities.invokeLater(new Runnable() {
           public void run() {
             // Only do something if the player has moved aka if it is the computer's turn
-            if (!LaboonChess.getPlayersTurn()){
+						// and if the game is not over
+						System.out.println("Game over?????? " + LaboonChess.controller.gameOver);
+            if (!LaboonChess.getPlayersTurn() && !LaboonChess.controller.gameOver){
+							System.out.println("Entered Stock input");
               int[] move = LaboonChess.controller.getMoveFromStockfish(true);
-              setPieces();
               LaboonChess.controller.playMoveFromStockfish(move);
-						//	LaboonChess.controller.makeCompMove();
-              LaboonChess.changeTurn();
               setPieces();
+							LaboonChess.changeTurn();
             }
 
           }
@@ -656,10 +658,9 @@ public class BoardPanel extends JPanel {
   public void playFirstTurnWithStockfish(){
 
   	LaboonChess.firstStockfishTurn();
-  	LaboonChess.setPlayersTurn(true);
   	firstTurnTaken = true;
   	setPieces();
-
+		LaboonChess.changeTurn();
   }
 
 
