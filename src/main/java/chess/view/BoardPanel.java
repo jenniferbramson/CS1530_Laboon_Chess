@@ -566,9 +566,8 @@ public class BoardPanel extends JPanel {
 							SwingUtilities.invokeLater(new Runnable() {
 								public void run() {
 									// Only do something if the player has moved aka if it is the computer's turn
-									boolean gameOver = my_rulebook.resultsOfGame.equals("win") ||
-																		 my_rulebook.resultsOfGame.equals("lose") ||
-																		 my_rulebook.resultsOfGame.equals("draw");
+									boolean gameOver = !my_rulebook.resultsOfGame.equals("noResult");
+									
 									if (!LaboonChess.getPlayersTurn() && !gameOver){
 										System.out.println("Entered Stock input");
 										int[] move = LaboonChess.controller.getMoveFromStockfish(true);
