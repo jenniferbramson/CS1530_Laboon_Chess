@@ -10,7 +10,7 @@ public class StartUpPanel extends JPanel {
 	private JButton newGame;
 	private JButton load;
 	private JButton exit;
-	private JButton title;
+	private JLabel title;
 
 	//Variables to change the spacing of buttons and title
 	private int topSpace = 50;
@@ -28,7 +28,7 @@ public class StartUpPanel extends JPanel {
 		this.add(Box.createRigidArea(new Dimension(0,topSpace)));
 
 		//Add Image/modify title
-		title = new JButton("");
+		title = new JLabel();
 		title.setOpaque(true);
 		title.setBackground(Color.WHITE);
 		title.setBorder(null);
@@ -42,10 +42,9 @@ public class StartUpPanel extends JPanel {
 			Image img = ImageIO.read(getClass().getResource("/Header.png"));
 			title.setIcon(new ImageIcon(img));
 		} catch (IOException ex) {
-			title = new JButton("Laboon Chess");
+			title = new JLabel("Laboon Chess");
 		}
 
-		title.addActionListener(getFeature());
 		this.add(title);
 
 		//Add spacing between buttons
@@ -148,13 +147,4 @@ public class StartUpPanel extends JPanel {
 		return action;
 	}
 
-	private ActionListener getFeature() {
-		ActionListener action = new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-			// Placeholder for when we add functionality
-
-			}
-		};
-		return action;
-	}
 }
