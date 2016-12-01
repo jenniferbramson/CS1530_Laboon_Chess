@@ -36,6 +36,7 @@ public class KibitzerPanel extends JPanel {
 		kibFiles.add("/Kib/cat_chess.jpeg");
 		kibFiles.add("/Kib/taco_cat.jpeg");
 		kibFiles.add("/Kib/yawn.jpeg");
+		kibFiles.add("/Kib/harambe.jpg");
 
 		this.setPreferredSize(new Dimension(widthPanel, heightPanel));
 
