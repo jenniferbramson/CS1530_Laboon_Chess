@@ -68,13 +68,8 @@ public class GameResultsPanel extends JPanel {
 			else if(resultsOfGame.equals("draw")) {
 				title.setText(drawMessage);
 			}
-			//Set results back to the default value
-			TurnController.resultsOfGame = "noResult";
 		}
-
-		//Set game results back to default value
-		TurnController.resultsOfGame = "noResult";
-
+		
 		title.addActionListener(getFeature());
 		this.add(title);
 
@@ -147,7 +142,7 @@ public class GameResultsPanel extends JPanel {
 			public void actionPerformed(ActionEvent e) {
 			// Placeholder for when we add functionality
 				//Run the color selection for chess game
-				ChooseColor choice = new ChooseColor();
+				ChooseDifficulty choice = new ChooseDifficulty();
 
 				//Stop video from playing after the user has left the screen
 				GameResults.video.exit();

@@ -26,16 +26,16 @@ public class KibitzerPanel extends JPanel {
 	public KibitzerPanel() {
 
 		//Add items to ArrayList
-		kibFiles.add("1");
-		kibFiles.add("2");
-		kibFiles.add("3");
-		kibFiles.add("4");
-		kibFiles.add("5");
-		kibFiles.add("6");
-		kibFiles.add("7");
-		kibFiles.add("8");
-		kibFiles.add("9");
-		kibFiles.add("10");
+		kibFiles.add("/Kib/laboon.jpg");
+		kibFiles.add("/Kib/lynx.jpeg");
+		kibFiles.add("/Kib/cats_play_chess.jpeg");
+		kibFiles.add("/Kib/hammock.jpeg");
+		kibFiles.add("/Kib/facepalm.jpeg");
+		kibFiles.add("/Kib/bday_cat.jpeg");
+		kibFiles.add("/Kib/jeans_cat.jpeg");
+		kibFiles.add("/Kib/cat_chess.jpeg");
+		kibFiles.add("/Kib/taco_cat.jpeg");
+		kibFiles.add("/Kib/yawn.jpeg");
 
 		this.setPreferredSize(new Dimension(widthPanel, heightPanel));
 
@@ -55,7 +55,6 @@ public class KibitzerPanel extends JPanel {
 			commentDisplay.setBorder(null);
 		} catch(Exception e){
 			String tempName = kibFiles.get(randomInt);
-			System.out.println("Temp name: " + tempName);
 			commentDisplay.setText("Name in ArrayList: " + tempName);
 			commentDisplay.setHorizontalAlignment(JLabel.CENTER);
 			commentDisplay.setFont(new Font("Arial", Font.BOLD, 16));
@@ -74,10 +73,8 @@ public class KibitzerPanel extends JPanel {
 		checkChessboardVisible = true;
 
 		while(checkChessboardVisible == true) {
-			System.out.println("Test Counter: " + testCounter);
-
 			//Generate random number based on the size of the list
-			int randomInt = ThreadLocalRandom.current().nextInt(0, (kibFiles.size() - 1));
+			int randomInt = ThreadLocalRandom.current().nextInt(0, (kibFiles.size()));
 			String fileName = kibFiles.get(randomInt);
 
 			try{
@@ -86,7 +83,6 @@ public class KibitzerPanel extends JPanel {
 				commentDisplay.setBorder(null);
 			} catch(Exception e){
 				String tempName = kibFiles.get(randomInt);
-				System.out.println("Temp name: " + tempName);
 				commentDisplay.setText("Name in ArrayList: " + tempName);
 				commentDisplay.setHorizontalAlignment(JLabel.CENTER);
 				commentDisplay.setFont(new Font("Arial", Font.BOLD, 16));
@@ -97,7 +93,7 @@ public class KibitzerPanel extends JPanel {
 			int randomIntTime = ThreadLocalRandom.current().nextInt(1, 5);
 			secondsWait = randomIntTime * 1000;
 
-			System.out.println("Thread waiting for: " + randomIntTime + " seconds");
+			System.out.println("Test Counter: " + testCounter + " - Thread waiting for: " + randomIntTime + " seconds");
 
 			try {
 				Thread.sleep(secondsWait);
@@ -121,6 +117,7 @@ public class KibitzerPanel extends JPanel {
 			if (gameOver) {
 				checkChessboardVisible = false;
 			}
+
 
 			//Test to ensure that thread is working and changing images
 			testCounter++;
